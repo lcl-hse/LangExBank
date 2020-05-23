@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+{% load static %}
+<html>
+    <head>
+        {% block head %}{% endblock %}
+    </head>
+    <body>
+
+        <div class="d-flex flex-column flex-md-row align-items-center p-3 px-md-4 mb-3 bg-white border-bottom box-shadow">
+          <h5 class="my-0 mr-md-auto font-weight-normal">REALEC Testing Platform</h5>
+          <nav class="my-2 my-md-0 mr-md-3">
+            <a class="p-2 text-dark" href="/quizzes">Quizzes</a>
+            <a class="p-2 text-dark" href="/questions">Questions</a>
+            <!-- <a class="p-2 text-dark" href="/users">Users</a> -->
+            <a class="p-2 text-dark" href="/IELTS">IELTS</a>
+          </nav>
+          <a class="btn btn-outline-primary" href="/login">Log Out</a>
+        </div>
+
+        {% block main_body %}{% endblock %}
+    </body>
+    {% block under_body %}{% endblock %}
+</html>

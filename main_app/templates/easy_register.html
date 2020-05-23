@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+{% load static %}
+<html>
+    <head>
+        <link href="{% static "basic.css" %}" rel="stylesheet" />
+    </head>
+    <body>
+        <div class="main">
+            {% autoescape off %}
+                {{ message }}<br />
+            {% endautoescape %}
+            <form method="POST">
+                {% csrf_token %}
+                <b>Full name: </b> <input type = "text" name="full_name"> <br /> <br />
+                <b>Group: </b> <input type = "text" name="group"> <br /> <br />
+                <b>Pick a username: </b> <input type="text" name="login"> <br /> <br />
+                <b>Pick a password: </b> <input type="password" name="password"> <br /> <br />
+                <button> Register </button>
+                <!-- <input type="submit" value="Log In"> -->
+            </form>
+        </div>
+    </body>
+</html>

@@ -1,0 +1,31 @@
+{% extends "index.html" %}
+{% block main_body %}
+    <div class="container-fluid">
+        <div style="display: none" id="token">{{ csrf_token }}</div>
+        <div class = "main">
+            <div>
+            <h1> Available quizzes </h1>
+            <ul>
+                {% if student %}
+                {% for quiz in quizlist %}
+                    <li> <b>Quiz "{{ quiz.0 }}"</b> <a href="/takeQuiz/{{ quiz.1 }}"> Take quiz</a> </li>
+                {% endfor %}
+                {% else %}
+                    {% for quiz in quizlist %}
+                    <div id="quiz_{{ quiz.1 }}" name="{{ quiz.0 }}">
+                        <li>
+                            <b>Quiz "{{ quiz.0 }}"</b>
+                            <a href="/editQuiz/{{ quiz.1 }}"> Edit</a> 
+                            <a href="/takeQuiz/{{ quiz.1 }}"> Preview</a>
+                            <a href="/grades/{{ quiz.1 }}"> Results</a>
+                            <span class="fakeLink" onclick="deleteQuiz({{ quiz.1 }}, '{{ quiz.0 }}')"> Delete </a>
+                        </li>
+                    </div>
+                    {% endfor %}
+                {% endif %}
+            </ul>
+        </div>
+        </div>
+    </div>
+{% endblock %}
+{% block under_body %}{% load static %}<script type="text/javascript" src="{% static "quiz_manager.js" %}"></script>{% endblock %}

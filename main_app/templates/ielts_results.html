@@ -1,0 +1,32 @@
+{% extends "index.html" %}
+{% block head %}
+{% load static %}
+  <!-- Bootstrap CSS -->
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+  <link href="{% static "basic.css" %}" rel="stylesheet" />
+{% endblock %}
+{% block main_body %}
+<div class="container-fluid">
+    <div class = "main">
+      <div>
+        <h1> Results of {{ quiz_name }}</h1>
+        <table>
+            <tr>
+                <th> Student </th>
+                <th> Group </th>
+                <th> Mark </th>
+            </tr>
+            {% for mark in marks %}
+            <tr>
+                <td> {{ mark.1 }} </td>
+                <td> {{ mark.2 }} </td>
+                <td> {{ mark.3 }} </td>
+                <td> <a href="/IELTSgrades/{{ quiz_id }}/{{ mark.0 }}"> Details </a></td>
+                <!-- <td style="border: none;"> <a href="/grades/{{ quiz_id }}/{{ mark.0 }}/download"> Excel file </a></td></td> -->
+            </tr>
+            {% endfor %}
+        </table>
+      </div>
+    </div>
+</div>
+{% endblock %}

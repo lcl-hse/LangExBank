@@ -1,0 +1,17 @@
+{% extends "question_collection_base.html" %}
+{% block bottom %}
+<div class="equalCols">
+    <div>
+        Quiz name: <textarea name="quizName" cols="30" rows="1" form="questionsToInclude"></textarea><br />
+        <button onclick="createNewQuiz()">Create quiz</button> <input type="checkbox" form="questionsToInclude" name="strip_answers" checked="checked"> Strip punctuation and parenthesis from submitted answers</input>
+    </div>
+    <div>
+        Folder name: <textarea name="folderName" cols="30" rows="1" form="questionsToInclude"></textarea><br />
+        <button onclick="createNewFolder()">Create folder</button> 
+    </div>
+</div>
+<br />
+<div>
+    <a class="btn btn-primary" href="/fromFolder" role="button">+ Add questions from REALEC</a>
+</div>
+{% endblock %}

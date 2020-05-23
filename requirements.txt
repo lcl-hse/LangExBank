@@ -1,0 +1,14 @@
+nltk
+django
+django_extensions
+pandas
+xlrd
+transliterate
+sklearn
+torch
+torchtext
+lemminflect
+spacy
+spellchecker
+indexer
+django-searchable-encrypted-fields

@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+{% load static %}
+<html>
+    <head>
+        <script type="text/javascript" src="http://js.nicedit.com/nicEdit-latest.js"></script>
+        <script type="text/javascript" src="{ % static "question_editor.js" % }"></script>
+        <script>
+            bkLib.onDomLoaded(function() { nicEditors.allTextAreas() });
+        </script>
+        <link href="{% static "basic.css" %}" rel="stylesheet" />
+    </head>
+    <body>
+        <div class = "main">
+            <div class="mainarea">
+                <div class="navbar">
+                    <ul>
+                        <li><a href="/quizzes">Quizzes</a></li>
+                        <li><a href="/questions">Questions</a></li>
+                        <!-- <li><a href="/users">Users</a></li> -->
+                        <li><a href="/IELTS">IELTS</a></li>
+                        <li><a href="/login">Log Out</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <form method="POST" id="editForm">
+                        {% csrf_token %}
+                        {% for question in questions %}
+                        <h2>Question {{ question.0 }}</h2>
+                        <textarea name="question_{{ question.0 }}" cols="80" rows="6">{{ question.1.0 }}</textarea><br />
+                        <input type="hidden" name="question_{{ question.0 }}_tag" value="{{ question.1.3}}">
+                        <button>Delete</button>
+                        <button>Restore to default</button><br />
+                        <h3>Answers</h3><br />
+                        {% for answer in question.1.1 %}
+                            <textarea name="answer_{{ question.0 }}_1" cols="80" rows="3">{{ answer }}</textarea><br />
+                            <button>Delete</button>
+                            <button>Restore to default</button><br />
+                        {% endfor %}
+                        {% endfor %} <br />
+                        <input type="checkbox" name="newQuiz"> Generate new quiz <br />
+                        <!-- Сделать скрипт на AJAX'е, который проверяет, не существует ли уже квиз с таким именем: -->
+                        Quiz Name:  <input type="text" name="quizName"> 
+                        <input type="checkbox" name="strip_answers"> Strip punctuation and parenthesis from submitted answers </input>
+                        <br />
+                        <input type="submit" value="Save questions">
+                    </form>
+                </div>
+            </div>
+        </div>
+    </body>
+</html>

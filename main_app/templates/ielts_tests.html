@@ -1,0 +1,39 @@
+{% extends "index.html" %}
+{% block head %}
+{% load static %}
+<!-- Bootstrap CSS -->
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+<link href="{% static "basic.css" %}" rel="stylesheet" />
+{% endblock %}
+{% block main_body %}
+  {% autoescape off %}
+  <div class="container-fluid">
+      <div style="display: none" id="token">{{ csrf_token }}</div>
+      <div class = "main">
+        <div>
+          <h1> Available IELTS tests </h1>
+          <ul>
+              {% if student %}
+              {% for quiz in quizlist %}
+                  <li> <b>Quiz "{{ quiz.0 }}"</b> <a href="/takeIELTSTest/{{ quiz.1 }}"> Take test</a> </li>
+              {% endfor %}
+              {% else %}
+                  {% for quiz in quizlist %}
+                  <div id="test_{{ quiz.1 }}" name="{{ quiz.0 }}">
+                      <li> <b>Quiz "{{ quiz.0 }}"</b>
+                      <a href="/editIELTS/{{ quiz.1 }}"> Edit</a> 
+                      <a href="/takeIELTSTest/{{ quiz.1 }}"> Preview</a>
+                      <a href="/IELTSgrades/{{ quiz.1 }}"> Results</a>
+                      <span class="fakeLink" onclick="deleteTest({{ quiz.1 }}, '{{ quiz.0 }}')"> Delete </a>
+                      </li>
+                  </div>
+                  {% endfor %}
+              {% endif %}
+          </ul>
+          <a href="/editIELTS/">Add new</a>
+        </div>
+      </div>
+  </div>
+  {% endautoescape %}
+{% endblock %}
+{% block under_body %}<script type="text/javascript" src="{% static "ielts_test_manager.js" %}"></script>{% endblock %}

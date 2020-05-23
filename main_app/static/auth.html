@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>REALEC Reference </title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+</head>
+<body>
+    <div class="my-container">
+        <div class="jumbotron" style="color: white; background-image: url({{ url_for('static', filename='london.jpg') }}); background-size: cover; background-position-y:  25%;">
+            <h1>REALEC</h1>
+            <p><i>Russian Error-Annotated Learner English Corpus</i></p>
+        </div>
+    </div>
+
+    <div class="row my-container">
+        <div class="col-3">
+            <div class="bordered rounded sidenav">
+                {% autoescape false %}
+                    {{ taglist }}
+                {% endautoescape %}
+            </div>
+        </div>
+        <div class="col-9">
+            <div class="bordered rounded main my-container">
+                <form method="POST">
+                    <div>
+                        <b>Username</b>:  <input type="text" name="username">
+                    </div>
+                    <div>
+                        <b>Password</b>: <input type="text" name="password">
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

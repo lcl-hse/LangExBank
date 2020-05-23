@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+{% load static %}
+<html>
+    <head>
+        <script>
+            var submitAnswers = function() {
+                document.getElementById("answerForm").submit()
+            };
+        </script>
+        <link href="{% static "basic.css" %}" rel="stylesheet" />
+    </head>
+    <body>
+        <div class="main">
+            <div class="mainarea">
+                <div class="navbar">
+                    <li><a href="/quizzes">Quizzes</a></li>
+                    <li><a href="/questions">Questions</a></li>
+                    <!-- <li><a href="/users">Users</a></li> -->
+                    <li><a href="/IELTS">IELTS</a></li>
+                    <li><a href="/login">Log Out</a></li>
+                </div>
+                <div>
+                    {% autoescape off %}
+                    <div class="equalCols">
+                        <div>
+                        <form id="answerForm" method="POST">
+                            <!-- <input type="hidden" name="quiz_id" value="{{ quiz_id }}"> -->
+                                <b>Question 1.</b> <br />
+                                What is said in this sentence is not true <br />
+                                <input type="radio" name="q1" value="True"> True<br />
+                                <input type="radio" name="q1" value="True"> False<br />
+                                <br />
+                                <!-- <b>Your answer:</b> <br /> <br /> -->
+                                <b>Question 1.</b> <br />
+                                What is said in the previous sentence is a lie <br />
+                                <input type="radio" name="q1" value="True"> True<br />
+                                <input type="radio" name="q1" value="True"> False<br />
+                        </form>
+                        <button onclick="submitAnswers()">Submit answers</button>
+                        </div>
+                        <div>
+                            <object type="application/pdf" data="https://idrh.ku.edu/sites/idrh.ku.edu/files/files/tutorials/pdf/Non-text-searchable.pdf" class="pdf_embed">
+                        </div>
+                    </div>
+                    {% endautoescape %}
+                </div>
+            </div>
+        </div>
+    </body>
+</html>

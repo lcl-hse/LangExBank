@@ -1,0 +1,88 @@
+{% extends "index.html" %}
+{% block head %}
+{% load static %}
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <link href="{% static "basic.css" %}" rel="stylesheet" />
+    <script>
+        // Taken from https://stackoverflow.com/a/27547021
+
+        var expanded = false;
+
+        var showCheckboxes = function() {
+            var checkboxes = document.getElementById("checkboxes");
+            if (!expanded) {
+                checkboxes.style.display = "block";
+                expanded = true;
+            } else {
+                checkboxes.style.display = "none";
+                expanded = false;
+            }
+        }
+
+        var createNewQuiz = function() {
+            document.getElementById("questionsToInclude").submit();
+        }
+
+        var selectAllTags = function() {
+            var boxes = document.getElementById("checkboxes").children;
+            for (var i=0; i<boxes.length; i++) {
+                if (boxes[i].tagName.toLowerCase() == "input"){
+                    boxes[i].checked = true;
+                }
+            }
+        }
+
+        var unselectAllTags = function() {
+            var boxes = document.getElementById("checkboxes").children;
+            for (var i=0; i<boxes.length; i++) {
+                if (boxes[i].tagName.toLowerCase() == "input"){
+                    boxes[i].checked = false;
+                }
+            }
+        }
+
+        var submitForm = function() {
+            document.getElementById("selectForm").submit();
+        }
+    </script>
+{% endblock %}
+{% block main_body %}
+    <div class="container-fluid">
+        <div class = "main">
+            <form method="POST" id="selectForm">
+            <div class="row">
+                <div class="col-4">
+                Enter path to <a href="http://realec.org">REALEC</a> folder: <input type="text" name="path" size="30"></input>
+                </div>
+                <div class="col-8">
+                <div class="multiselect">
+                    {% csrf_token %}
+                    <select name="filter" onclick="showCheckboxes()">
+                        <option value="y" selected hidden> Select error tag from REALEC </option>
+                    </select>
+                    <div class="checkboxes" id="checkboxes">
+                        <!-- err_tags - список элементов типа (выбран ли тег(bool), краткое название тега(str), полное название тега(str)) -->
+                        <a class="fakeLink" onclick="selectAllTags()"> Select all </a><br />
+                        <a class="fakeLink" onclick="unselectAllTags()"> Unselect all </a><br />
+                        {% for err_tag in err_tags %}
+                            {% if err_tag.0 %}
+                                <input type="checkbox" name="tag_{{ err_tag.1 }}"" checked="checked"> {{ err_tag.2 }} <br />
+                            {% else %}
+                                <input type="checkbox" name="tag_{{ err_tag.1 }}"> {{ err_tag.2 }} <br />
+                            {% endif %}
+                        {% endfor %}
+                    </div>
+                </div>
+                </div>
+            </div>
+            <br />
+            <input type="checkbox" name="multiple_choice"> Make questions multiple choice
+            <br />
+            <input type="checkbox" name="new_qfolder"> Create new question folder with name: <input type="text" name="qfolder_name">
+            <br />
+            <button type="button" class="btn btn-primary" onclick="submitForm()">Generate questions</button>
+            </form>
+        </div>
+    </div>
+{% endblock %}

@@ -1,0 +1,146 @@
+{% extends "index.html" %}
+{% block head %}
+{% load static %}
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+  <script type="text/javascript" src="{% static "tinymce/js/tinymce/tinymce.min.js" %}"></script>
+  <script type="text/javascript" src="{% static "ielts_test_editor.js" %}"></script>
+  <!-- Bootstrap CSS -->
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+  <link href="{% static "basic.css" %}" rel="stylesheet" />
+{% endblock %}
+{% block main_body %}
+  <div class="container-fluid">
+      <div class = "main">
+        <div>
+          <form method="POST" enctype="multipart/form-data">
+          <input type="hidden" id="secs_to_delete" name="secs_to_delete" value="">
+          <input type="hidden" id="questions_to_delete" name="questions_to_delete" value="">
+          <b>Input test name:</b> <input type="text" name="testName" value="{{ test_name }}">
+          {% autoescape off %}
+          <input type="hidden" id="csrf_token" name="csrfmiddlewaretoken" value="{{ csrf_token }}">
+          <div id="sections">
+              {% for test_section in test_sections %}
+              <div id="section_{{ test_section.id }}">
+                  <b>Name:</b> <input type="text" name="sec_name_{{ test_section.id }}" value="{{ test_section.name }}">
+                  <b>Type:</b>
+                  <select name="section-type_{{ test_section.id }}" onchange="changeAttachment(this, 'attachment_{{ test_section.id }}')">
+                    {% if test_section.section_type == "r" %}
+                      <option value="r" selected> Reading </option>
+                      <option value="l"> Listening</option>
+                    {% elif test_section.section_type == "l" %}
+                      <option value="r"> Reading </option>
+                      <option value="l" selected> Listening</option>
+                    {% endif %}
+                  </select>
+                  <button type="button" onclick="delete_section(this.parentNode)">Delete section</button>
+                  <br />
+                  <br />
+                  <div class="equalCols">
+                      {% if test_section.section_type == "r" %}
+                        <div>
+                          <!-- div with section text -->
+                          <div>
+                            <!-- div with section text -->
+                            <!-- Dirty hack - keep contents of the test section (textarea below)
+                                inside a hidden div before initializing a TinyMCE editor
+                                and inserting contents into it -->
+                            <div id="rich_editor_{{ test_section.id }}_text" style="display: none;">{{ test_section.text }}</div>
+                            <textarea class="rich_editor" name="section_{{ test_section.id }}" id="rich_editor_{{ test_section.id }}" cols="50" rows="30"></textarea>
+                          </div>
+                        </div>
+                        <div id="attachment_{{ test_section.id }}">
+                          <!-- div with PDF embed -->
+                          <b>PDF Upload:</b> <br />
+                          <input type="file" name="pdf_upload_{{ test_section.id }}" id="pdf_input_{{ test_section.id }}" onchange="pdf_preview(this)">
+                          </input>
+                          {% if test_section.supplement.url is not None %}
+                          <embed id="book_{{ test_section.id }}" type="application/pdf" style="height: 90%; width: 100%;" src="{{ test_section.supplement.url }}"controls>
+                          </embed>
+                          {% else %}
+                          <embed id="book_{{ test_section.id }}" type="application/pdf" style="height: 90%; width: 100%;" controls>
+                          </embed>
+                          {% endif %}
+                          <br />
+                          <br />
+                        </div>
+                      {% elif test_section.section_type == "l" %}
+                        <div>
+                          <!-- div with section text -->
+                          <!-- Dirty hack - keep contents of the test section (textarea below)
+                              inside a hidden div before initializing a TinyMCE editor
+                              and inserting contents into it -->
+                          <div id="rich_editor_{{ test_section.id }}_text" style="display: none;">{{ test_section.text }}</div>
+                          <textarea class="rich_editor" name="section_{{ test_section.id }}" id="rich_editor_{{ test_section.id }}" cols="50" rows="30"></textarea>
+                        </div>
+                        <div id="attachment_{{ test_section.id }}">
+                          <!-- div with audio embed -->
+                          <b>MP3 Upload:</b> <br />
+                          <input type="file" name="audio_upload_{{ test_section.id }}" id="aud_input_{{ test_section.id }}" onchange="aud_preview(this)">
+                          </input>
+                          {% if test_section.supplement.url is not None %}
+                          <audio id="sound_{{ test_section.id }}" src="{{ test_section.supplement.url }}" controls>
+                          </audio>
+                          {% else %}
+                          <audio id="sound_{{ test_section.id }}" controls>
+                          </audio>
+                          {% endif %}
+                          <br />
+                          <br />
+                        </div>
+                      {% endif %}
+                  </div>
+                  <div>
+                    {% for question in test_section.question_set.all %}
+                      <div id="qform_{{ test_section.id }}_{{ question.id }}">
+                          <b>Text: </b>
+                          <textarea cols="10" rows="1" name="qtext_{{ test_section.id }}_{{ question.id }}">{{ question.question_text }}</textarea>
+                          <b>Answer: </b>
+                          <textarea cols="30" rows="1" name="atext_{{ test_section.id }}_{{ question.id }}">{{ question.get_right_answers_text }}</textarea>
+                          <button type="button" onclick="delete_question(this.parentNode)">Delete</button>
+                          {% if question.case_insensitive %}
+                            <input type="checkbox" name="insensitive_{{ test_section.id }}_{{ question.id }}" checked="checked"> Case insensitive
+                          {% else %}
+                            <input type="checkbox" name="insensitive_{{ test_section.id }}_{{ question.id }}"> Case insensitive
+                          {% endif %}
+                          {% if question.question_type == "ielts_multiple" %}
+                            <input type="checkbox" name="sequence_{{ test_section.id }}_{{ question.id }}" checked="checked"> Multiple letters
+                          {% else %}
+                            <input type="checkbox" name="sequence_{{ test_section.id }}_{{ question.id }}"> Multiple letters
+                          {% endif %}
+                          {% if question.get_wrong_answers_text %}
+                            <input type="checkbox" name="multiple_{{ test_section.id }}_{{ question.id }}" onchange="make_multiple(this)" checked="checked"> Multiple Choice question
+                            <div id="wrong_answers_{{ test_section.id }}_{{ question.id }}">
+                              <b>Wrong answers</b>: <input type="text" name="wrong_{{ test_section.id }}_{{ question.id }}" value="{{ question.get_wrong_answers_text }}"><br /><br />
+                            </div>
+                          {% else %}
+                            <input type="checkbox" name="multiple_{{ test_section.id }}_{{ question.id }}" onchange="make_multiple(this)"> Multiple Choice question
+                          {% endif %}
+                      </div>
+                    {% endfor %}
+                    <button type="button" onclick="addSimpleQuestionForm(this, {{ test_section.id }})">Add questions</button>
+                  </div>
+              </div>
+              {% endfor %}
+          </div>
+          {% endautoescape %}
+          <br />
+          <button type="button" onclick="addSection()">Add section</button>
+          <!-- <button type="button" onclick="testAjaxPost('{{ csrf_token }}')">Test AJAX POST Request</button> -->
+          <button>Save</button>
+          </form>
+        </div>
+      </div>
+  </div>
+{% endblock %}
+{% block under_body %}
+  <script>
+    var editors = document.getElementsByClassName("rich_editor");
+    for (var i = 0; i < editors.length; ++i) {
+      // Adding TinyMCEditor to textarea
+      addMCEWithContent(editors[i].id, document.getElementById(editors[i].id+"_text").innerHTML);
+      // Filling editor with text from hidden div
+      // console.log(editors[i].id);
+      // tinymce.get(editors[i].id).setContent(document.getElementById(editors[i].id+"_text").innerHTML);
+    }
+  </script>
+{% endblock %}

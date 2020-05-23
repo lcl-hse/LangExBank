@@ -1,0 +1,115 @@
+.main{width: 90%;
+font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+margin: 5%;}
+.mainarea{display: grid;
+grid-template-columns: 20% 75%;
+grid-column-gap: 5%;}
+.twoCols{display: grid;
+grid-template-columns: 200px 600px;
+grid-column-gap: 5px;}
+.twoShortCols{display: grid;
+    height: 300px;
+    grid-template-columns: 200px 600px;
+    grid-column-gap: 5px;}
+.threeCols{display: grid;
+    grid-template-columns: 200px 200px 200px;
+    grid-column-gap: 100px;
+}
+.navbar{background-color: azure;
+    height: 600px;
+    position: sticky;
+}
+
+.scrollbox {
+height:500px;
+overflow-x:scroll;
+}
+.instruction {
+    background-color: bisque;
+}
+button{background-color: blue;
+color: white;}
+.navbutton{
+    background-color: green;
+    color: white;
+    font-size: 14pt;
+}
+th, td {
+    border: 1px solid black;
+}
+.multiselect {
+    display: block;
+    position: absolute;
+}
+.checkboxes {
+    display: none;
+    background-color: azure;
+    border: 1px #dadada solid;
+    height: 240px;
+    width: 100%;
+    overflow-x: scroll;
+}
+/* taken from https://stackoverflow.com/a/14070126 */
+.fakeLink{
+    cursor:pointer;
+    color:blue;
+    text-decoration:underline;
+}
+.equalCols{
+    display: grid;
+    grid-template-columns: 49% 49%;
+    grid-column-gap: 1%;
+}
+.equalSmallCols{
+    display: grid;
+    height: 300px;
+    grid-template-columns: 49% 49%;
+    grid-column-gap: 1%;
+}
+.pagelist{
+    font-size: 18pt;
+}
+.pagelink {
+    border: 2px solid white;
+    background-color: bisque;
+}
+
+.listening {
+    background-color: cyan;
+    border: 1px solid;
+    border-radius: 5px;
+}
+
+.pdf_embed {
+    width: 100%;
+    height: 720px;
+    overflow: scroll;
+}
+
+.section {
+    background-color: beige;
+    border-radius: 4px;
+    border: 1px solid black;
+    padding: 2%;
+}
+
+
+.nicEdit-main {
+    width: 600px !important;
+}
+
+.myTextArea{
+    max-height: 400px;
+    resize: none;
+}
+
+.section-text{
+    background-color: white;
+    height: 640px;
+    overflow: scroll;
+    padding: 2%;
+}
+/* table td input {
+    width: 100%;
+    height: 100%;   
+} */

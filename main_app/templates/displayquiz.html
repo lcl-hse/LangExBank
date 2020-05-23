@@ -1,0 +1,42 @@
+{% extends "index.html" %}
+{% block head %}
+{% load static %}
+        <script>
+          var submitAnswers = function() {
+              document.getElementById("answerForm").submit()
+          };
+        </script>
+        <!-- Bootstrap CSS -->
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+        <link href="{% static "basic.css" %}" rel="stylesheet" />
+{% endblock %}
+{% block main_body %}
+<div class="container-fluid">
+    <div class = "main">
+      <div>
+        {% autoescape off %}
+            <form id="answerForm" method="POST">
+                {% csrf_token %}
+                <input type="hidden" name="quiz_id" value="{{ quiz_id }}">
+                {% for question in questions %}
+                <div class="quizQuestion">
+                  {% if question.1.question_type == "multiple_choice" %}
+                    <b>Question {{ question.0 }}.</b> <br />
+                    {{ question.1.question_text }} <br />
+                    {% for answer in question.1.get_answers %}
+                      <input type="radio" name="question_{{ question.1.id }}" value="{{ answer.answer_text }}"> {{ answer.answer_text }}<br />
+                    {% endfor %}
+                  {% elif question.1.question_type == "short_answer" %}
+                    <b>Question {{ question.0 }}.</b> <br />
+                    {{ question.1.question_text.0 }} <textarea cols="80" rows="1" name="question_{{ question.1.id }}"></textarea> {{ question.1.question_text.1 }} <br />
+                    <!-- <b>Your answer:</b> <br /> <br /> -->
+                  {% endif %}
+                </div>
+                {% endfor %}
+            </form>
+            <button onclick="submitAnswers()">Submit answers</button>
+        {% endautoescape %}
+      </div>
+    </div>
+</div>
+{% endblock %}
