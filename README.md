@@ -12,6 +12,18 @@ To use LangExBank you need to configure testing_platform/settings.py as follows:
 
 If you are deploying LangExBank using Docker you can set environmental variables to needed values inside your container without modifying settings.py
 
-To edit database create superuser in Django-admin:
+To edit database create superuser in Django-admin with:
 
-$ python manage.py createsuperuser
+python manage.py createsuperuser
+
+And visit http://your-url/admin to create new users.
+
+To add new questions from REALEC visit http://your-url/fromFolder/
+
+To review Question database, visit http://your-url/Questions/
+
+You can filter Questions by tag and type using 'Select question types' and 'Select error tag from REALEC' selectors.
+
+To add new quiz select questions at http://your-url/Questions/, enter quiz name and click 'Add questions from REALEC'.
+
+To enable registration set variable registration_open in testing_platform/settings.py to True or to 1 in your environment and then send link http://your-url/easy_register/ to your students
