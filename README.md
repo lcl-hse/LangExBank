@@ -27,3 +27,5 @@ You can filter Questions by tag and type using 'Select question types' and 'Sele
 To add new quiz select questions at http://your-url/Questions/, enter quiz name and click 'Add questions from REALEC'.
 
 To enable registration set variable registration_open in testing_platform/settings.py to True or to 1 in your environment and then send link http://your-url/easy_register/ to your students
+
+Before using LangExBank please install required Python packages from requirements.txt
