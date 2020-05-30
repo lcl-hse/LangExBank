@@ -13,4 +13,5 @@ To use LangExBank you need to configure testing_platform/settings.py as follows:
 If you are deploying LangExBank using Docker you can set environmental variables to needed values inside your container without modifying settings.py
 
 To edit database create superuser in Django-admin:
+
 $ python manage.py createsuperuser
