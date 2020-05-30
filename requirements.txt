@@ -9,6 +9,7 @@ torch
 torchtext
 lemminflect
 spacy
-spellchecker
-indexer
+pyspellchecker
 django-searchable-encrypted-fields
+gunicorn
+textdistance
