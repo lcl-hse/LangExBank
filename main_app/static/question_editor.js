@@ -18,12 +18,6 @@ var delete_elem = function(elem) {
     elem.parentNode.removeChild(elem);
 };
 
-var deleteNewAnswer = function(deleteButton) {
-    answerDiv = deleteButton.parentNode;
-    delete_elem(answerDiv);
-    currAddedAnswerId += 1;
-}
-
 var deleteNewWAnswer = function(deleteButton) {
     answerDiv = deleteButton.parentNode;
     delete_elem(answerDiv);
