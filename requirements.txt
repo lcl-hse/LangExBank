@@ -3,13 +3,13 @@ django
 django_extensions
 pandas
 xlrd
+openpyxl
 transliterate
 sklearn
 torch
 torchtext
 lemminflect
 spacy
-pyspellchecker
+spellchecker
+indexer
 django-searchable-encrypted-fields
-gunicorn
-textdistance
