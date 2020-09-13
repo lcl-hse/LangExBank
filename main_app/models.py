@@ -58,6 +58,7 @@ class Section(models.Model):
     # choices=(('p','pdf'), ('i','image'), ('a','audio')), null=True)
 
 
+
 class Question(models.Model):
     quiz = models.ManyToManyField(Quizz, blank=True)
     question_text = models.CharField(max_length=1000)
@@ -130,4 +131,17 @@ class Results(models.Model):
     question = models.ForeignKey(Question,
     on_delete=models.CASCADE)
     answer = models.CharField(max_length=100)
+    mark = models.FloatField()
+
+
+class IELTSWritingTask(models.Model):
+    name = models.CharField(max_length=40,unique=True)
+    text = models.CharField(max_length=100000)
+    supplement = models.FileField(null=True)
+
+class IELTSWritingResponse(models.Model):
+    task = models.ForeignKey(IELTSWritingTask,
+    on_delete=models.CASCADE)
+    student = models.ForeignKey(User,
+    on_delete=models.CASCADE)
     mark = models.FloatField()

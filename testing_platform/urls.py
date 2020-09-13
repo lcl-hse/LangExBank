@@ -58,7 +58,15 @@ urlpatterns = [
     # path('testAjax/', views.test_ajax, name="test_ajax"),
     path('deleteIELTSTest/', views.delete_test, name="delete_test"),
     path('deleteQuiz/', views.delete_quiz, name="delete_quiz"),
-    path('distractorReport/<int:quiz_id>', views.distractor_report, name='distractor_report')
+    path('distractorReport/<int:quiz_id>', views.distractor_report, name='distractor_report'),
+    path('editIELTSWriting/', views.edit_writing, name="edit_writing"),
+    path('editIELTSWriting/<int:test_id>', views.edit_writing, name="edit_writing"),
+    path('IELTSWritingGrades/<int:test_id>', views.writing_results, name='writing_results'),
+    path('ReviewIELTSWriting/<int:test_id>/<str:student_id>', views.review_writing, name='review_writing'),
+    path('editIELTSSpeaking/', views.edit_speaking, name="edit_speaking"),
+    path('editIELTSSpeaking/<int:test_id>', views.edit_speaking, name="edit_speaking"),
+    path('IELTSSpeakingGrades/<int:test_id>', views.speaking_results, name='speaking_results'),
+    path('ReviewIELTSSpeaking/<int:test_id>/<str:student_id>', views.review_speaking, name='review_speaking')
 ]
 
 # path('questions/<str:err_type>', views.display_questions, name="display_questions"),

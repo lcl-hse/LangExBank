@@ -1,5 +1,5 @@
 from django.shortcuts import render, redirect
-from django.http import HttpResponse, JsonResponse, HttpResponseForbidden
+from django.http import HttpResponse, JsonResponse, HttpResponseForbidden, HttpResponseNotFound
 from django.conf import settings
 from django.contrib.auth.decorators import login_required
 from django.db.models import Avg, Q, Sum
@@ -1041,4 +1041,76 @@ def distractor_report(request, quiz_id):
                 }
                 output['quiz_data'].append(item)
             return JsonResponse(output)
+    return HttpResponseForbidden()
+
+def edit_writing(request, writing_test_id=None):
+    if "rights" in request.session:
+        if request.session['rights'] in ('A','T'):
+            if request.POST:
+                return HttpResponseNotFound()
+            else:
+                return HttpResponseNotFound()
+    return HttpResponseForbidden()
+
+def take_writing(request, writing_test_id):
+    if "rights" in request.session:
+        if request.session['rights'] in ('A','T','S'):
+            if request.POST:
+                return HttpResponseNotFound()
+            else:
+                return HttpResponseNotFound()
+    return HttpResponseForbidden()
+
+def writing_results(request, writing_test_id):
+    if "rights" in request.session:
+        if request.session['rights'] in ('A','T'):
+            if request.POST:
+                return HttpResponseNotFound()
+            else:
+                return HttpResponseNotFound()
+    return HttpResponseForbidden()
+
+def review_writing(request, writing_test_id, student_id):
+    if "rights" in request.session:
+        if request.session['rights'] in ('A','T'):
+            if request.POST:
+                return HttpResponseNotFound()
+            else:
+                return HttpResponseNotFound()
+    return HttpResponseForbidden()
+
+def edit_speaking(request, speaking_test_id=None):
+    if "rights" in request.session:
+        if request.session['rights'] in ('A','T'):
+            if request.POST:
+                return HttpResponseNotFound()
+            else:
+                return HttpResponseNotFound()
+    return HttpResponseForbidden()
+
+def take_speaking(request, speaking_test_id):
+    if "rights" in request.session:
+        if request.session['rights'] in ('A','T','S'):
+            if request.POST:
+                return HttpResponseNotFound()
+            else:
+                return HttpResponseNotFound()
+    return HttpResponseForbidden()
+
+def speaking_results(request, speaking_test_id):
+    if "rights" in request.session:
+        if request.session['rights'] in ('A','T'):
+            if request.POST:
+                return HttpResponseNotFound()
+            else:
+                return HttpResponseNotFound()
+    return HttpResponseForbidden()
+
+def review_speaking(request, speaking_test_id, student_id):
+    if "rights" in request.session:
+        if request.session['rights'] in ('A','T'):
+            if request.POST:
+                return HttpResponseNotFound()
+            else:
+                return HttpResponseNotFound()
     return HttpResponseForbidden()
