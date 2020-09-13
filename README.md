@@ -79,6 +79,8 @@ DJANGO_ENCRYPTION_KEYS=please-change-me
 LANGEXBANK_ENC_KEY=please-change-me
 LANGEXBANK_ENCODE_USERS=0
 LANGEXBANK_OPEN_SIGNUP=1
+DJANGO_MEDIA_ROOT=mediafiles
+DJANGO_STATIC_ROOT=staticfiles
 ```
 Where:
 <table>
@@ -136,6 +138,22 @@ Where:
  </td>
  <td>
   Whether to open registration for new users. This option will be later explained in <a href="#new-users-registration">New users registration</a> section.
+ </td>
+</tr>
+<tr>
+ <td>
+  <code>DJANGO_MEDIA_ROOT</code>
+ </td>
+ <td>
+  String (respective path). Where to store media files (PDFs, audios, videos).
+ </td>
+</tr>
+<tr>
+ <td>
+  <code>DJANGO_STATIC_ROOT</code>
+ </td>
+ <td>
+  String (respective path). Where to store static files (JS, CSS).
  </td>
 </tr>
 </table>

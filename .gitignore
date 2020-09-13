@@ -7,7 +7,7 @@ test_data/
 testing_platform/settings.py
 trash/
 ve_win/
-ve/
+ve/g
 api_test_files/
 DisGen/distractor_service_input_files/**
 DisGen/distractor_service_output_files/**
