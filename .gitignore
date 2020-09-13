@@ -13,6 +13,10 @@ DisGen/distractor_service_input_files/**
 DisGen/distractor_service_output_files/**
 localbase
 __pycache__
-dump*.json
+*dump*.json
 *.ipynb
 .vscode
+*.bat
+*.xlsx
+env.prod
+*.env
