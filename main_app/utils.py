@@ -221,3 +221,11 @@ def full_grade(test):
         full_grade += len(re.findall(pattern, ans.answer_text))
     
     return full_grade
+
+def ord_ielts_answer(answer_text):
+    if answer_text in ('yes', 'true'):
+        return 'a'
+    elif answer_text in ('false','no'):
+        return 'b'
+    else:
+        return answer_text

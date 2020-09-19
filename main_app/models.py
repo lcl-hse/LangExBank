@@ -4,6 +4,8 @@ from encrypted_fields import fields
 
 from random import shuffle
 
+from .utils import ord_ielts_answer
+
 # requires package django-annoying to be installed:
 # https://github.com/skorokithakis/django-annoying#readme
 # from annoying.fields import AutoOneToOneField
@@ -91,7 +93,10 @@ class Question(models.Model):
             right_answers = list(self.answer_set.all())
             wrong_answers = list(wronganswers)
             answers = right_answers + wrong_answers
-            shuffle(answers)
+            if self.question_type in ('ielts_multiple','ielts_question'):
+                answers = sorted(answers, key=lambda x: ord_ielts_answer(x.answer_text.lower().strip()))
+            else:
+                shuffle(answers)
             return answers
         else:
             return None
@@ -109,6 +114,7 @@ class Question(models.Model):
         if self.question_type == 'multiple_choice':
             return (wanswer.answer_text for wanswer in self.wronganswer_set.all() if wanswer.is_generated)
         return ()
+
 
 class Answer(models.Model):
     question_id = models.ForeignKey(Question,
