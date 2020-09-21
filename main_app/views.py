@@ -21,8 +21,8 @@ from io import BytesIO
 from collections import defaultdict, namedtuple
 
 
-from .models import *
 from .utils import *
+from .models import *
 from .management.commands.questions_from_folder import generate_questions
 from testing_platform.settings import login_enc_key, encode, registration_open
 
@@ -714,6 +714,8 @@ def edit_ielts_test(request, test_id=None):
                     for question_field in question_fields:
                         q_id = int(question_field.split('_')[-1])
                         q = Question.objects.get(id=q_id)
+
+                        q.question_text = request.POST[question_field]
 
                         if f"insensitive_{ section_id }_{ q_id }" in request.POST:
                             q.case_insensitive = True

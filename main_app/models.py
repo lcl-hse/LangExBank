@@ -4,14 +4,19 @@ from encrypted_fields import fields
 
 from random import shuffle
 
-from .utils import ord_ielts_answer
-
 # requires package django-annoying to be installed:
 # https://github.com/skorokithakis/django-annoying#readme
 # from annoying.fields import AutoOneToOneField
 
 # Create your models here.
 
+def ord_ielts_answer(answer_text):
+    if answer_text in ('yes', 'true'):
+        return 'a'
+    elif answer_text in ('false','no'):
+        return 'b'
+    else:
+        return answer_text
 
 class User(models.Model):
     login = models.CharField(max_length=40, primary_key=True)
