@@ -40,9 +40,10 @@ var restore_section = function(section_id) {};
 
 var restore_qform = function(section_id, q_id) {};
 
-var addMCE = function(elem_id, height=456) {
+var addMCE = function(elem_id, height=undefined, width=undefined) {
     // elem = document.getElementById(elem_id);
-    tinymce.init({
+    console.log(width);
+    var init_params = {
         selector: 'textarea#'+elem_id,
         paste_data_images: true,
         // image_upload_url: "/imgUpload",
@@ -53,12 +54,19 @@ var addMCE = function(elem_id, height=456) {
         "insertdatetime media table contextmenu paste"
         ],
         toolbar: "insertfile undo redo | styleselect | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link image"
-    });
+    };
+    if (height != undefined) {
+        init_params.height = height;
+    };
+    if (width != undefined) {
+        init_params.width = width;
+    };
+    tinymce.init(init_params);
 };
 
-var addMCEWithContent = function(elem_id, html_text, height=456) {
+var addMCEWithContent = function(elem_id, html_text, height=undefined, width=undefined) {
     // elem = document.getElementById(elem_id);
-    tinymce.init({
+    var init_params = {
         selector: 'textarea#'+elem_id,
         paste_data_images: true,
         // image_upload_url: "/imgUpload",
@@ -74,7 +82,14 @@ var addMCEWithContent = function(elem_id, html_text, height=456) {
               editor.setContent(html_text);
             });
         }
-    });
+    };
+    if (height != undefined) {
+        init_params.height = height;
+    };
+    if (width != undefined) {
+        init_params.width = width;
+    };
+    tinymce.init(init_params);
 };
 
 var allMCEs = function() {

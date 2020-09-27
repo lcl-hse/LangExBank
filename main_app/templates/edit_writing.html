@@ -1,1 +1,41 @@
 {% extends "index.html" %}
+{% block head %}
+{% load static %}
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script type="text/javascript" src="{% static "tinymce/js/tinymce/tinymce.min.js" %}"></script>
+    <script type="text/javascript" src="{% static "ielts_test_editor.js" %}"></script>
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <link href="{% static "basic.css" %}" rel="stylesheet" />
+{% endblock %}
+{% block main_body %}
+<div class="container-fluid">
+    <div class="main">
+        <form method="POST" enctype="multipart/form-data">
+            <div class="row">
+                <div class="col-md-8">
+                    <textarea class="rich_editor" name="rich_editor" id="rich_editor" rows="30"></textarea>
+                </div>
+                <div class="col-md-4">
+                    <div>
+                        Enter assignment name: <input type="text" name="writing_name">
+                    </div>
+                    <div>
+                        Select supplement type:
+                        <select name="suppl_type">
+                            <option value="text" selected>Text</option>
+                            <option value="pdf">PDF file</option>
+                        </select>
+                    </div>
+                    <div><button>Save</button></div>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}
+{% block under_body %}
+    <script>
+        addMCE("rich_editor");
+    </script>
+{% endblock %}

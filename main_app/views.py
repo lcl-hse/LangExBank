@@ -35,6 +35,7 @@ from conf_files.tag_mapping import tag_map, map_tag
 ## Displaying them to user
 ## Displaying questions generated from the essay
 ## And writing them to the database:
+@del_prev_page
 def show_generated_questions(request, coll, doc):
     if 'rights' in request.session:
         if request.session['rights'] == 'T' or request.session['rights'] == 'A':
@@ -88,11 +89,12 @@ def show_generated_questions(request, coll, doc):
                 questions = testmaker.generate_exercises_from_essay(essay_path, context=True, exercise_types=['short_answer'],
                 hier_choice=True, file_output=False, moodle_output=False)['short_answer']
                 return render(request, 'generquestions.html', {'questions': enumerate(questions)})
-    request.session["prev_page"] = reverse("show_generated_questions", args={"coll": coll,
+    request.session["prev_page"] = reverse("show_generated_questions", kwargs={"coll": coll,
                                                                              "doc": doc})
+    request.session["asked_restricted"] = True
     return redirect('login')
 
-
+@del_prev_page
 def display_quiz(request, quiz_id):
     if request.POST and 'rights' in request.session:
         answer_fields = [field for field in request.POST if re.fullmatch("question_[0-9]+", field)]
@@ -169,12 +171,11 @@ def display_quiz(request, quiz_id):
                 q.question_text = split_by_span(q.question_text)
         return render(request, 'displayquiz.html', {'questions': enumerate(quiz_questions), 'quiz_id': quiz_id})
     else:
-        request.session["prev_page"] = reverse("take_quiz", args={"quiz_id": quiz_id})
+        request.session["prev_page"] = reverse("take_quiz", kwargs={"quiz_id": int(quiz_id)})
         return redirect('login')
 
-
+@del_prev_page
 def edit_quiz(request, quiz_id, page_num=1):
-
     ## чтобы открывать мог только админ или учитель, этот квиз создавший:
     if 'rights' in request.session:
         if 'q_p_page' in request.session:
@@ -303,11 +304,12 @@ def edit_quiz(request, quiz_id, page_num=1):
         return render(request, 'editquiz.html', {'questions': enumerate(quiz_questions, start=questions_per_page*page_num), 'quiz_name': quiz_identifier, 'quiz_id': quiz.id,
         'message': message, 'checked': checked, 'page_nums': [i for i in range(1, ceil(count/questions_per_page)+1)], 'page': page_num+1, 'total_pages': ceil(count/questions_per_page)})
     else:
-        request.session["prev_page"] = reverse("edit_quiz", args={"quiz_id": quiz_id, "page_num": page_num})
+        request.session["prev_page"] = reverse("edit_quiz", kwargs={"quiz_id": int(quiz_id), "page_num": int(page_num)})
+        request.session["asked_restricted"] = True
         # return HttpResponse('You are not logged in as a teacher or admin. <a href="/login/">Login here</a>')
-        return HttpResponseForbidden()
+        return render(request, "403.html")
 
-
+@del_prev_page
 def quiz_list(request):
     if "rights" in request.session:
         if request.session["rights"] in ("T", "A"):
@@ -328,7 +330,7 @@ def quiz_list(request):
         else:
             return HttpResponse("Authentication error")
     request.session["prev_page"] = reverse("quiz_list")
-    return HttpResponseForbidden()
+    return render(request, "403.html")
 
 
 def login(request):
@@ -341,6 +343,7 @@ def login(request):
             del request.session["user_id"]
         if "prev_page" in request.session:
             del request.session["prev_page"]
+        request.session.modified = True
     if "login" in request.POST:
         try:
             user = User.objects.get(login=request.POST['login'])
@@ -350,9 +353,10 @@ def login(request):
                 request.session["user_id"] = user.login
                 request.session["rights"] = user.rights
                 request.session.modified = True
-                if 'prev_page' in request.session:
+                if 'prev_page' in request.session and has_access(user, request.session["prev_page"]):
                     redirect_addr = request.session["prev_page"]
                     del request.session["prev_page"]
+                    request.session.modified = True
                     return redirect(redirect_addr)
                 else:
                     return redirect("index")
@@ -360,20 +364,20 @@ def login(request):
                 return render(request, 'login.html', {'message': '<span style="color: white; background-color: red"> Invalid password </span>'})
         except:
             return render(request, 'login.html', {'message': '<span style="color: white; background-color: red"> Invalid login </span>'})
-    if 'prev_page' in request.session:
+    if 'asked_restricted' in request.session:
         message = '<span style="color: white; background-color: blue"> Please login as a teacher or admin to continue </span>'
     else:
         message = ''
     return render(request, 'login.html', {'message': message})
 
-
+@del_prev_page
 def index(request):
     if 'user_id' in request.session:
         return render(request, 'index.html')
     else:
         return redirect('login')
 
-
+@del_prev_page
 def quiz_grades(request, quiz_id, download=False, mask_names=True):
     ## to do -
     ## по умолчанию показывать только ответы студентов
@@ -414,16 +418,18 @@ def quiz_grades(request, quiz_id, download=False, mask_names=True):
                 'quiz_name': quiz.name, 'quiz_id': quiz.id,
                 'download_url': download_url})
         else:
-            request.session["prev_page"] = reverse("quiz_grades", args={"quiz_id": quiz_id})
+            request.session["prev_page"] = reverse("quiz_grades", args={"quiz_id": int(quiz_id)})
+            request.session["asked_restricted"] = True
             return HttpResponse('You are not logged in as a teacher or admin. <a href="/login/">Login here</a>')
     else:
-        request.session["prev_page"] = reverse("quiz_grades", args={"quiz_id": quiz_id})
-        # return HttpResponse('You are not logged in as a teacher or admin. <a href="/login/">Login here</a>')
-        return HttpResponseForbidden()
+        request.session["prev_page"] = reverse("quiz_grades", kwargs={"quiz_id": int(quiz_id)})
+        request.session["asked_restricted"] = True
+        return render(request, "403.html")
 
 def download_grades(request, quiz_id):
     return quiz_grades(request, quiz_id, download=True)
 
+@del_prev_page
 def student_answers(request, quiz_id, student_id, download=False, mask_name=True):
     if request.session["rights"] in ("T", "A"):
         if request.session["rights"] == 'T':
@@ -482,10 +488,10 @@ def student_answers(request, quiz_id, student_id, download=False, mask_name=True
             'student_name': student_name, 'quiz_name': quiz_name,
             'download_url': download_url})  
     else:
-        request.session["prev_page"] = reverse("student_answers", args={"quiz_id": quiz_id,
+        request.session["prev_page"] = reverse("student_answers", kwargs={"quiz_id": int(quiz_id),
                                                                         "student_id": student_id})
-        # return HttpResponse('You are not logged in as a teacher or admin. <a href="/login/">Login here</a>')
-        return HttpResponseForbidden()
+        request.session["asked_restricted"] = True
+        return render(request, "403.html")
 
 def download_answers(request, quiz_id, student_id):
     return student_answers(request, quiz_id, student_id, download=True)
@@ -538,6 +544,7 @@ def filter_questions(sh_answer_questions, request, template, action_addr="/quest
     'types': question_types, 'left_pages': left_pages, 'right_pages': right_pages, 'page_id': page+1,
     'action_addr': action_addr})
 
+@del_prev_page
 def display_questions(request, err_type=None):
     if 'rights' in request.session:
         if request.session['rights'] == 'T' or request.session['rights'] == 'A':
@@ -582,9 +589,10 @@ def display_questions(request, err_type=None):
                     raise Exception('Incorrect request')
             
     request.session["prev_page"] = reverse("display_questions")
-    # return HttpResponse('You are not logged in as a teacher or admin. <a href="/login/">Login here</a>')
-    return HttpResponseForbidden()
+    request.session["asked_restricted"] = True
+    return render(request, "403.html")
 
+@del_prev_page
 def questions_from_folder(request):
     if 'rights' in request.session:
         if request.session['rights'] in ('A','T'):
@@ -606,10 +614,10 @@ def questions_from_folder(request):
             return render(request, 'questions_from_folder.html',
             {'err_tags': err_tags})
     request.session["prev_page"] = reverse("questions_from_folder")
-    # return HttpResponse('You are not logged in as a teacher or admin. <a href="/login/">Login here</a>')
-    return HttpResponseForbidden()
+    request.session["asked_restricted"] = True
+    return render(request, "403.html")
 
-
+@del_prev_page
 def add_questions(request, quiz_id):
     if 'rights' in request.session:
         if request.session['rights'] == 'A' or request.session['rights'] == 'T':
@@ -625,11 +633,11 @@ def add_questions(request, quiz_id):
             return filter_questions(sh_answer_questions, request, template='add_questions.html',
                                     action_addr=f"/addQuestions/{quiz_id}")
             
-    request.session["prev_page"] = reverse("add_questions", args={"quiz_id": quiz_id})
-    # return HttpResponse('You are not logged in as a teacher or admin. <a href="/login/">Login here</a>')
-    return HttpResponseForbidden()
+    request.session["prev_page"] = reverse("add_questions", kwargs={"quiz_id": int(quiz_id)})
+    request.session["asked_restricted"] = True
+    return render(request, "403.html")
 
-
+@del_prev_page
 def easy_register(request):
     if registration_open:
         if request.POST:
@@ -661,6 +669,7 @@ def easy_register(request):
 def pdf_demo(request):
     return render(request, 'pdf_demo.html')
 
+@del_prev_page
 def edit_ielts_test(request, test_id=None):
     if "rights" in request.session:
         if request.session["rights"] in ("A", "T"):
@@ -854,10 +863,11 @@ def edit_ielts_test(request, test_id=None):
                     test_name = ''
                 return render(request, "new_ielts_test.html", {'test_sections': test_sections,
                                                                          'test_name': test_name})
-    request.session["prev_page"] = reverse("edit_ielts", args={'test_id': test_id})
-    # return HttpResponse('You are not logged in as a teacher or admin. <a href="/login/">Login here</a>')
-    return HttpResponseForbidden()
+    request.session["prev_page"] = reverse("edit_ielts", kwargs={'test_id': int(test_id)})
+    request.session["asked_restricted"] = True
+    return render(request, "403.html")
 
+@del_prev_page
 def ielts_test_list(request):
     if "rights" in request.session:
         if request.session["rights"] in ("T", "A"):
@@ -871,13 +881,13 @@ def ielts_test_list(request):
         else:
             return HttpResponse("Authentication error")
     request.session["prev_page"] = reverse('ielts_test_list')
-    # return HttpResponse('You are not logged in as a teacher or admin. <a href="/login/">Login here</a>')
-    return HttpResponseForbidden()
+    return render(request, "403.html")
 
 ## здесь довольно громоздкая функция,
 ## надо бы оптимизировать,
 ## а то check_answers считается слишком долго - иногда страница с Results приходит раньще,
 ## чем они посчитаются
+@del_prev_page
 def take_ielts_test(request, test_id):
     if "rights" in request.session:
         if request.POST:
@@ -903,9 +913,10 @@ def take_ielts_test(request, test_id):
             # section.question_set.all()) for section in sections]
             # print(task_set)
             return render(request, "displaytest.html", {"task_set": sections})
-    request.session["prev_page"] = reverse("take_ielts", args={"test_id": test_id})
+    request.session["prev_page"] = reverse("take_ielts", kwargs={"test_id": int(test_id)})
     return redirect('login')
 
+@del_prev_page
 def ielts_grades(request, test_id, mask_names=True):
     ## to do -
     ## по умолчанию показывать только ответы студентов
@@ -926,15 +937,12 @@ def ielts_grades(request, test_id, mask_names=True):
                 key=lambda x: -marks[x])]
             return render(request, 'ielts_results.html', {'marks': marks,
             'quiz_name': test.name, 'quiz_id': test.id})
-        else:
-            request.session["prev_page"] = reverse("ielts_grades", args={"test_id": test_id})
-            return HttpResponse('You are not logged in as a teacher or admin. <a href="/login/">Login here</a>')
     else:
-        request.session["prev_page"] = reverse("ielts_grades", args={"test_id": test_id})
-        # return HttpResponse('You are not logged in as a teacher or admin. <a href="/login/">Login here</a>')
-        return HttpResponseForbidden()
+        request.session["prev_page"] = reverse("ielts_grades", kwargs={"test_id": test_id})
+        request.session["asked_restricted"] = True
+        return render(request, "403.html")
 
-
+@del_prev_page
 def student_test_results(request, test_id, student_id, download=False, mask_name=True):
     if 'rights' in request.session:
         if request.session["rights"] in ("T", "A"):
@@ -993,10 +1001,10 @@ def student_test_results(request, test_id, student_id, download=False, mask_name
                 return render(request, 'student_results.html', {'student_answers': list(student_answers),
                 'student_name': student_name, 'quiz_name': quiz_name,
                 'download_url': download_url})       
-    request.session["prev_page"] = reverse("student_test_results", args={"test_id": test_id,
+    request.session["prev_page"] = reverse("student_test_results", kwargs={"test_id": test_id,
     "student_id": student_id})
-    # return HttpResponse('You are not logged in as a teacher or admin. <a href="/login/">Login here</a>')
-    return HttpResponseForbidden()
+    request.session["asked_restricted"] = True
+    return render(request, "403.html")
 
 def download_ielts_results(request, test_id, student_id):
     return student_test_results(request, test_id, student_id, download=True)
@@ -1009,7 +1017,7 @@ def delete_test(request):
                 test = IELTS_Test.objects.get(id=test_id)
                 test.delete()
                 return HttpResponse("OK")
-    return HttpResponseForbidden()
+    return render(request, "403.html")
 
 def delete_quiz(request):
     if "rights" in request.session:
@@ -1019,7 +1027,7 @@ def delete_quiz(request):
                 quiz = Quizz.objects.get(id=quiz_id)
                 quiz.delete()
                 return HttpResponse("OK")
-    return HttpResponseForbidden()
+    return render(request, "403.html")
 
 def distractor_report(request, quiz_id):
     if 'rights' in request.session:
@@ -1043,17 +1051,19 @@ def distractor_report(request, quiz_id):
                 }
                 output['quiz_data'].append(item)
             return JsonResponse(output)
-    return HttpResponseForbidden()
+    return render(request, "403.html")
 
+@del_prev_page
 def edit_writing(request, writing_test_id=None):
     if "rights" in request.session:
         if request.session['rights'] in ('A','T'):
             if request.POST:
                 return HttpResponseNotFound()
             else:
-                return HttpResponseNotFound()
-    return HttpResponseForbidden()
+                return render(request, "edit_writing.html")
+    return render(request, "403.html")
 
+@del_prev_page
 def take_writing(request, writing_test_id):
     if "rights" in request.session:
         if request.session['rights'] in ('A','T','S'):
@@ -1061,8 +1071,9 @@ def take_writing(request, writing_test_id):
                 return HttpResponseNotFound()
             else:
                 return HttpResponseNotFound()
-    return HttpResponseForbidden()
+    return render(request, "403.html")
 
+@del_prev_page
 def writing_results(request, writing_test_id):
     if "rights" in request.session:
         if request.session['rights'] in ('A','T'):
@@ -1070,8 +1081,9 @@ def writing_results(request, writing_test_id):
                 return HttpResponseNotFound()
             else:
                 return HttpResponseNotFound()
-    return HttpResponseForbidden()
+    return render(request, "403.html")
 
+@del_prev_page
 def review_writing(request, writing_test_id, student_id):
     if "rights" in request.session:
         if request.session['rights'] in ('A','T'):
@@ -1079,8 +1091,9 @@ def review_writing(request, writing_test_id, student_id):
                 return HttpResponseNotFound()
             else:
                 return HttpResponseNotFound()
-    return HttpResponseForbidden()
+    return render(request, "403.html")
 
+@del_prev_page
 def edit_speaking(request, speaking_test_id=None):
     if "rights" in request.session:
         if request.session['rights'] in ('A','T'):
@@ -1088,8 +1101,9 @@ def edit_speaking(request, speaking_test_id=None):
                 return HttpResponseNotFound()
             else:
                 return HttpResponseNotFound()
-    return HttpResponseForbidden()
+    return render(request, "403.html")
 
+@del_prev_page
 def take_speaking(request, speaking_test_id):
     if "rights" in request.session:
         if request.session['rights'] in ('A','T','S'):
@@ -1097,8 +1111,9 @@ def take_speaking(request, speaking_test_id):
                 return HttpResponseNotFound()
             else:
                 return HttpResponseNotFound()
-    return HttpResponseForbidden()
+    return render(request, "403.html")
 
+@del_prev_page
 def speaking_results(request, speaking_test_id):
     if "rights" in request.session:
         if request.session['rights'] in ('A','T'):
@@ -1106,8 +1121,9 @@ def speaking_results(request, speaking_test_id):
                 return HttpResponseNotFound()
             else:
                 return HttpResponseNotFound()
-    return HttpResponseForbidden()
+    return render(request, "403.html")
 
+@del_prev_page
 def review_speaking(request, speaking_test_id, student_id):
     if "rights" in request.session:
         if request.session['rights'] in ('A','T'):
@@ -1115,4 +1131,4 @@ def review_speaking(request, speaking_test_id, student_id):
                 return HttpResponseNotFound()
             else:
                 return HttpResponseNotFound()
-    return HttpResponseForbidden()
+    return render(request, "403.html")

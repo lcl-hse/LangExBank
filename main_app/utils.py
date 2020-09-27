@@ -221,3 +221,34 @@ def full_grade(test):
         full_grade += len(re.findall(pattern, ans.answer_text))
     
     return full_grade
+
+
+## checks whether this user has access to provided page:
+def has_access(user, page):
+    ## пока костыльно,
+    ## потом можно будет
+    ## переписать по-нормальному
+    if user.rights in ('A','T'):
+        return True
+    elif user.rights == 'S':
+        page_lc = page.lower()
+        if 'edit' in page_lc or 'review' in page_lc\
+        or 'grades' in page_lc or 'delete' in page_lc\
+        or 'folder' in page_lc or 'questions' in page_lc:
+            return False
+        else:
+            return True
+    return False
+
+## Decorators
+
+## Decorator for deleting session data after leaving restricted-acces page:
+def del_prev_page(view):
+    def wrapper_del_prev_page(request, *args, **kwargs):
+        if "prev_page" in request.session:
+            del request.session["prev_page"]
+        if "asked_restricted" in request.session:
+            del request.session["asked_restricted"]
+        request.session.modified = True
+        return view(request, *args, **kwargs)
+    return wrapper_del_prev_page
