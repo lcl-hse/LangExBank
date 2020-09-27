@@ -141,13 +141,13 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/2.1/howto/static-files/
 
-STATIC_URL = '/static/'
+STATIC_URL = os.environ.get("DJANGO_STATIC_URL", default='/staticfiles/')
 
-MEDIA_URL = '/media/'
+MEDIA_URL = os.environ.get("DJANGO_MEDIA_URL", default='/mediafiles/')
 
-MEDIA_ROOT = os.path.join(BASE_DIR, os.environ.get('DJANGO_MEDIA_ROOT',default='media'))
+MEDIA_ROOT = os.path.join(BASE_DIR, os.environ.get('DJANGO_MEDIA_ROOT',default='mediafiles'))
 
-STATIC_ROOT = os.path.join(BASE_DIR, os.environ.get('DJANGO_MEDIA_ROOT',default='static'))
+STATIC_ROOT = os.path.join(BASE_DIR, os.environ.get('DJANGO_MEDIA_ROOT',default='staticfiles'))
 
 login_enc_key = os.environ.get("LANGEXBANK_ENC_KEY")
 
