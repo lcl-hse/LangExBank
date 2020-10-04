@@ -1031,7 +1031,7 @@ def delete_activity(request):
                 if test_type == 'writing':
                     test = IELTSWritingTask.objects.get(name=test_name)
                 else:
-                    raise Exception
+                    raise ValueError()
                 test.delete()
                 return HttpResponse("OK")
     return HttpResponseForbidden()
