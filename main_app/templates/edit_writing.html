@@ -4,6 +4,7 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
     <script type="text/javascript" src="{% static "tinymce/js/tinymce/tinymce.min.js" %}"></script>
     <script type="text/javascript" src="{% static "ielts_test_editor.js" %}"></script>
+    <script type="text/javascript" src="{% static "writing_editor.js" %}"></script>
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
     <link href="{% static "basic.css" %}" rel="stylesheet" />
@@ -12,19 +13,38 @@
 <div class="container-fluid">
     <div class="main">
         <form method="POST" enctype="multipart/form-data">
+            <input type="hidden" id="csrf_token" name="csrfmiddlewaretoken" value="{{ csrf_token }}">
             <div class="row">
-                <div class="col-md-8">
+                {% autoescape off %}
+                <div id="task_text" style="display: none;">{{ writing_section.text }}</div>
+                {% endautoescape %}
+                {% if attachment_type == "rich_text" %}
+                <div class="col-md-8" id="writingAttachment">
                     <textarea class="rich_editor" name="rich_editor" id="rich_editor" rows="30"></textarea>
                 </div>
+                {% elif attachment_type == "pdf" %}
+                <b>PDF Upload:</b> <br />
+                <input type="file" name="pdf_upload" id="pdf_input" onchange="pdf_right_preview(this)">
+                </input>
+                <embed id="book" type="application/pdf" style="height: 640px; width: 100%;" src="{{ writing_section.supplement.url }}" controls>
+                </embed>
+                <br />
+                <br />
+                {% endif %}
                 <div class="col-md-4">
                     <div>
-                        Enter assignment name: <input type="text" name="writing_name">
+                        Enter assignment name: <input type="text" name="writing_name" value="{{ writing_section.name }}">
                     </div>
-                    <div>
+                    <div class="writing-editor">
                         Select supplement type:
-                        <select name="suppl_type">
+                        <select name="suppl_type" onchange="changeWritingAttachment(this)">
+                            {% if attachment_type == "rich_text" %}
                             <option value="text" selected>Text</option>
                             <option value="pdf">PDF file</option>
+                            {% elif attachment_type == "pdf" %}
+                            <option value="text">Text</option>
+                            <option value="pdf" selected>PDF file</option>
+                            {% endif %}
                         </select>
                     </div>
                     <div><button>Save</button></div>
@@ -35,7 +55,10 @@
 </div>
 {% endblock %}
 {% block under_body %}
-    <script>
-        addMCE("rich_editor");
-    </script>
+<script>
+    hidden_text = document.getElementById("task_text");
+    if (task_text) {
+        addMCEWithContent("rich_editor", hidden_text.innerHTML);
+    };
+</script>
 {% endblock %}

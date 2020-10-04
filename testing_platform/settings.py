@@ -147,7 +147,7 @@ MEDIA_URL = os.environ.get("DJANGO_MEDIA_URL", default='/mediafiles/')
 
 MEDIA_ROOT = os.path.join(BASE_DIR, os.environ.get('DJANGO_MEDIA_ROOT',default='mediafiles'))
 
-STATIC_ROOT = os.path.join(BASE_DIR, os.environ.get('DJANGO_MEDIA_ROOT',default='staticfiles'))
+STATIC_ROOT = os.path.join(BASE_DIR, os.environ.get('DJANGO_STATIC_ROOT',default='staticfiles'))
 
 login_enc_key = os.environ.get("LANGEXBANK_ENC_KEY")
 

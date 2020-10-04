@@ -42,7 +42,7 @@ var restore_qform = function(section_id, q_id) {};
 
 var addMCE = function(elem_id, height=undefined, width=undefined) {
     // elem = document.getElementById(elem_id);
-    console.log(width);
+    // console.log(width);
     var init_params = {
         selector: 'textarea#'+elem_id,
         paste_data_images: true,
@@ -108,7 +108,7 @@ var allMCEs = function() {
 }
 
 var changeAttachment = function(selector, attachment_id) {
-    console.log(attachment_id)
+    // console.log(attachment_id)
     attachment = document.getElementById(attachment_id);
     att_id = attachment_id.split('_').pop();
     if (selector.value == 'l') {
@@ -134,7 +134,7 @@ var changeAttachment = function(selector, attachment_id) {
 };
 
 var make_multiple = function(multipleButton) {
-    console.log("entered function make_multiple()");
+    // console.log("entered function make_multiple()");
     sec_quest_id = multipleButton.name.split('_');
     sec_id = sec_quest_id[1];
     quest_id = sec_quest_id[2];

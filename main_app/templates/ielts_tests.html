@@ -12,15 +12,18 @@
       <div class = "main">
         <div>
           <h1> Available IELTS tests </h1>
+          <div class="row">
+          <div class="col-md-4" id="reading_listening_list">
+          <h2>Reading & Listening tests</h2>
           <ul>
               {% if student %}
               {% for quiz in quizlist %}
-                  <li> <b>Quiz "{{ quiz.0 }}"</b> <a href="/takeIELTSTest/{{ quiz.1 }}"> Take test</a> </li>
+                  <li> <b>Test "{{ quiz.0 }}"</b> <a href="/takeIELTSTest/{{ quiz.1 }}"> Take test</a> </li>
               {% endfor %}
               {% else %}
                   {% for quiz in quizlist %}
-                  <div id="test_{{ quiz.1 }}" name="{{ quiz.0 }}">
-                      <li> <b>Quiz "{{ quiz.0 }}"</b>
+                  <div id="test_{{ quiz.1 }}">
+                      <li> <b>Test "{{ quiz.0 }}"</b>
                       <a href="/editIELTS/{{ quiz.1 }}"> Edit</a> 
                       <a href="/takeIELTSTest/{{ quiz.1 }}"> Preview</a>
                       <a href="/IELTSgrades/{{ quiz.1 }}"> Results</a>
@@ -30,6 +33,32 @@
                   {% endfor %}
               {% endif %}
           </ul>
+          </div>
+          <div class="col-md-4" id="writing_lsit">
+          <h2>Writing tests</h2>
+          <ul>
+            {% if student %}
+            {% for wtest in wtest_list %}
+                <li> <b>Test "{{ wtest.name }}"</b> <a href="/takeIELTSWriting/{{ wtest.name }}"> Take test</a> </li>
+            {% endfor %}
+            {% else %}
+                {% for wtest in wtest_list %}
+                <div>
+                    <li> <b>Test "{{ wtest.name }}"</b>
+                    <a href="/editIELTSWriting/{{ wtest.name }}"> Edit</a> 
+                    <a href="/takeIELTSWriting/{{ wtest.name }}"> Preview</a>
+                    <a href="/IELTSWritingGrades/{{ wtest.name }}"> Results</a>
+                    <span class="fakeLink" onclick="deleteActivity(this.parentNode.parentNode,'{{ wtest.name }}','writing')"> Delete </a>
+                    </li>
+                </div>
+                {% endfor %}
+            {% endif %}
+          </ul>
+          </div>
+          <div class="col-md-4" id="speaking_list">
+          <h2>Speaking tests</h2>
+          </div>
+          </div>
           <a class="btn btn-outline-primary" href="/editIELTS/">+ Add new Reading/Listening activity</a>
           <a class="btn btn-outline-primary" href="/editIELTSWriting/">+ Add new Writing activity</a>
           <a class="btn btn-outline-primary" href="/editIELTSSpeaking/">+ Add new Speaking activity</a>

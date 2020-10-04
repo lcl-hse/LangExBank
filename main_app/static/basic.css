@@ -2,20 +2,25 @@
 font-family: sans-serif;
 margin: 2%;
 }
+
 .mainarea{display: grid;
 grid-template-columns: 20% 75%;
 grid-column-gap: 5%;}
+
 .twoCols{display: grid;
 grid-template-columns: 200px 600px;
 grid-column-gap: 5px;}
+
 .twoShortCols{display: grid;
     height: 300px;
     grid-template-columns: 200px 600px;
     grid-column-gap: 5px;}
+
 .threeCols{display: grid;
     grid-template-columns: 200px 200px 200px;
     grid-column-gap: 100px;
 }
+
 .navbar{background-color: azure;
     height: 600px;
     position: sticky;
@@ -27,23 +32,29 @@ height: 650px;
 overflow-x:scroll;
 /* resize: vertical; */
 }
+
 .instruction {
     background-color: bisque;
 }
+
 button{background-color: blue;
 color: white;}
+
 .navbutton{
     background-color: green;
     color: white;
     font-size: 14pt;
 }
+
 th, td {
     border: 1px solid black;
 }
+
 .multiselect {
     display: block;
     position: absolute;
 }
+
 .checkboxes {
     display: none;
     background-color: azure;
@@ -53,26 +64,31 @@ th, td {
     position: relative;
     overflow-x: scroll;
 }
+
 /* taken from https://stackoverflow.com/a/14070126 */
 .fakeLink{
     cursor:pointer;
     color:blue;
     text-decoration:underline;
 }
+
 .equalCols{
     display: grid;
     grid-template-columns: 49% 49%;
     grid-column-gap: 1%;
 }
+
 .equalSmallCols{
     display: grid;
     height: 300px;
     grid-template-columns: 49% 49%;
     grid-column-gap: 1%;
 }
+
 .pagelist{
     font-size: 18pt;
 }
+
 .pagelink {
     border: 2px solid white;
     background-color: bisque;
@@ -98,7 +114,6 @@ th, td {
     padding: 2%;
 }
 
-
 .nicEdit-main {
     width: 600px !important;
 }
@@ -118,7 +133,7 @@ th, td {
 .myInputText{
     width: 70%;
     resize: horizontal;
-};
+}
 
 .section-text{
     background-color: white;
@@ -133,6 +148,10 @@ th, td {
 
 .quizQuestion{
     padding-bottom: 3%;
+}
+
+.writing-editor{
+    margin-bottom: 20%;
 }
 
 /* table td input {

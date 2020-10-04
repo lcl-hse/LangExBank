@@ -870,13 +870,16 @@ def edit_ielts_test(request, test_id=None):
 @del_prev_page
 def ielts_test_list(request):
     if "rights" in request.session:
+        tests = IELTS_Test.objects.all().values_list('name', 'id')
+        wtests = IELTSWritingTask.objects.all()
+
         if request.session["rights"] in ("T", "A"):
-            tests = IELTS_Test.objects.all().values_list('name', 'id')
             return render(request, 'ielts_tests.html', {'quizlist': tests,
+            'wtest_list': wtests,
             'student': False})
         elif request.session["rights"] == "S":
-            tests = IELTS_Test.objects.all().values_list('name', 'id')
             return render(request, 'ielts_tests.html', {'quizlist': tests,
+            'wtest_list': wtests,
             'student': True})
         else:
             return HttpResponse("Authentication error")
@@ -1017,7 +1020,21 @@ def delete_test(request):
                 test = IELTS_Test.objects.get(id=test_id)
                 test.delete()
                 return HttpResponse("OK")
-    return render(request, "403.html")
+    return HttpResponseForbidden()
+
+def delete_activity(request):
+    if "rights" in request.session:
+        if request.session['rights'] in ('A', 'T'):
+            if 'test_name' in request.POST:
+                test_name = request.POST["test_name"]
+                test_type = request.POST["type"]
+                if test_type == 'writing':
+                    test = IELTSWritingTask.objects.get(name=test_name)
+                else:
+                    raise Exception
+                test.delete()
+                return HttpResponse("OK")
+    return HttpResponseForbidden()
 
 def delete_quiz(request):
     if "rights" in request.session:
@@ -1054,13 +1071,43 @@ def distractor_report(request, quiz_id):
     return render(request, "403.html")
 
 @del_prev_page
-def edit_writing(request, writing_test_id=None):
+def edit_writing(request, writing_test_name=None):
     if "rights" in request.session:
         if request.session['rights'] in ('A','T'):
             if request.POST:
-                return HttpResponseNotFound()
+                ## Поля:
+
+                ## или
+                ## rich_editor - текст задания
+                ## pdf_upload - приложенный к заданию PDF-файл
+                ## конец или
+
+                ## writing_name - название задания
+                if writing_test_name:
+                    writ_task = IELTSWritingTask.objects.get(name=writing_test_name)
+                    writ_task.name = request.POST["writing_name"]
+                else:
+                    writ_task = IELTSWritingTask(name=request.POST["writing_name"])
+                
+                if "rich_editor" in request.POST:
+                    writ_task.text = request.POST["rich_editor"]
+                elif "pdf_upload" in request.FILES:
+                    writ_task.supplement = request.FILES["pdf_upload"]
+                
+                writ_task.save()
+                return redirect("ielts_test_list")
             else:
-                return render(request, "edit_writing.html")
+                if writing_test_name is None:
+                    return render(request, "edit_writing.html", {"attachment_type": "rich_text"})
+                else:
+                    writ_test = IELTSWritingTask.objects.get(name=writing_test_name)
+                    if writ_test.supplement:
+                        attachment_type = "pdf"
+                    else:
+                        attachment_type = "rich_text"
+                    return render(request, "edit_writing.html",
+                    {"attachment_type": attachment_type,
+                     "writing_section": writ_test})
     return render(request, "403.html")
 
 @del_prev_page
