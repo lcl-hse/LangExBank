@@ -23,13 +23,15 @@
                     <textarea class="rich_editor" name="rich_editor" id="rich_editor" rows="30"></textarea>
                 </div>
                 {% elif attachment_type == "pdf" %}
-                <b>PDF Upload:</b> <br />
-                <input type="file" name="pdf_upload" id="pdf_input" onchange="pdf_right_preview(this)">
-                </input>
-                <embed id="book" type="application/pdf" style="height: 640px; width: 100%;" src="{{ writing_section.supplement.url }}" controls>
-                </embed>
-                <br />
-                <br />
+                <div class="col-md-8" id="writingAttachment">
+                    <b>PDF Upload:</b> <br />
+                    <input type="file" name="pdf_upload" id="pdf_input" onchange="pdf_right_preview(this)">
+                    </input>
+                    <embed id="book" type="application/pdf" style="height: 640px; width: 100%;" src="{{ writing_section.supplement.url }}" controls>
+                    </embed>
+                    <br />
+                    <br />
+                    </div>
                 {% endif %}
                 <div class="col-md-4">
                     <div>
@@ -37,7 +39,7 @@
                     </div>
                     <div class="writing-editor">
                         Select supplement type:
-                        <select name="suppl_type" onchange="changeWritingAttachment(this)">
+                        <select name="suppl_type" onchange="changeWritingAttachment(this, 'writingAttachment')">
                             {% if attachment_type == "rich_text" %}
                             <option value="text" selected>Text</option>
                             <option value="pdf">PDF file</option>

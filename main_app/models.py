@@ -147,7 +147,7 @@ class Results(models.Model):
 
 class IELTSWritingTask(models.Model):
     name = models.CharField(max_length=40,unique=True)
-    text = models.CharField(max_length=100000)
+    text = models.CharField(max_length=100000,null=True)
     supplement = models.FileField(null=True)
 
 class IELTSWritingResponse(models.Model):
@@ -155,4 +155,4 @@ class IELTSWritingResponse(models.Model):
     on_delete=models.CASCADE)
     student = models.ForeignKey(User,
     on_delete=models.CASCADE)
-    mark = models.FloatField()
+    mark = models.FloatField(null=True)

@@ -1,1 +1,36 @@
 {% extends "index.html" %}
+{% block head %}
+{% load static %}
+<!-- Bootstrap CSS -->
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+<link href="{% static "basic1.css" %}" rel="stylesheet" />
+{% endblock %}
+{% block main_body %}
+<div class="container-fluid">
+    <div class="main">
+        <form method="POST">
+        {% csrf_token %}
+        <h1>{{ writing_section.name }}</h1>
+        <div class="row">
+            {% autoescape off %}
+            <div class="col-md-6">
+                {% if attachment_type ==  "pdf" %}
+                <embed src="{{ writing_section.supplement.url }}" type="application/pdf" style="height: 100%; width: 100%;">
+                </embed>
+                {% elif attachment_type == "rich_text" %}
+                <div class="section-text shadow mb-3 bg-white rounded">
+                    <!-- Text of the section -->
+                    {{ writing_section.text }}
+                </div>
+                {% endif %}
+            </div>
+            {% endautoescape %}
+            <div class="col-md-6">
+                <textarea class="section-text form-control" rows="25"></textarea>
+                <button class="button">Submit</button>
+            </div>
+        </div>
+        </form>
+    </div>
+</div>
+{% endblock %}

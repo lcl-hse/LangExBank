@@ -1091,9 +1091,12 @@ def edit_writing(request, writing_test_name=None):
                 
                 if "rich_editor" in request.POST:
                     writ_task.text = request.POST["rich_editor"]
+                    if writ_task.supplement:
+                        writ_task.supplement.delete()
                 elif "pdf_upload" in request.FILES:
                     writ_task.supplement = request.FILES["pdf_upload"]
-                
+                    if writ_task.text:
+                        writ_task.text = None
                 writ_task.save()
                 return redirect("ielts_test_list")
             else:
@@ -1111,17 +1114,30 @@ def edit_writing(request, writing_test_name=None):
     return render(request, "403.html")
 
 @del_prev_page
-def take_writing(request, writing_test_id):
+def take_writing(request, writing_test_name):
     if "rights" in request.session:
         if request.session['rights'] in ('A','T','S'):
             if request.POST:
-                return HttpResponseNotFound()
+                wtest = IELTSWritingTask.objects.get(name=writing_test_name)
+                student = User.objects.get(login=request.session["user_id"])
+                if IELTSWritingResponse.objects.filter(student=student,task=wtest).exists():
+                    return HttpResponse("You've already submitted this writing")
+                new_response = IELTSWritingResponse(task=wtest,student=student)
+                new_response.save()
+                return redirect("ielts_test_list")
             else:
-                return HttpResponseNotFound()
+                writ_test = IELTSWritingTask.objects.get(name=writing_test_name)
+                if writ_test.supplement:
+                    attachment_type = "pdf"
+                else:
+                    attachment_type = "rich_text"
+                return render(request, "ielts_writing.html",
+                {"attachment_type": attachment_type,
+                 "writing_section": writ_test})
     return render(request, "403.html")
 
 @del_prev_page
-def writing_results(request, writing_test_id):
+def writing_results(request, writing_test_name):
     if "rights" in request.session:
         if request.session['rights'] in ('A','T'):
             if request.POST:
@@ -1131,7 +1147,7 @@ def writing_results(request, writing_test_id):
     return render(request, "403.html")
 
 @del_prev_page
-def review_writing(request, writing_test_id, student_id):
+def review_writing(request, writing_test_name, student_id):
     if "rights" in request.session:
         if request.session['rights'] in ('A','T'):
             if request.POST:
