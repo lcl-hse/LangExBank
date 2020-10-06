@@ -30,6 +30,17 @@ class User(models.Model):
     #     ## https://github.com/skorokithakis/django-annoying/issues/51
     #     User.student = User.student
 
+    def get_group(self):
+        if Student.objects.filter(login=self).exists():
+            student = Student.objects.get(login=self)
+            return student.group
+        else:
+            if self.rights == 'A':
+                return 'Admin'
+            elif self.rights == 'T':
+                return 'Teacher'
+        return None
+
 
 class Student(models.Model):
     login = models.OneToOneField(User, primary_key=True,
@@ -156,3 +167,4 @@ class IELTSWritingResponse(models.Model):
     student = models.ForeignKey(User,
     on_delete=models.CASCADE)
     mark = models.FloatField(null=True)
+    text = models.CharField(max_length=50000,null=True)

@@ -1122,7 +1122,8 @@ def take_writing(request, writing_test_name):
                 student = User.objects.get(login=request.session["user_id"])
                 if IELTSWritingResponse.objects.filter(student=student,task=wtest).exists():
                     return HttpResponse("You've already submitted this writing")
-                new_response = IELTSWritingResponse(task=wtest,student=student)
+                new_response = IELTSWritingResponse(task=wtest,student=student,
+                text=request.POST["student_response"])
                 new_response.save()
                 return redirect("ielts_test_list")
             else:
@@ -1140,20 +1141,33 @@ def take_writing(request, writing_test_name):
 def writing_results(request, writing_test_name):
     if "rights" in request.session:
         if request.session['rights'] in ('A','T'):
-            if request.POST:
-                return HttpResponseNotFound()
-            else:
-                return HttpResponseNotFound()
+            wtest = IELTSWritingTask.objects.get(name=writing_test_name)
+            results = IELTSWritingResponse.objects.filter(task=wtest)
+            return render(request,"writing_results.html",
+            {"wtest_name": wtest.name, "results": results})
     return render(request, "403.html")
 
 @del_prev_page
 def review_writing(request, writing_test_name, student_id):
     if "rights" in request.session:
         if request.session['rights'] in ('A','T'):
+            wtest = IELTSWritingTask.objects.get(name=writing_test_name)
+            student = User.objects.get(login=student_id)
+            response = IELTSWritingResponse.objects.get(task=wtest,
+                                                        student=student)
             if request.POST:
-                return HttpResponseNotFound()
+                response.text = request.POST["new_text"]
+                response.mark = request.POST["mark"]
+                response.save()
+                return redirect("ielts_test_list")
             else:
-                return HttpResponseNotFound()
+                if response.task.supplement:
+                    attachment_type = "pdf"
+                else:
+                    attachment_type = "rich_text"
+                return render(request, "review_writing.html",
+                              {"response": response,
+                               "attachment_type": attachment_type})
     return render(request, "403.html")
 
 @del_prev_page

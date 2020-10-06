@@ -1,1 +1,61 @@
 {% extends "index.html" %}
+{% block head %}
+{% load static %}
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+<script type="text/javascript" src="{% static "tinymce/js/tinymce/tinymce.min.js" %}"></script>
+<script type="text/javascript" src="{% static "ielts_test_editor.js" %}"></script>
+<script type="text/javascript" src="{% static "writing_editor.js" %}"></script>
+<!-- Bootstrap CSS -->
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+<link href="{% static "basic1.css" %}" rel="stylesheet" />
+{% endblock %}
+{% block main_body %}
+<div class="container-fluid">
+    <div class="main">
+        <form method="POST">
+        {% csrf_token %}
+        <h1>{{ response.task.name }}</h1>
+        <div class="row">
+            {% autoescape off %}
+            <div class="col-md-6">
+                {% if attachment_type ==  "pdf" %}
+                <embed src="{{ response.task.supplement.url }}" type="application/pdf" style="height: 100%; width: 100%;">
+                </embed>
+                {% elif attachment_type == "rich_text" %}
+                <div class="section-text shadow mb-3 bg-white rounded">
+                    <!-- Text of the section -->
+                    {{ response.task.text }}
+                </div>
+                {% endif %}
+            </div>
+            <div class="col-md-6">
+                <div id="student_response" style="display: none;">{% if response.text %}{{ response.text }}{% endif %}</div>
+                <textarea id="new_text" name="new_text" class="section-text form-control" rows="25"></textarea>
+            </div>
+            {% endautoescape %}
+        </div>
+        <div class="row">
+            <div class="col-md-6">
+            <b>Mark: </b>
+            {% if response.mark is not None %}
+            <input type="number" class="form-control-md" name="mark" min="0" max="100" value="{{ response.mark }}">
+            {% else %}
+            <input type="number" class="form-control-sm" name="mark" min="0" max="100">
+            {% endif %}
+            </div>
+            <div class="col-md-6">
+            <button class="button">Save changes</button>
+            </div>
+        </div>
+        </form>
+    </div>
+</div>
+{% endblock %}
+{% block under_body %}
+<script>
+    hidden_text = document.getElementById("student_response");
+    if (hidden_text) {
+        addMCEWithContent("new_text", hidden_text.innerHTML);
+    };
+</script>
+{% endblock %}
