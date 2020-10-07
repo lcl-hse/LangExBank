@@ -11,5 +11,4 @@ torchtext
 lemminflect
 spacy
 spellchecker
-indexer
 django-searchable-encrypted-fields
