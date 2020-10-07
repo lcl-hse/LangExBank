@@ -1159,7 +1159,8 @@ def review_writing(request, writing_test_name, student_id):
                 response.text = request.POST["new_text"]
                 response.mark = request.POST["mark"]
                 response.save()
-                return redirect("ielts_test_list")
+                return redirect("writing_results",
+                                writing_test_name=writing_test_name)
             else:
                 if response.task.supplement:
                     attachment_type = "pdf"
