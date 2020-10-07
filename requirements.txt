@@ -12,3 +12,4 @@ lemminflect
 spacy
 spellchecker
 django-searchable-encrypted-fields
+gunicorn
