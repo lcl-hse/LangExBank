@@ -10,6 +10,6 @@ torch
 torchtext
 lemminflect
 spacy
-spellchecker
+pyspellchecker
 django-searchable-encrypted-fields
 gunicorn
