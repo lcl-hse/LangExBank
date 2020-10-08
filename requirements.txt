@@ -13,3 +13,4 @@ spacy
 pyspellchecker
 django-searchable-encrypted-fields
 gunicorn
+textdistance
