@@ -29,6 +29,9 @@
                 {% endif %}
             </div>
             <div class="col-md-6">
+                <div style="text-align: left;">
+                <b>Submission date</b>: {{ response.submission_dt }}
+                </div>
                 <div id="student_response" style="display: none;">{% if response.text %}{{ response.text }}{% endif %}</div>
                 <textarea id="new_text" name="new_text" class="section-text form-control" rows="25"></textarea>
             </div>

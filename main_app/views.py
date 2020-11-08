@@ -19,6 +19,7 @@ from math import ceil
 from transliterate import translit
 from io import BytesIO
 from collections import defaultdict, namedtuple
+from datetime import datetime
 
 
 from .utils import *
@@ -1123,7 +1124,8 @@ def take_writing(request, writing_test_name):
                 if IELTSWritingResponse.objects.filter(student=student,task=wtest).exists():
                     return HttpResponse("You've already submitted this writing")
                 new_response = IELTSWritingResponse(task=wtest,student=student,
-                text=request.POST["student_response"])
+                text=request.POST["student_response"],
+                submission_dt=datetime.now())
                 new_response.save()
                 return redirect("ielts_test_list")
             else:
