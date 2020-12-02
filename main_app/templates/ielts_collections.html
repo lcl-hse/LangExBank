@@ -1,0 +1,83 @@
+{% extends "index.html" %}
+{% block head %}
+{% load static %}
+<!-- Bootstrap CSS -->
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+<link href="{% static "basic.css" %}" rel="stylesheet" />
+{% endblock %}
+{% block main_body %}
+  {% autoescape off %}
+  <div class="container-fluid">
+      <div style="display: none" id="token">{{ csrf_token }}</div>
+      <div class="main">
+          <h1> Available IELTS test collections </h1>
+          <div>
+            <a href="/IELTS/">Back to IELTS test list</a>
+          </div>
+          <ul id="collections">
+          {% load my_filters %}
+          {% for collection in collections %}
+          {% if not student %}
+          <div id="div_collection_{{ collection.name }}">
+            <li>
+              <span id="dropdown_collection_{{ collection.name }}" onclick="dropdown(this)">  &#9660;  </span> Collection {{ collection.name}}
+              <span class="fakeLink" onclick="deleteCollection('{{ collection.name }}')">Delete</span>
+              <a href = "/addTestToCollection/{{ collection.name }}">Edit collection</a>
+              <ul id="collection_{{ collection.name }}" style="display: none;">
+                {% for activity in collection.get_activities %}
+                <li>
+                  <div class="collection_{{ collection.name }}_type_{{ activity.activity_type }}_id_{{ activity.name }} ">
+                    {% if activity.activity_type == "IELTS_Test" %}
+                    <b>Comprehension Test {{ activity.name }}</b>
+                    <a href="/editIELTS/{{ activity.id }}"> Edit</a> 
+                    <a href="/takeIELTSTest/{{ activity.id }}"> Preview</a>
+                    <a href="/IELTSgrades/{{ activity.id }}"> Results</a>
+                    <!-- <span class="fakeLink" onclick="deleteTestFromCollection('{{ activity.name }}','{{ collection.name }}','IELTS_Test')">Delete from collection</span> -->
+                    {% elif activity.activity_type == "IELTSWritingTask" %}
+                    <b>>Writing Test {{ activity.name }}</b>
+                    <a href="/editIELTSWriting/{{ activity.name }}"> Edit</a> 
+                    <a href="/takeIELTSWriting/{{ activity.name }}"> Preview</a>
+                    <a href="/IELTSWritingGrades/{{ activity.name }}"> Results</a>
+                    <!-- <span class="fakeLink" onclick="deleteTestFromCollection('{{ activity.name }}','{{ collection.name }}','IELTSWritingTask')">Delete from collection</span> -->
+                    {% endif %}
+                  </div>
+                </li>
+                {% endfor %}
+              </ul>
+            </li>
+          </div>
+          {% else %}
+          <div id="div_collection_{{ collection.name }}">
+            <li>
+              <span id="dropdown_collection_{{ collection.name }}" onclick="dropdown(this)">  &#9660;  </span> Collection {{ collection.name}}
+              <ul id="collection_{{ collection.name }}">
+                {% for activity in collection.get_activities %}
+                <li>
+                  <div class="collection_{{ collection.name }}_type_{{ activity.activity_type }}_id_{{ activity.name }} ">
+                    {% if activity.activity_type == "IELTS_Test" %}
+                    <b>Comprehension Test {{ activity.name }}</b>
+                    <a href="/takeIELTSTest/{{ activity.id }}"> Take test</a>
+                    {% elif activity.activity_type == "IELTSWritingTask" %}
+                    <b>>Writing Test {{ activity.name }}</b>
+                    <a href="/takeIELTSWriting/{{ activity.name }}"> Take test</a>
+                    {% endif %}
+                  </div>
+                </li>
+                {% endfor %}
+              </ul>
+            </li>
+          </div>
+          {% endif %}
+          {% endfor %}
+          </ul>
+          {% if not student %}
+          <form method='POST'>
+          {% csrf_token %}
+          New collection: <input type="text" name="collection_id" id="new_collection_name"><button class="btn btn-primary">+ Create collection</button>
+          </form>
+          {% endif %}
+      </div>
+  </div>
+  {% endautoescape %}
+{% endblock %}
+{% block under_body %}<script type="text/javascript" src="{% static "ielts_test_manager.js" %}"></script>{% endblock %}
