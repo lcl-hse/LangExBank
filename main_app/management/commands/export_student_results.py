@@ -7,7 +7,7 @@ from django.core.management import BaseCommand
 
 
 class Command(BaseCommand):
-    def add_argument(self, parser):
+    def add_arguments(self, parser):
         parser.add_argument('-avg', '--average', dest='average', action='store_true')
     def handle(self, *args, **kwargs):
         students = Student.objects.all()
