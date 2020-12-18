@@ -1,12 +1,14 @@
 import pandas as pd
 
 from main_app.models import *
-from django.db.models import Avg
+from django.db.models import Avg, Sum
 from django.core.management import BaseCommand
 
 
 
 class Command(BaseCommand):
+    def add_argument(self, parser):
+        parser.add_argument('-avg', '--average', dest='average', action='store_true')
     def handle(self, *args, **kwargs):
         students = Student.objects.all()
         tests = IELTS_Test.objects.all()
@@ -23,7 +25,10 @@ class Command(BaseCommand):
             for test in tests:
                 test_results = Results.objects.filter(student=student.login).filter(question__section__ielts_test=test)
                 if len(test_results):
-                    entry[test.name] = test_results.aggregate(test_grade=Avg('mark'))['test_grade']
+                    if kwargs['average']:
+                        entry[test.name] = test_results.aggregate(test_grade=Avg('mark'))['test_grade']
+                    else:
+                        entry[test.name] = test_results.aggregate(test_grade=Sum('mark'))['test_grade']
                 else:
                     entry[test.name] = None
             
@@ -31,7 +36,10 @@ class Command(BaseCommand):
             for wtest in wtests:
                 wtest_results = IELTSWritingResponse.objects.filter(student=student.login).filter(task=wtest)
                 if len(wtest_results):
-                    entry[wtest.name] = wtest_results.aggregate(test_grade=Avg('mark'))['test_grade']
+                    if kwargs['average']:
+                        entry[wtest.name] = wtest_results.aggregate(test_grade=Avg('mark'))['test_grade']
+                    else:
+                        entry[wtest.name] = wtest_results.aggregate(test_grade=Sum('mark'))['test_grade']
                 else:
                     entry[wtest.name] = None
             
