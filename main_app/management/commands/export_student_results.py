@@ -9,10 +9,19 @@ from django.core.management import BaseCommand
 class Command(BaseCommand):
     def add_arguments(self, parser):
         parser.add_argument('-avg', '--average', dest='average', action='store_true')
+        parser.add_argument('--tests', nargs='+')
+        parser.add_argument('--discard', dest='discard', action='store_true')
+
     def handle(self, *args, **kwargs):
         students = Student.objects.all()
-        tests = IELTS_Test.objects.all()
-        wtests = IELTSWritingTask.objects.all()
+
+        if 'tests' in kwargs:
+            print(f"Extracting data for {(',').join(kwargs['tests'])}")
+            tests = IELTS_Test.objects.filter(name__in=kwargs['tests'])
+            wtests = IELTSWritingTask.objects.filter(name__in=kwargs['tests'])
+        else:
+            tests = IELTS_Test.objects.all()
+            wtests = IELTSWritingTask.objects.all()
 
         data = []
 
@@ -45,4 +54,11 @@ class Command(BaseCommand):
             
             data.append(entry)
         data = pd.DataFrame(data).set_index('student').sort_index(axis=0).sort_index(axis=1)
+        
+        if 'discard' in kwargs:
+            if kwargs['discard']:
+                data = data.dropna(axis=0,
+                subset = [col for col in data.columns if col!='Group'],
+                how='all')
+
         data.to_excel('Student_results.xlsx')
