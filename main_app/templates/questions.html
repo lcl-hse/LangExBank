@@ -1,6 +1,6 @@
 {% extends "question_collection_base.html" %}
 {% block bottom %}
-<div class="equalCols">
+<div class="equalThreeCols">
     <div>
         Quiz name: <textarea name="quizName" cols="30" rows="1" form="questionsToInclude"></textarea><br />
         <button onclick="createNewQuiz()">Create quiz</button> <input type="checkbox" form="questionsToInclude" name="strip_answers" checked="checked"> Strip punctuation and parenthesis from submitted answers</input>
@@ -8,6 +8,9 @@
     <div>
         Folder name: <textarea name="folderName" cols="30" rows="1" form="questionsToInclude"></textarea><br />
         <button onclick="createNewFolder()">Create folder</button> 
+    </div>
+    <div>
+        <button class="btn btn-danger">Delete questions</button>
     </div>
 </div>
 <br />

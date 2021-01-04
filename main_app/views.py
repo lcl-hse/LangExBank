@@ -598,6 +598,7 @@ def questions_from_folder(request):
     if 'rights' in request.session:
         if request.session['rights'] in ('A','T'):
             if request.POST:
+                filter_query = None
                 path = request.POST['path']
                 tags = [field[4:] for field in request.POST if field.startswith('tag_')]
                 if 'new_qfolder' in request.POST:
@@ -608,8 +609,29 @@ def questions_from_folder(request):
                 multiple_choice = False
                 if 'multiple_choice' in request.POST:
                     multiple_choice = True
+                if 'filter_query' in request.POST:
+                    filter_query = request.POST['filter_query']
+                    try:
+                        reg_exp = re.compile(filter_query)
+                    except:
+                        msg = f'<span style="color: white; background-color: red">"{filter_query}" is not a valid regular expression</span>'
+                        err_tags = []
+                        for tag in tagset:
+                            tag_triplet = [False, tag, tag]
+                            if tag in tag_map:
+                                tag_triplet[2] = tag_map[tag]
+                            if tag in tags:
+                                tag_triplet[0] = True
+                            err_tags.append(tag_triplet)
+                        print(err_tags)
+                        return render(request,
+                        'questions_from_folder.html',
+                        {'err_tags': err_tags,
+                        'msg': msg})
+                print(f"Filter query - {filter_query}")
                 generate_questions(folder=path, tags=tags, strike=True, delete_downloaded=True,
-                new_qfolder=new_qfolder, qfolder_name=qfolder_name, multiple_choice=multiple_choice)
+                new_qfolder=new_qfolder, qfolder_name=qfolder_name, multiple_choice=multiple_choice,
+                filter_query=filter_query)
                 return redirect('display_questions')
             err_tags = [(False, tag, tag_map[tag]) if tag in tag_map else (False, tag, tag) for tag in tagset]
             return render(request, 'questions_from_folder.html',

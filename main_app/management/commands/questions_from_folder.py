@@ -23,10 +23,10 @@ class Command(BaseCommand):
     
 def generate_questions(folder, tags, strike, delete_downloaded=True,
                        new_qfolder=False, qfolder_name=None, ukey_prefix='',
-                       multiple_choice=False):
+                       multiple_choice=False, filter_query=None):
     exercises = testmaker.download_folder_and_make_exercises(folder_name=folder,
     error_types=tags, file_output=False, moodle_output=False, make_two_variants=False,
-    delete_downloaded=delete_downloaded)['short_answer']
+    delete_downloaded=delete_downloaded, filter_query=filter_query)['short_answer']
     last_id = Question.objects.last().id
 
     ukey = ukey_prefix + '_' + str(time.time())

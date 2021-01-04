@@ -117,6 +117,24 @@ var createNewFolder = function() {
     document.getElementById("questionsToInclude").submit();
 };
 
+var selectAllQuestions = function() {
+    questions = document.getElementById("questionsToInclude").children;
+    for (var i=0; i<questions.length; i++) {
+        if (questions[i].type == "checkbox") {
+            questions[i].checked = true;
+        }
+    }
+};
+
+var unselectAllQuestions = function() {
+    questions = document.getElementById("questionsToInclude").children;
+    for (var i=0; i<questions.length; i++) {
+        if (questions[i].type == "checkbox") {
+            questions[i].checked = false;
+        }
+    }
+};
+
 // var selectTag = function(tag) {
 //     if (tag != "") {
 //         location.replace("/questions/"+tag)
@@ -209,6 +227,8 @@ var createNewFolder = function() {
                 {% for right_page in right_pages %}
                 <li class="page-item"><a class="page-link" href="{{action_addr}}/{{ right_page.link }}">{{ right_page.text }}</a></li>
                 {% endfor %}
+                <li><button class="btn btn-primary" onclick="selectAllQuestions()">Select all</button></li>
+                <li> <button class="btn btn-primary" onclick="unselectAllQuestions()">Unselect all</button> </li>
             </ul>
         </nav>
         <form id="questionsToInclude" method="POST" class="scrollbox">

@@ -18,11 +18,11 @@
                 checkboxes.style.display = "none";
                 expanded = false;
             }
-        }
+        };
 
         var createNewQuiz = function() {
             document.getElementById("questionsToInclude").submit();
-        }
+        };
 
         var selectAllTags = function() {
             var boxes = document.getElementById("checkboxes").children;
@@ -31,7 +31,7 @@
                     boxes[i].checked = true;
                 }
             }
-        }
+        };
 
         var unselectAllTags = function() {
             var boxes = document.getElementById("checkboxes").children;
@@ -40,20 +40,23 @@
                     boxes[i].checked = false;
                 }
             }
-        }
+        };
 
         var submitForm = function() {
             document.getElementById("selectForm").submit();
-        }
+        };
     </script>
 {% endblock %}
 {% block main_body %}
     <div class="container-fluid">
         <div class = "main">
+            {% autoescape off %}
+                {{ msg }}<br />
+            {% endautoescape %}
             <form method="POST" id="selectForm">
             <div class="row">
                 <div class="col-4">
-                Enter path to <a href="http://realec.org">REALEC</a> folder: <input type="text" name="path" size="30"></input>
+                Enter path to <a href="http://realec.org">REALEC</a> folder: <input type="text" name="path" size="30" value="{{ request.POST.path }}"></input>
                 </div>
                 <div class="col-8">
                 <div class="multiselect">
@@ -79,7 +82,9 @@
             <br />
             <input type="checkbox" name="multiple_choice"> Make questions multiple choice
             <br />
-            <input type="checkbox" name="new_qfolder"> Create new question folder with name: <input type="text" name="qfolder_name">
+            <input type="checkbox" name="new_qfolder"> Create new question folder with name: <input type="text" name="qfolder_name" value="{{ request.POST.qfolder_name }}">
+            <br />
+            Filter sentences (regular expression): <input type="text" name="filter_query" value="{{ request.POST.filter_query }}">
             <br />
             <button type="button" class="btn btn-primary" onclick="submitForm()">Generate questions</button>
             </form>

@@ -231,7 +231,7 @@ class Exercise:
       maintain_log = True, show_messages = True, use_ram=False,output_file_names = None,
       file_output = True, write_txt = False, keep_processed = True, hier_choice = False, moodle_output = True,
       make_two_variants = False, exclude_repeated = False, include_smaller_mistakes = False, file_prefix = os.getcwd()+os.sep,
-      keep_all_exercises = False, use_tqdm=False):
+      keep_all_exercises = False, use_tqdm=False, filter_query=None):
 
         """"
         :param error_types: list of str, can include values from
@@ -333,6 +333,8 @@ class Exercise:
         self.wf_dictionary = wordforms.wordforms  # {'headword':[words,words,words]}
         self.keep_all_exercises = keep_all_exercises
         self.tqdm = use_tqdm
+        self.filter_query = filter_query
+        print(f"Filter query - {self.filter_query}")
 
     def find_errors_indoc(self, line):
         """
@@ -797,6 +799,9 @@ class Exercise:
             single_error_in_sent = False
             to_skip = False
             if '<<' in sent2:
+                if self.filter_query:
+                    if not re.search(self.filter_query, sent2):
+                        continue
                 if self.keep_all_exercises and self.exercise_types == ['short_answer']:
                     error_areas = re.finditer("<<.*?>>", sent2)
                     for area in error_areas:
@@ -1335,7 +1340,8 @@ def download_folder_and_make_exercises(folder_name, output_path=None, maintain_l
  error_types=[], context=True, make_two_variants=True, file_output=True, moodle_output=True, check_duplicates=True,
  keep_processed=False,
  path_to_downloaded='downloaded_'+get_fname_time(),
- delete_downloaded=False):
+ delete_downloaded=False,
+ filter_query=None):
     r = realec_helper.realecHelper()
     r.download_folder(folder_name, path_to_saved_folder=path_to_downloaded)
     if check_duplicates:
@@ -1368,7 +1374,8 @@ def download_folder_and_make_exercises(folder_name, output_path=None, maintain_l
     maintain_log=maintain_log,
     mode='folder',context=context,bold = True,
     make_two_variants=make_two_variants,
-    hier_choice=True, show_messages=False, keep_processed=keep_processed)
+    hier_choice=True, show_messages=False, keep_processed=keep_processed,
+    filter_query=filter_query)
     e.make_data_ready_4exercise()
     e.make_exercise()
     if delete_downloaded:
