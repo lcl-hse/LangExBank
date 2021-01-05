@@ -118,7 +118,7 @@ var createNewFolder = function() {
 };
 
 var selectAllQuestions = function() {
-    questions = document.getElementById("questionsToInclude").children;
+    var questions = document.getElementById("questionsToInclude").children;
     for (var i=0; i<questions.length; i++) {
         if (questions[i].type == "checkbox") {
             questions[i].checked = true;
@@ -127,7 +127,7 @@ var selectAllQuestions = function() {
 };
 
 var unselectAllQuestions = function() {
-    questions = document.getElementById("questionsToInclude").children;
+    var questions = document.getElementById("questionsToInclude").children;
     for (var i=0; i<questions.length; i++) {
         if (questions[i].type == "checkbox") {
             questions[i].checked = false;
@@ -152,7 +152,7 @@ var unselectAllQuestions = function() {
             <div class="row">
                 <div class="col-4">
                     <div class="multiselect">
-                        <!-- {% csrf_token %} -->
+                        {% csrf_token %}
                         <select name="filter" onclick="showCheckboxes()">
                             <option value="y" selected hidden> Select error tag from REALEC </option>
                         </select>

@@ -75,7 +75,7 @@ var deleteCollection = function(collection_id) {
           delete_elem(collection_div);
           alert(`Collection ${collection_id} deleted`);
       } else if (this.status >= 400) {
-          alert(`Unable to delete collection ${collection_id}`)
+          alert(`Unable to delete collection ${collection_id}`);
       }
     };
     xhttp.open("POST", "/deleteCollection/", true);

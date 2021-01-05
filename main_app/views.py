@@ -1307,3 +1307,10 @@ def add_test_to_collection(request, collection_id):
         'collection': collection})
     return render(request, '403.html')
 
+def delete_questions(request):
+    if "rights" in request.session:
+        if request.session["rights"] in ("A","T"):
+            questions_to_include = [int(i) for i in request.POST if request.POST[i] == "on" and isint(i)]
+            Question.objects.filter(id__in=questions_to_include).delete()
+            return HttpResponse("ok")
+    return HttpResponseForbidden()
