@@ -3,6 +3,8 @@ exam2017/
 examples/
 media/**
 moodle_exercises/
+mediafiles/
+staticfiles/
 test_data/
 testing_platform/settings.py
 trash/
@@ -17,6 +19,7 @@ __pycache__
 *.ipynb
 .vscode
 *.bat
+*.sh
 *.xlsx
 env.prod
 *.env
