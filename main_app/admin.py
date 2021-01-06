@@ -2,7 +2,7 @@ from django.contrib import admin
 
 # Register your models here.
 
-from .models import User, Student, Quizz, Question, Results, Folder, IELTS_Test, Section, Answer, WrongAnswer
+from .models import User, Student, Quizz, Question, Results, Folder, IELTS_Test, Section, Answer, WrongAnswer, IELTSWritingTask, IELTSWritingResponse
 
 
 admin.site.register(User)
@@ -15,3 +15,5 @@ admin.site.register(IELTS_Test)
 admin.site.register(Section)
 admin.site.register(Answer)
 admin.site.register(WrongAnswer)
+admin.site.register(IELTSWritingTask)
+admin.site.register(IELTSWritingResponse)

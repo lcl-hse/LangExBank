@@ -1,0 +1,70 @@
+{% extends "index.html" %}
+{% block head %}
+{% load static %}
+<!-- Bootstrap CSS -->
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+<link href="{% static "basic.css" %}" rel="stylesheet" />
+{% endblock %}
+{% block main_body %}
+  {% autoescape off %}
+  <div class="container-fluid">
+      <div style="display: none" id="token">{{ csrf_token }}</div>
+      <div class = "main">
+        <div>
+          <form method="POST">
+          {% csrf_token %}
+          <div class="row">
+            <div class="col-md-6">
+            <h1> Available IELTS tests </h1>
+            </div>
+            <div class="col-md-6">
+            Collection name:
+            <input type="text" name="collection_name" value="{{ collection.name }}">
+            </div>
+          </div>
+          
+          <div class="row">
+          <div class="col-md-4" id="reading_listening_list">
+          <h2>Reading & Listening tests</h2>
+          <ul>
+            {% for quiz in quizlist %}
+            <div id="test_{{ quiz.name }}">
+                <li> <b>Test "{{ quiz.name }}"</b>
+                {% if quiz.included %}
+                <input type="checkbox" name="comp_{{quiz.name}}" value="y" checked>
+                {% else %}
+                <input type="checkbox" name="comp_{{quiz.name}}" value="y">
+                {% endif %}
+                </li>
+            </div>
+            {% endfor %}
+          </ul>
+          </div>
+          <div class="col-md-4" id="writing_lsit">
+          <h2>Writing tests</h2>
+          <ul>
+            {% for wtest in wtest_list %}
+            <div>
+                <li> <b>Test "{{ wtest.name }}"</b>
+                {% if wtest.included %}
+                <input type="checkbox" name="writ_{{wtest.name}}" value="y" checked>
+                {% else %}
+                <input type="checkbox" name="writ_{{wtest.name}}" value="y">
+                {% endif %}
+                </li>
+            </div>
+            {% endfor %}
+          </ul>
+          </div>
+          <div class="col-md-4" id="speaking_list">
+          <h2>Speaking tests</h2>
+          </div>
+          </div>
+          <button class="btn btn-outlline btn-primary">Save collection</button>
+          </form>
+        </div>
+      </div>
+  </div>
+  {% endautoescape %}
+{% endblock %}
+{% block under_body %}<script type="text/javascript" src="{% static "ielts_test_manager.js" %}"></script>{% endblock %}

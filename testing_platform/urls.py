@@ -69,7 +69,11 @@ urlpatterns = [
     path('editIELTSSpeaking/<int:test_id>', views.edit_speaking, name="edit_speaking"),
     path('takeIELTSSpeaking/<int:test_id>', views.take_speaking, name="take_speaking"),
     path('IELTSSpeakingGrades/<int:test_id>', views.speaking_results, name='speaking_results'),
-    path('ReviewIELTSSpeaking/<int:test_id>/<str:student_id>', views.review_speaking, name='review_speaking')
+    path('ReviewIELTSSpeaking/<int:test_id>/<str:student_id>', views.review_speaking, name='review_speaking'),
+    path('IELTS/Collections/', views.display_test_collections, name="ielts_test_collections"),
+    path('deleteCollection/', views.delete_collection, name="delete_collection"),
+    path('addTestToCollection/<str:collection_id>', views.add_test_to_collection, name="add_test_to_collection"),
+    path('deleteQuestions/', views.delete_questions, name="delete_questions")
 ]
 
 # path('questions/<str:err_type>', views.display_questions, name="display_questions"),

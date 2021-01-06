@@ -19,6 +19,7 @@ from math import ceil
 from transliterate import translit
 from io import BytesIO
 from collections import defaultdict, namedtuple
+from datetime import datetime
 
 
 from .utils import *
@@ -597,6 +598,7 @@ def questions_from_folder(request):
     if 'rights' in request.session:
         if request.session['rights'] in ('A','T'):
             if request.POST:
+                filter_query = None
                 path = request.POST['path']
                 tags = [field[4:] for field in request.POST if field.startswith('tag_')]
                 if 'new_qfolder' in request.POST:
@@ -607,8 +609,29 @@ def questions_from_folder(request):
                 multiple_choice = False
                 if 'multiple_choice' in request.POST:
                     multiple_choice = True
+                if 'filter_query' in request.POST:
+                    filter_query = request.POST['filter_query']
+                    try:
+                        reg_exp = re.compile(filter_query)
+                    except:
+                        msg = f'<span style="color: white; background-color: red">"{filter_query}" is not a valid regular expression</span>'
+                        err_tags = []
+                        for tag in tagset:
+                            tag_triplet = [False, tag, tag]
+                            if tag in tag_map:
+                                tag_triplet[2] = tag_map[tag]
+                            if tag in tags:
+                                tag_triplet[0] = True
+                            err_tags.append(tag_triplet)
+                        print(err_tags)
+                        return render(request,
+                        'questions_from_folder.html',
+                        {'err_tags': err_tags,
+                        'msg': msg})
+                print(f"Filter query - {filter_query}")
                 generate_questions(folder=path, tags=tags, strike=True, delete_downloaded=True,
-                new_qfolder=new_qfolder, qfolder_name=qfolder_name, multiple_choice=multiple_choice)
+                new_qfolder=new_qfolder, qfolder_name=qfolder_name, multiple_choice=multiple_choice,
+                filter_query=filter_query)
                 return redirect('display_questions')
             err_tags = [(False, tag, tag_map[tag]) if tag in tag_map else (False, tag, tag) for tag in tagset]
             return render(request, 'questions_from_folder.html',
@@ -1123,7 +1146,8 @@ def take_writing(request, writing_test_name):
                 if IELTSWritingResponse.objects.filter(student=student,task=wtest).exists():
                     return HttpResponse("You've already submitted this writing")
                 new_response = IELTSWritingResponse(task=wtest,student=student,
-                text=request.POST["student_response"])
+                text=request.POST["student_response"],
+                submission_dt=datetime.now())
                 new_response.save()
                 return redirect("ielts_test_list")
             else:
@@ -1210,3 +1234,83 @@ def review_speaking(request, speaking_test_id, student_id):
             else:
                 return HttpResponseNotFound()
     return render(request, "403.html")
+
+@del_prev_page
+def display_test_collections(request):
+    if "rights" in request.session:
+        collections = TestCollection.objects.all()
+
+        if request.session["rights"] in ('A','T'):
+            if request.POST:
+                create_collection(request.POST["collection_id"])
+            return render(request,'ielts_collections.html',
+            {'student':False, 'collections':collections})
+        elif request.session["rights"] == 'S':
+            return render(request, 'ielts_collections.html',
+            {'student':True, 'collections':collections})
+    return render(request, '403.html')
+
+def create_collection(collection_id):
+    new_collection = TestCollection(name=collection_id)
+    new_collection.save()
+
+def delete_collection(request):
+    if request.session["rights"] in ('A','T'):
+        if 'collection_id'  in request.POST:
+            collection_id = request.POST['collection_id']
+            collection = TestCollection.objects.get(name=collection_id)
+            collection.delete()
+            return HttpResponse("ok")
+    return HttpResponseForbidden()
+
+
+@del_prev_page
+def add_test_to_collection(request, collection_id):
+    if request.session["rights"] in ('A','T'):
+        collection = TestCollection.objects.get(name=collection_id)
+        if request.POST:
+            tests_to_add = [field[field.find('_')+1:] for field in request.POST if field.startswith('comp_')]
+            wtests_to_add = [field[field.find('_')+1:] for field in request.POST if field.startswith('writ_')]
+            tests_to_add = IELTS_Test.objects.filter(name__in=tests_to_add)
+            wtests_to_add = IELTSWritingTask.objects.filter(name__in=wtests_to_add)
+            
+            ## Speaking & Reading Comprehension tests
+            new_tests = tests_to_add.difference(collection.ielts_test_set.all())
+            tests_to_delete = collection.ielts_test_set.all().difference(tests_to_add)
+
+            for test in new_tests:
+                collection.ielts_test_set.add(test)
+            
+            for test in tests_to_delete:
+                collection.ielts_test_set.remove(test)
+            
+            ## Writing tests
+            new_wtests = wtests_to_add.difference(collection.ieltswritingtask_set.all())
+            wtests_to_delete = collection.ieltswritingtask_set.all().difference(new_wtests)
+
+            for wtest in new_wtests:
+                collection.ieltswritingtask_set.add(wtest)
+            for wtest in wtests_to_delete:
+                collection.ieltswritingtask_set.remove(wtest)
+            
+            collection_new_name = request.POST["collection_name"]
+            collection.name = collection_new_name
+            collection.save()
+            return redirect("ielts_test_collections")
+        
+        tests = IELTS_Test.objects.all()
+        wtests = IELTSWritingTask.objects.all()
+        quizlist = [{"name": test.name, "included": test in collection.ielts_test_set.all()} for test in tests]
+        wtest_list = [{"name": wtest.name, "included": wtest in collection.ieltswritingtask_set.all()} for wtest in wtests]
+        return render(request, 'edit_collection.html',
+        {'quizlist': quizlist, 'wtest_list': wtest_list,
+        'collection': collection})
+    return render(request, '403.html')
+
+def delete_questions(request):
+    if "rights" in request.session:
+        if request.session["rights"] in ("A","T"):
+            questions_to_include = [int(i) for i in request.POST if request.POST[i] == "on" and isint(i)]
+            Question.objects.filter(id__in=questions_to_include).delete()
+            return HttpResponse("ok")
+    return HttpResponseForbidden()

@@ -60,9 +60,20 @@ class Folder(models.Model):
     name = models.CharField(max_length=40, unique=True)
 
 
+class TestCollection(models.Model):
+    name = models.CharField(max_length=40, unique=True)
+
+    def get_activities(self):
+        return list(self.ielts_test_set.all()) + list(self.ieltswritingtask_set.all())
+
 class IELTS_Test(models.Model):
     name = models.CharField(max_length=40, unique=True)
     full_grade = models.FloatField(null=True)
+    deadline = models.DateTimeField(null=True)
+    collection = models.ManyToManyField(TestCollection, blank=True)
+
+    def activity_type(self):
+        return 'IELTS_Test'
 
 class Section(models.Model):
     ielts_test = models.ManyToManyField(IELTS_Test, blank=True)
@@ -160,6 +171,12 @@ class IELTSWritingTask(models.Model):
     name = models.CharField(max_length=40,unique=True)
     text = models.CharField(max_length=100000,null=True)
     supplement = models.FileField(null=True)
+    deadline = models.DateTimeField(null=True)
+    collection = models.ManyToManyField(TestCollection, blank=True)
+
+    def activity_type(self):
+        return 'IELTSWritingTask'
+
 
 class IELTSWritingResponse(models.Model):
     task = models.ForeignKey(IELTSWritingTask,
@@ -168,3 +185,4 @@ class IELTSWritingResponse(models.Model):
     on_delete=models.CASCADE)
     mark = models.FloatField(null=True)
     text = models.CharField(max_length=50000,null=True)
+    submission_dt = models.DateTimeField(null=True)

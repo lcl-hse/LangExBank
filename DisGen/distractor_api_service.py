@@ -4,6 +4,7 @@ from flask import Flask, request, render_template, jsonify, send_file
 from werkzeug.utils import secure_filename
 
 import pandas as pd
+import numpy as np
 
 import distractor_generator
 
@@ -33,6 +34,13 @@ def index():
 
                 df = pd.read_excel(inp_filepath, index_col='id')
                 df = distractor_generator.get_distractors(df)
+
+                df['Distractor 1 Quality'] = ""
+                df['Distractor 2 Quality'] = ""
+                df['Distractor 3 Quality'] = ""
+                df['Right Quality'] = ""
+                df['Wrong Qulaity'] = ""
+
                 df.to_excel(out_filepath)
 
                 attachment_name = file.filename.rsplit('.',1)[0]+'_with_distractors.xlsx'

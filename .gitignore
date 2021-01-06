@@ -20,3 +20,4 @@ __pycache__
 *.xlsx
 env.prod
 *.env
+main_app/migrations

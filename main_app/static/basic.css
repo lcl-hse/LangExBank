@@ -78,6 +78,12 @@ th, td {
     grid-column-gap: 1%;
 }
 
+.equalThreeCols{
+    display: grid;
+    grid-template-columns: 32% 32% 32%;
+    grid-column-gap: 2%;
+}
+
 .equalSmallCols{
     display: grid;
     height: 300px;

@@ -1,6 +1,7 @@
 {% extends "question_collection_base.html" %}
+{% load static %}
 {% block bottom %}
-<div class="equalCols">
+<div class="equalThreeCols">
     <div>
         Quiz name: <textarea name="quizName" cols="30" rows="1" form="questionsToInclude"></textarea><br />
         <button onclick="createNewQuiz()">Create quiz</button> <input type="checkbox" form="questionsToInclude" name="strip_answers" checked="checked"> Strip punctuation and parenthesis from submitted answers</input>
@@ -9,9 +10,35 @@
         Folder name: <textarea name="folderName" cols="30" rows="1" form="questionsToInclude"></textarea><br />
         <button onclick="createNewFolder()">Create folder</button> 
     </div>
+    <div>
+        <button class="btn btn-danger" onclick="deleteQuestions()">Delete questions</button>
+    </div>
 </div>
 <br />
 <div>
     <a class="btn btn-primary" href="/fromFolder" role="button">+ Add questions from REALEC</a>
 </div>
+{% endblock %}
+{% block under_body %}
+<script type="text/javascript" src="{% static "serialize-0.2.min.js" %}"></script>
+<script>
+    var deleteQuestions = function() {
+        if (confirm("Are you sure to delete selected questions from the database FOREVER?")) {
+            var xhttp = new XMLHttpRequest();
+            xhttp.onreadystatechange = function() {
+                if (this.status == 200) {
+                    location.reload();
+                } else if (this.status >= 400) {
+                    alert("Unable to delete questions");
+                }
+            };
+            xhttp.open("POST", "/deleteQuestions/", true);
+            xhttp.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+            var questionForm = document.getElementById("questionsToInclude");
+            xhttp.send(serialize(questionForm));
+        } else {
+            return;
+        }
+    };
+</script>
 {% endblock %}
