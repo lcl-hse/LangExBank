@@ -5,10 +5,11 @@ services:
     build:
       context: .
       dockerfile: Dockerfile.prod
-    command: gunicorn testing_platform.wsgi:application --bind 0.0.0.0:8000 -t 12000
+    command: gunicorn testing_platform.wsgi:application --bind 0.0.0.0:8000 -t 10000
     volumes:
       - static_volume:/home/app/web/staticfiles
       - media_volume:/home/app/web/mediafiles
+      - model_data_volume:/home/app/web/models_data
     expose:
       - 8000
     env_file:
@@ -26,3 +27,4 @@ services:
 volumes:
   static_volume:
   media_volume:
+  model_data_volume:
