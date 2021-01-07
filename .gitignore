@@ -2,6 +2,7 @@ exam/
 exam2017/
 examples/
 media/**
+models_data/
 moodle_exercises/
 mediafiles/
 staticfiles/
@@ -23,4 +24,4 @@ __pycache__
 *.xlsx
 env.prod
 *.env
-main_app/migrations
+.goutputstream*
