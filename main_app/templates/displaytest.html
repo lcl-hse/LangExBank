@@ -41,7 +41,13 @@
                                                         <br />
                                                     {% endfor %}
                                                 {% else %}
-                                                    <input type="text" class="form-control form-control-sm" name="question_{{ question.id }}" cols="50" row="1">
+                                                {% if question.multi_field %}
+                                                {% for field in question.field_range %}
+                                                <input type="text" class="form-control form-control-sm" name="question_{{ question.id }}_field_multi" cols="50" row="1">
+                                                {% endfor %}
+                                                {% else %}
+                                                <input type="text" class="form-control form-control-sm" name="question_{{ question.id }}" cols="50" row="1">
+                                                {% endif %}
                                                 {% endif %}
                                             </div>
                                         {% endfor %}
@@ -81,7 +87,13 @@
                                                             <br />
                                                         {% endfor %}
                                                     {% else %}
+                                                        {% if question.multi_field %}
+                                                        {% for field in question.field_range %}
+                                                        <input type="text" class="form-control form-control-sm" name="question_{{ question.id }}_{{ field }}_multi" cols="50" row="1">
+                                                        {% endfor %}
+                                                        {% else %}
                                                         <input type="text" class="form-control form-control-sm" name="question_{{ question.id }}" cols="50" row="1">
+                                                        {% endif %}
                                                     {% endif %}
                                                 </div>
                                             {% endfor %}
@@ -115,7 +127,13 @@
                                                 <br />
                                             {% endfor %}
                                         {% else %}
+                                            {% if question.multi_field %}
+                                            {% for field in question.field_range %}
+                                            <input type="text" class="form-control form-control-sm" name="question_{{ question.id }}_field_multi" cols="50" row="1">
+                                            {% endfor %}
+                                            {% else %}
                                             <input type="text" class="form-control form-control-sm" name="question_{{ question.id }}" cols="50" row="1">
+                                            {% endif %}
                                         {% endif %}
                                     </div>
                                 {% endfor %}

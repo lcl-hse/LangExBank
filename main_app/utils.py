@@ -1,5 +1,6 @@
 import base64
 import re
+import ast
 
 from math import ceil
 from collections import namedtuple
@@ -166,44 +167,85 @@ def check_multiple(answer, right_answers):
 
 def check_answers(answers, question_ids, session):
     question_ids = sorted(question_ids)
+
     questions = Question.objects.filter(id__in=question_ids).order_by('id')
-    right_answers = [(ans.answer_text, ans.question_id.id) for ans in Answer.objects.filter(question_id__id__in = question_ids)]
+    right_answers = [(ans.answer_text, ans.question_id.id) for ans in Answer.objects.filter(question_id__id__in = question_ids).order_by('id')]
 
     right_answers = {ans[1]: [i[0] for i in right_answers if i[1] == ans[1]] for ans in right_answers}
 
     check_sheet = []
 
     for answer, qid, question in zip(answers, question_ids, questions):
-        if question.question_type == "ielts_multiple":
-            check_sheet.append(check_multiple(answer, right_answers[qid]))
-        else:
-            if question.case_insensitive:
-                if answer.strip().lower() in [i.strip().lower() for i in right_answers[qid]]:
-                    check_sheet.append(1.0)
-                else:
-                    check_sheet.append(0.0)
+        #print(answer, question)
+        if question.multi_field:
+            answered = True
+            ## check >1 fields and get score only for 100% correspondence:
+            ## The order of answers is preserved via ID field
+            for ans, right_values in zip(answer, right_answers[qid]):
+                ans = ans.strip()
+                if question.case_insensitive:
+                    ans = ans.lower()
+                    right_values = right_values.lower()
+                if ans not in (i.strip() for i in right_values.split(';')):
+                    answered = False
+                    break
+            if answered:
+                check_sheet.append(1.0)
             else:
-                if answer.strip() in [i.strip() for i in right_answers[qid]]:
-                    check_sheet.append(1.0)
+                check_sheet.append(0.0)
+
+        else:
+            if question.question_type == "ielts_multiple":
+                check_sheet.append(check_multiple(answer, right_answers[qid]))
+            else:
+                if question.case_insensitive:
+                    if answer.strip().lower() in [i.strip().lower() for i in right_answers[qid]]:
+                        check_sheet.append(1.0)
+                    else:
+                        check_sheet.append(0.0)
                 else:
-                    check_sheet.append(0.0)
+                    if answer.strip() in [i.strip() for i in right_answers[qid]]:
+                        check_sheet.append(1.0)
+                    else:
+                        check_sheet.append(0.0)
     
     user = User.objects.get(login = session["user_id"])
 
     Results.objects.bulk_create([Results(student = User.objects.get(login=session["user_id"]),
                                          question = q,
-                                         answer = answer,
+                                         answer = str(answer),
                                          mark = mark) for answer, q, mark in zip(answers, questions, check_sheet)])
 
 def recheck_answers(results):
     for result in results:
-        right_answers = [i.answer_text for i in Answer.objects.filter(question_id = result.question)]
+        right_answers = [i.answer_text for i in result.question.answer_set.all().order_by('id')]
         if result.question.question_type == "ielts_multiple":
             result.mark = check_multiple(result.answer, right_answers)
         elif result.question.question_type == "ielts_question":
-            for right_answer in right_answers:
-                if result.answer.strip() == right_answer.strip():
+            if result.question.multi_field:
+                answered = True
+                ## check >1 fields and get score only for 100% correspondence:
+                ## The order of answers is preserved via ID field
+                for ans, right_values in zip(ast.literal_eval(result.answer), right_answers):
+                    ans = ans.strip()
+                    if result.question.case_insensitive:
+                        ans = ans.lower()
+                        right_values = right_values.lower()
+                    if ans not in (i.strip() for i in right_values.split(';')):
+                        answered = False
+                        break
+                if answered:
                     result.mark = 1.0
+                else:
+                    result.mark = 0.0
+            else:
+                for right_answer in right_answers:
+                    if result.question.case_insensitive:
+                        if result.answer.lower().strip() == right_answer.lower().strip():
+                            result.mark = 1.0
+                    else:
+                        if result.answer.strip() == right_answer.strip():
+                            result.mark = 1.0
         result.save()
 
 def full_grade(test):

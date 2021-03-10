@@ -152,8 +152,8 @@ var make_multiple = function(multipleButton) {
         // console.log("checkbox not checked");
         wrong_answer_div = document.getElementById("wrong_answers_"+sec_id+"_"+quest_id)
         delete_elem(wrong_answer_div);
-    }
-}
+    };
+};
 
 var addSimpleQuestionForm = function(addButton, section_id) {
     prev_sibl = addButton.previousElementSibling;
@@ -181,7 +181,9 @@ var addSimpleQuestionForm = function(addButton, section_id) {
     a_text.cols = 30;
     a_text.rows = 1;
     a_text.name = "atext_"+section_id+"_"+curr_id;
+    a_text.id = a_text.name;
     simple_form.innerHTML += '<button type="button" onclick="del_qform('+section_id+','+curr_id+')">Delete</button>';
+    simple_form.innerHTML += '<button type="button" onclick="addField(this.parentNode)">Add another field</button>';
     simple_form.innerHTML += '<input type="checkbox" name="insensitive_'+section_id+'_'+curr_id+'"> Case insensitive';
     simple_form.innerHTML += '<input type="checkbox" name="sequence_'+section_id+'_'+curr_id+'"> Multiple letters';
     simple_form.innerHTML += '<input type="checkbox" name="multiple_'+section_id+'_'+curr_id+'" onchange="make_multiple(this)"> Multiple Choice question';
@@ -266,4 +268,71 @@ var addSection = function() {
     // decrementing currently added section id at the end:
     sec_id -= 1;
     addMCE(new_name);
+};
+
+var addField = function(questionNode) {
+    questionNodeId = questionNode.id.split('_');
+    questionId = questionNodeId[1] + '_' + questionNodeId[2];
+
+    fields = questionNode.querySelectorAll(`[id^=atext_${questionId}]`);
+
+    lastField = fields[fields.length-1];
+
+    console.log(fields);
+    console.log(lastField);
+
+    lastFieldName = lastField.id.split(':');
+    lastFieldId = lastFieldName[lastFieldName.length-1];
+    lastFieldName = lastFieldName[0];
+    if (lastFieldId == lastFieldName) {
+        lastFieldId = 0;
+    };
+    lastFieldId++;
+
+    newSpan = document.createElement("span");
+
+    newField = document.createElement("textarea");
+    newField.cols = 30;
+    newField.rows = 1;
+    newField.name = lastFieldName + ':' + lastFieldId;
+
+    delButton = document.createElement("button");
+    delButton.type = 'button';
+    delButton.onclick = function() {
+        newFieldSpan = this.parentNode;
+        questionDiv = newFieldSpan.parentNode;
+
+        questionDiv.removeChild(newFieldSpan);
+
+        // check if it's the last extra field for question:
+        if (questionDiv.querySelectorAll(`[id^=atext_${questionId}]`).length == 1) {
+            questionDiv.innerHTML += `<span id="singlefieldcheckboxes">\
+            <input type="checkbox" name="sequence_${questionId}"> Multiple letters\
+            <input type="checkbox" name="multiple_${questionId}"> Multiple Choice question\
+            </span>`;
+        };
+    };
+    delButton.innerHTML = 'X';
+
+    // var deleteNewDiv = function() {
+    //     delete_elem(newDiv);
+    // };
+
+
+    newSpan.appendChild(newField);
+    newSpan.appendChild(delButton);
+    newSpan.id = newField.name;
+
+    // Delete DIV for wrong answers (if exists):
+    wrong_answer_div = document.getElementById(`wrong_answers_${questionId}`);
+    if (wrong_answer_div != undefined) {
+        delete_elem(wrong_answer_div);
+    };
+    // Delete checkboxes for incompatible options
+    checkboxes = questionNode.querySelector(`[id="singlefieldcheckboxes"]`);
+
+    if (checkboxes!=undefined) {
+        delete_elem(checkboxes);
+    };
+    insertAfter(newSpan, lastField);
 };

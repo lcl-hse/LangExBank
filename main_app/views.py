@@ -756,13 +756,36 @@ def edit_ielts_test(request, test_id=None):
                             q.case_insensitive = True
                         q.save()
 
-                        if f"sequence_{section_id}_{q_id}" in request.POST:
-                            q.question_type = "ielts_multiple"
-                        q.save()
-
                         ## Deleting previous answers:
                         Answer.objects.filter(question_id=q).delete()
                         WrongAnswer.objects.filter(question_id=q).delete()
+
+
+                        ## If the question requires multi-field answer:
+                        extra_fields = [key for key in request.POST if re.match(f"atext_{section_id}_{q_id}:[0-9]+",
+                        key)]
+
+                        if extra_fields:
+                            if not q.multi_field:
+                                q.multi_field = True
+                            answer_field = f"atext_{section_id}_{q_id}"
+
+                            for field in [answer_field] + extra_fields:
+                                answer_text = request.POST[field]
+                                if q.case_insensitive:
+                                    answer_text = answer_text.lower().strip()
+                                a = Answer(question_id=q, answer_text=answer_text)
+                                a.save()
+                            q.save() 
+                            continue
+                        elif q.multi_field and not extra_fields:
+                            q.multi_field = False
+                        ## Endblock
+                        
+                        ## Making IELTS question of type sequence if needed (for now incompatible with multi-field option)
+                        if f"sequence_{section_id}_{q_id}" in request.POST:
+                            q.question_type = "ielts_multiple"
+                        q.save()
                         
                         ## Writing new answers:
                         answers = request.POST[f'atext_{section_id}_{q_id}'].split(";")
@@ -778,8 +801,10 @@ def edit_ielts_test(request, test_id=None):
                             wAnswers = [WrongAnswer(question=q, answer_text=wAnswer) for wAnswer in wrong_answers]
                             WrongAnswer.objects.bulk_create(wAnswers)
                     ## recheck results for modified questions:
-                    question_ids = [int(i.split('_')[-1]) for i in question_fields]
-                    recheck_answers(Results.objects.filter(question__id__in=question_ids))
+                    if "recheck" in request.POST:
+                        if request.POST["recheck"]:
+                            question_ids = [int(i.split('_')[-1]) for i in question_fields]
+                            recheck_answers(Results.objects.filter(question__id__in=question_ids))
                     ## Working with newly added questions:
                     question_fields = [field for field in request.POST if field.startswith(f"qtext_{section.id}_-")]
                     for question_field in question_fields:
@@ -791,6 +816,24 @@ def edit_ielts_test(request, test_id=None):
                         if f"insensitive_{section_id}_{q_id}" in request.POST:
                             q.case_insensitive = True
                         q.save()
+
+                        ## If the question requires multi-field answer:
+                        extra_fields = [key for key in request.POST if re.match(f"atext_{section_id}_{q_id}:[0-9]+",
+                        key)]
+
+                        if extra_fields:
+                            q.multi_field = True
+                            answer_field = f"atext_{section_id}_{q_id}"
+
+                            for field in [answer_field] + extra_fields:
+                                answer_text = request.POST[field]
+                                if q.case_insensitive:
+                                    answer_text = answer_text.lower().strip()
+                                a = Answer(question_id=q, answer_text=answer_text)
+                                a.save() 
+                            q.save()
+                            continue
+                        ## Endblock
 
                         if f"sequence_{section_id}_{q_id}" in request.POST:
                             q.question_type = "ielts_multiple"
@@ -856,6 +899,24 @@ def edit_ielts_test(request, test_id=None):
                             q.case_insensitive = True
                         q.save()
 
+                        ## If the question requires multi-field answer:
+                        extra_fields = [key for key in request.POST if re.match(f"atext_{section_id}_{q_id}:[0-9]+",
+                        key)]
+
+                        if extra_fields:
+                            q.multi_field = True
+                            answer_field = f"atext_{section_id}_{q_id}"
+
+                            for field in [answer_field] + extra_fields:
+                                answer_text = request.POST[field]
+                                if q.case_insensitive:
+                                    answer_text = answer_text.lower().strip()
+                                a = Answer(question_id=q, answer_text=answer_text)
+                                a.save() 
+                            q.save()
+                            continue
+                        ## Endblock
+
                         if "sequence_"+new_section_id+"_"+q_id in request.POST:
                             q.question_type = "ielts_multiple"
                         q.save()
@@ -882,13 +943,15 @@ def edit_ielts_test(request, test_id=None):
                     test = IELTS_Test.objects.get(id=test_id)
                     test_sections = Section.objects.filter(ielts_test=test)
                     test_name = test.name
+                    pre_created = True
                     # for sec in test_sections:
                     #     sec.text = sec.text.replace('\n','\\\n')
                 else:
                     test_sections = []
                     test_name = ''
+                    pre_created = False
                 return render(request, "new_ielts_test.html", {'test_sections': test_sections,
-                                                                         'test_name': test_name})
+                                                                'test_name': test_name, 'pre_created': pre_created})
     request.session["prev_page"] = reverse("edit_ielts", kwargs={'test_id': int(test_id)})
     request.session["asked_restricted"] = True
     return render(request, "403.html")
@@ -924,9 +987,35 @@ def take_ielts_test(request, test_id):
              question__section__ielts_test__id = test_id).exists():
                 return HttpResponse("You've already submitted this quiz")
             answer_fields = sorted([field for field in request.POST if field.startswith("question_")],
-            key=lambda x: x.split("_")[1])
+            key=lambda x: int(x.split("_")[1]))
             question_ids = [int(i.split('_')[1]) for i in answer_fields]
-            answers = [request.POST[answer_field] for answer_field in answer_fields]
+
+
+            ## Join answer fields for multi-field questions:
+            answer_fields_out = []
+            answer_field_id = 0
+
+            while answer_field_id < len(answer_fields):
+                if answer_fields[answer_field_id].endswith('multi'):
+                    multi_field = []
+                    while answer_field_id < len(answer_fields) and answer_fields[answer_field_id].endswith('multi'):
+                        multi_field.append(answer_fields[answer_field_id])
+                        answer_field_id += 1
+                    answer_fields_out.append(multi_field)
+                else:
+                    answer_fields_out.append(answer_fields[answer_field_id])
+                    answer_field_id += 1
+            
+            answer_fields = answer_fields_out
+
+            #print(answer_fields)
+            ## Endblock
+
+            answers = [request.POST[answer_field]\
+                if type(answer_field) == str else tuple(request.POST[field] for field in answer_field)\
+                for answer_field in answer_fields]
+            
+            #print(answers)
             check_answers(answers, question_ids, request.session)
             if request.session["rights"] in ("A", "T"):
                 return redirect("ielts_grades", test_id=test_id)

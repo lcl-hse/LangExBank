@@ -105,6 +105,9 @@ class Question(models.Model):
     folder = models.ManyToManyField(Folder, blank=True)
     section = models.ForeignKey(Section, null=True, on_delete=models.SET_NULL)
     case_insensitive = models.BooleanField(default=False)
+
+    ## Whether more than 1 field should be present in the answer sheet for this question:
+    multi_field = models.BooleanField(default=False)
     # folder_addr = models.CharField(max_length=45, null=True)
     # essay_addr = models.CharField(max_length=45, null=True)
     # question_group = models.CharField(max_length=45, null=True)
@@ -134,13 +137,28 @@ class Question(models.Model):
         return ';'.join([i.answer_text for i in wronganswers])
     
     def get_right_answers_text(self):
-        rightanswers = self.answer_set.all()
-        return ';'.join([i.answer_text for i in rightanswers])
+        if self.multi_field:
+            return self.answer_set.all()[0].answer_text
+        else:
+            rightanswers = self.answer_set.all()
+            return ';'.join([i.answer_text for i in rightanswers])
     
     def get_generated_distractors(self):
         if self.question_type == 'multiple_choice':
             return (wanswer.answer_text for wanswer in self.wronganswer_set.all() if wanswer.is_generated)
         return ()
+    
+    def get_extra_answers(self):
+        if self.multi_field:
+            return list(enumerate(self.answer_set.all()))[1:]
+        else:
+            return []
+    
+    def field_range(self):
+        if self.multi_field:
+            return range(len(self.answer_set.all()))
+        else:
+            return 1
 
 
 class Answer(models.Model):

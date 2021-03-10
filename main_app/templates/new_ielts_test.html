@@ -95,13 +95,24 @@
                           <b>Text: </b>
                           <textarea cols="10" rows="1" name="qtext_{{ test_section.id }}_{{ question.id }}">{{ question.question_text }}</textarea>
                           <b>Answer: </b>
-                          <textarea cols="30" rows="1" name="atext_{{ test_section.id }}_{{ question.id }}">{{ question.get_right_answers_text }}</textarea>
+                          <textarea cols="30" rows="1" name="atext_{{ test_section.id }}_{{ question.id }}" id="atext_{{ test_section.id }}_{{ question.id }}">{{ question.get_right_answers_text }}</textarea>
+                          {% if question.multi_field %}
+                          {% for answer in question.get_extra_answers %}
+                          <span id="atext_{{ test_section.id }}_{{ question.id }}:{{ answer.0 }}">
+                            <textarea cols="30" rows="1" name="atext_{{ test_section.id }}_{{ question.id }}:{{ answer.0 }}">{{ answer.1.answer_text }}</textarea>
+                            <button type="button" onclick="deleteField(this)">X</button>
+                          </span>
+                          {% endfor %}
+                          {% endif %}
                           <button type="button" onclick="delete_question(this.parentNode)">Delete</button>
+                          <button type="button" onclick="addField(this.parentNode)">Add another field</button>
                           {% if question.case_insensitive %}
                             <input type="checkbox" name="insensitive_{{ test_section.id }}_{{ question.id }}" checked="checked"> Case insensitive
                           {% else %}
                             <input type="checkbox" name="insensitive_{{ test_section.id }}_{{ question.id }}"> Case insensitive
                           {% endif %}
+                          {% if not question.multi_field %}
+                          <span id="singlefieldcheckboxes">
                           {% if question.question_type == "ielts_multiple" %}
                             <input type="checkbox" name="sequence_{{ test_section.id }}_{{ question.id }}" checked="checked"> Multiple letters
                           {% else %}
@@ -115,6 +126,8 @@
                           {% else %}
                             <input type="checkbox" name="multiple_{{ test_section.id }}_{{ question.id }}" onchange="make_multiple(this)"> Multiple Choice question
                           {% endif %}
+                          </span>
+                          {% endif %}
                       </div>
                     {% endfor %}
                     <button type="button" onclick="addSimpleQuestionForm(this, {{ test_section.id }})">Add questions</button>
@@ -127,6 +140,9 @@
           <button type="button" onclick="addSection()">Add section</button>
           <!-- <button type="button" onclick="testAjaxPost('{{ csrf_token }}')">Test AJAX POST Request</button> -->
           <button>Save</button>
+          {% if pre_created %}
+          <input type="checkbox" name="recheck">Recheck answers after saving
+          {% endif %}
           </form>
         </div>
       </div>
@@ -142,5 +158,22 @@
       // console.log(editors[i].id);
       // tinymce.get(editors[i].id).setContent(document.getElementById(editors[i].id+"_text").innerHTML);
     }
+    var deleteField = function (delButton) {
+        newFieldSpan = delButton.parentNode;
+        questionDiv = newFieldSpan.parentNode;
+
+        questionNodeId = questionDiv.id.split('_');
+        questionId = questionNodeId[1] + '_' + questionNodeId[2];
+
+        questionDiv.removeChild(newFieldSpan);
+
+        // check if it's the last extra field for question:
+        if (questionDiv.querySelectorAll(`[id^=atext_${questionId}]`).length == 1) {
+            questionDiv.innerHTML += `<span id="singlefieldcheckboxes">\
+            <input type="checkbox" name="sequence_${questionId}"> Multiple letters\
+            <input type="checkbox" name="multiple_${questionId}"> Multiple Choice question\
+            </span>`;
+        };
+    };
   </script>
 {% endblock %}
