@@ -5,7 +5,7 @@ pandas==1.0.3
 xlrd==1.2.0
 openpyxl==3.0.3
 transliterate==1.10.2
-sklearn==0.23.0
+sklearn
 torch==1.7.0
 torchtext==0.6.0
 lemminflect==0.2.1
