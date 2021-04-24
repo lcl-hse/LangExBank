@@ -19,6 +19,7 @@ __pycache__
 *dump*.json
 *.ipynb
 .vscode
+.idea
 *.bat
 *.sh
 *.xlsx
