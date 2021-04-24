@@ -7,9 +7,10 @@ import json, csv
 import pprint
 import difflib
 import time
-from . import realec_helper, wordforms, testmaker_utils
+from . import realec_helper
 import io
 import html
+from . import wordforms
 from .hierarchy import hierarchy
 
 from tqdm import tqdm_notebook
@@ -231,7 +232,7 @@ class Exercise:
       maintain_log = True, show_messages = True, use_ram=False,output_file_names = None,
       file_output = True, write_txt = False, keep_processed = True, hier_choice = False, moodle_output = True,
       make_two_variants = False, exclude_repeated = False, include_smaller_mistakes = False, file_prefix = os.getcwd()+os.sep,
-      keep_all_exercises = False, use_tqdm=False, filter_query=None):
+      keep_all_exercises = False):
 
         """"
         :param error_types: list of str, can include values from
@@ -332,9 +333,6 @@ class Exercise:
             os.makedirs(self.file_prefix+'processed_texts', exist_ok=True)
         self.wf_dictionary = wordforms.wordforms  # {'headword':[words,words,words]}
         self.keep_all_exercises = keep_all_exercises
-        self.tqdm = use_tqdm
-        self.filter_query = filter_query
-        print(f"Filter query - {self.filter_query}")
 
     def find_errors_indoc(self, line):
         """
@@ -349,8 +347,7 @@ class Exercise:
                     self.current_doc_errors[t] = {'Error':err, 'Index':(int(index1), int(index2)), "Wrong":text_mistake, "Relation":None}
             except:
                 #print (''.join(traceback.format_exception(*sys.exc_info())))
-                #print("Errors: Something wrong! No notes or a double span", line)
-                pass
+                print("Errors: Something wrong! No notes or a double span", line)
 
     def validate_answers(self, answer, error):
         # TO DO: multiple variants?
@@ -386,8 +383,7 @@ class Exercise:
                         self.current_doc_errors[annotation.split()[1]]['Right'] = validated
             except:
                 #print (''.join(traceback.format_exception(*sys.exc_info())))
-                #print("Answers: Something wrong! No Notes probably", line)
-                pass
+                print("Answers: Something wrong! No Notes probably", line)
 
     def find_relations_indoc(self, line):
         if re.search('^R', line) is not None:
@@ -398,8 +394,7 @@ class Exercise:
                 for arg in relation_args:
                     self.current_doc_errors[arg]["Relation"] = relation_type
             except:
-                #print("Relations: Something wrong! No Notes or relation between non-error tags", line)
-                pass
+                print("Relations: Something wrong! No Notes or relation between non-error tags", line)
     
     def find_delete_seqs(self, line):
         if re.search('^A', line) is not None and 'Delete' in line:
@@ -412,20 +407,15 @@ class Exercise:
         print('collecting errors info...')
         if self.mode == 'folder':
             # print(self.path_new)
-            annpaths = []
+            i = 0
             for root, dire, files in os.walk(self.path_old):
                 for f in files:
                     if f.endswith('.ann'):
+                        i += 1
+                        if self.show_messages:
+                            print(f)
                         annpath = root+'/'+f
-                        annpaths.append(annpath)
-
-            if self.tqdm:
-                annpaths = tqdm_notebook(annpaths, total=len(annpaths))
-
-            for i, annpath in enumerate(annpaths):
-                if self.show_messages:
-                    print(annpath)
-                self.parse_ann_and_process_text(ann = annpath, processed_text_filename = str(i))
+                        self.parse_ann_and_process_text(ann = annpath, processed_text_filename = str(i))
                     
         elif self.mode == 'file':
             self.parse_ann_and_process_text(ann = self.path_old)
@@ -437,10 +427,8 @@ class Exercise:
         if self.mode!='direct_input':
             with open(ann, 'r', encoding='utf-8') as ann_file:
                 annlines = ann_file.readlines()
-            meta = testmaker_utils.load_meta(ann[:-4])
         else:
             annlines = self.ann.splitlines()
-            meta = testmaker_utils.empty_meta()
         for method in (self.find_errors_indoc, self.find_answers_indoc, self.find_relations_indoc, self.find_delete_seqs):
             for line in annlines:
                 method(line)
@@ -463,17 +451,14 @@ class Exercise:
         self.embedded,self.overlap1,self.overlap2 = self.find_embeddings(unique_error_ind)
         if self.use_ram:
             if self.mode == 'file' or self.mode == 'folder':
-                self.add_to_processed_list(filename = ann[:ann.find('.ann')], meta=meta)
+                self.add_to_processed_list(filename = ann[:ann.find('.ann')])
             elif self.mode == 'direct_input':
-                self.add_to_processed_list(meta=meta)
+                self.add_to_processed_list()
         else:
             if self.mode == 'folder':
                 self.make_one_file(ann[:ann.find('.ann')],processed_text_filename)
-                testmaker_utils.save_meta(meta, os.path.join(self.path_new+processed_text_filename+'.json'))
             elif self.mode == 'direct_input':
                 self.save_processed(self.text, output_filename=self.path_new+'processed')
-                testmaker_utils.save_meta(meta, os.path.join(self.path_new+'processed'+'.json'))
-            
         if not self.include_smaller_mistakes:
             self.current_doc_errors.clear()
 
@@ -570,15 +555,12 @@ class Exercise:
         with open(filename+'.txt', 'r', encoding='utf-8') as text_file:
             self.save_processed(text_file.read(), output_filename = self.path_new+new_filename)
                 
-    def add_to_processed_list(self, filename = None, meta=None):
+    def add_to_processed_list(self, filename = None):
         if self.mode != 'direct_input':
             with io.open(filename+'.txt', 'r', newline='', encoding='utf-8') as text_file:
-                text = self.save_processed(text_file.read(), output_filename=filename)
+                self.processed_texts.append(self.save_processed(text_file.read(), output_filename=filename))
         else:
-            text = self.save_processed(self.text)
-        processed_text = testmaker_utils.ProcessedText(text=text,
-        **meta)
-        self.processed_texts.append(processed_text)
+            self.processed_texts.append(self.save_processed(self.text))
 
     def save_processed(self, one_text, output_filename = None):
         processed = ''
@@ -734,7 +716,7 @@ class Exercise:
                 corrected_sent += i
         return corrected_sent
 
-    def create_sentence_function(self, new_text, lengths, meta):
+    def create_sentence_function(self, new_text, lengths):
         """
         Makes sentences and write answers for all exercise types
         :return: array of good sentences. [ (sentences, [right_answer, ... ]), (...)]
@@ -758,9 +740,9 @@ class Exercise:
                     if self.maintain_log:
                         question_log["result"] = "ok"
                     if not index:
-                        good_sentences[ex_type].append((text, answers, single_question, error_tag, meta))
+                        good_sentences[ex_type].append((text, answers, single_question, error_tag))
                     else:
-                        good_sentences[ex_type+'_variant'+str(index)].append((text, answers, single_question, error_tag, meta))
+                        good_sentences[ex_type+'_variant'+str(index)].append((text, answers, single_question, error_tag))
                         self.c0 += 1
                 elif to_skip:
                     # if self.show_messages:
@@ -799,9 +781,6 @@ class Exercise:
             single_error_in_sent = False
             to_skip = False
             if '<<' in sent2:
-                if self.filter_query:
-                    if not re.search(self.filter_query, sent2):
-                        continue
                 if self.keep_all_exercises and self.exercise_types == ['short_answer']:
                     error_areas = re.finditer("<<.*?>>", sent2)
                     for area in error_areas:
@@ -1166,15 +1145,19 @@ class Exercise:
         if self.use_ram:
             list_to_iter = self.processed_texts
         else:
-            list_to_iter = testmaker_utils.ProcessedTextFileIter(self.path_new)
+            list_to_iter = os.listdir(self.path_new)
         self.c1 = 0
         self.c2 = 0
         self.c0 = 0 # сколько всего предложений с ошибкой прошло функцию build_exercise_text()
-        if self.tqdm:
-            list_to_iter = tqdm_notebook(list_to_iter, total=len(list_to_iter))
-        for one_doc in list_to_iter:
+        for f in tqdm_notebook(list_to_iter, total=len(list_to_iter)):
             new_text = ''
-            text_array = one_doc.text.split('#')
+            if self.use_ram:
+                text_array = f.split('#')
+            else:
+                with open(self.path_new + f,'r', encoding='utf-8') as one_doc:
+                    ##comment out when ready:
+                    # print(f)
+                    text_array = one_doc.read().split('#')
             current_number = 0
             for words in text_array:
                 words = words.replace('\n', ' ').replace('\ufeff', '')
@@ -1187,7 +1170,7 @@ class Exercise:
                     new_text += words[current_number:]
                     current_number = 0
             if '<<' in new_text:
-                new_sents = self.create_sentence_function(new_text, {i:len(all_sents[i]) for i in all_sents}, one_doc.meta)
+                new_sents = self.create_sentence_function(new_text, {i:len(all_sents[i]) for i in all_sents})
                 for key in all_sents:
                     # print(len(all_sents[key]), end = ' ')
                     all_sents[key] += new_sents[key]
@@ -1340,8 +1323,7 @@ def download_folder_and_make_exercises(folder_name, output_path=None, maintain_l
  error_types=[], context=True, make_two_variants=True, file_output=True, moodle_output=True, check_duplicates=True,
  keep_processed=False,
  path_to_downloaded='downloaded_'+get_fname_time(),
- delete_downloaded=False,
- filter_query=None):
+ delete_downloaded=False):
     r = realec_helper.realecHelper()
     r.download_folder(folder_name, path_to_saved_folder=path_to_downloaded)
     if check_duplicates:
@@ -1364,9 +1346,9 @@ def download_folder_and_make_exercises(folder_name, output_path=None, maintain_l
                         essay_anno = os.path.join(root, f[:f.rfind('.')]+'.ann')
                         if os.path.exists(essay_anno):
                             os.remove(essay_anno)
-        del all_texts
+    del all_texts
     exercise_types = ['short_answer']
-    # print(error_types)
+    print(error_types)
     e = Exercise(path_to_realecdata = r.path,
     exercise_types=exercise_types, file_output=file_output,
     moodle_output=moodle_output,
@@ -1374,8 +1356,7 @@ def download_folder_and_make_exercises(folder_name, output_path=None, maintain_l
     maintain_log=maintain_log,
     mode='folder',context=context,bold = True,
     make_two_variants=make_two_variants,
-    hier_choice=True, show_messages=False, keep_processed=keep_processed,
-    filter_query=filter_query)
+    hier_choice=True, show_messages=False, keep_processed=keep_processed)
     e.make_data_ready_4exercise()
     e.make_exercise()
     if delete_downloaded:
@@ -1388,3 +1369,4 @@ def download_folder_and_make_exercises(folder_name, output_path=None, maintain_l
 
 if __name__ == '__main__':
     console_user_interface()
+

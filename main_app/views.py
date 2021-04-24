@@ -27,7 +27,7 @@ from .models import *
 from .management.commands.questions_from_folder import generate_questions
 from testing_platform.settings import login_enc_key, encode, registration_open
 
-from testmaker import testmaker
+from testmaker import testmaker_old as testmaker
 from conf_files.tags import tagset
 from conf_files.tag_mapping import tag_map, map_tag
 
