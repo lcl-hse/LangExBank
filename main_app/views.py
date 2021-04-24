@@ -27,7 +27,7 @@ from .models import *
 from .management.commands.questions_from_folder import generate_questions
 from testing_platform.settings import login_enc_key, encode, registration_open
 
-from testmaker import realec_grammar_exercises_without_mc as testmaker
+from testmaker import testmaker
 from conf_files.tags import tagset
 from conf_files.tag_mapping import tag_map, map_tag
 

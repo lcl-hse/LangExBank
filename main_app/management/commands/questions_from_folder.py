@@ -1,6 +1,6 @@
 from main_app.models import *
 from django.core.management.base import BaseCommand
-from testmaker import realec_grammar_exercises_without_mc_new as testmaker
+from testmaker import testmaker
 from DisGen.distractor_generator import get_distractors
 
 import time
