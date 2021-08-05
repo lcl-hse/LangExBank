@@ -415,7 +415,7 @@ class Exercise:
             annpaths = []
             for root, dire, files in os.walk(self.path_old):
                 for f in files:
-                    if f.endswith('.ann') and os.path.exists(root+'/'+f+'.txt'):
+                    if f.endswith('.ann') and os.path.exists(root+'/'+f[:-4]+'.txt'):
                         annpath = root+'/'+f
                         annpaths.append(annpath)
 
