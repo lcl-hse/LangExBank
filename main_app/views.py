@@ -481,7 +481,16 @@ def student_answers(request, quiz_id, student_id, download=False, mask_name=True
         student = User.objects.get(login = student_id)
         quiz = Quizz.objects.get(id = quiz_id)
         student_answers = Results.objects.filter(student = student,
-        quizz = quiz).values_list('id', 'question__id', 'question__question_text', 'answer', 'mark', 'question__question_type')
+        quizz = quiz).values_list(
+            'id',
+            'question__id',
+            'question__question_text',
+            'answer',
+            'mark',
+            'question__question_type',
+            'question__error_tag'
+        )
+        student_answers = [item + (map_tag(item[-1]),) for item in student_answers]
         student_answers = [i[:5] + (";<br />".join(j[0] for j in Answer.objects.filter(question_id_id=i[1]).values_list("answer_text")),
         len(Results.objects.filter(question_id=i[1], mark=1.0))/len(Results.objects.filter(question_id=i[1])))+i[5:] for i in student_answers]
         if mask_name:
@@ -511,9 +520,16 @@ def student_answers(request, quiz_id, student_id, download=False, mask_name=True
             return response
         else:
             download_url = f"/grades/{quiz_id}/{student_id}/download"
-            return render(request, 'student_results.html', {'student_answers': list(student_answers),
-            'student_name': student_name, 'quiz_name': quiz_name,
-            'download_url': download_url})  
+            return render(
+                request,
+                'student_results.html', {
+                    'student_answers': list(student_answers),
+                    'student_name': student_name,
+                    'quiz_name': quiz_name,
+                    'download_url': download_url,
+                    'reference_url': REFERENCE_URL
+                }
+            )
     else:
         request.session["prev_page"] = reverse("student_answers", kwargs={"quiz_id": int(quiz_id),
                                                                         "student_id": student_id})

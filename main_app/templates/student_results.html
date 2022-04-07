@@ -15,6 +15,7 @@
                       <th> Correct answers </th>
                       <th> Mark </th>
                       <th> Fraction of correct answers</th>
+                      <th> Error tag </th>
                   </tr>
                   {% for entry in student_answers %}
                   <tr>
@@ -24,6 +25,7 @@
                       <td> {{ entry.5 }} </td>
                       <td> <input type="text" name="mark_{{ entry.0 }}" value="{{ entry.4 }}"> </td>
                       <td> {{ entry.6 }} </td>
+                      <td> <a href="{{ reference_url }}/articlesByTag/{{ entry.8 }}" target="_blank" rel="noopener noreferrer"> {{ entry.9 }} </a></td>
                   </tr>
                   {% endfor %}
               </table><br />
