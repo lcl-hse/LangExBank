@@ -48,7 +48,7 @@ INSTALLED_APPS = [
 # A list of hex-encoded 32 byte keys
 # You only need one unless/until rotating keys
 FIELD_ENCRYPTION_KEYS = [
-    'c798ca31f75677edf0d5a268bff71440b1ba059625ffcc1faef994ade28a605d'
+    'd798ca31f78677edf0d5a268bff71440b1ba059625ffcc1faef994ade28a605d'
 ]
 
 MIDDLEWARE = [
