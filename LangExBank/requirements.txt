@@ -1,0 +1,17 @@
+nltk
+django
+django_extensions
+pandas
+xlrd
+openpyxl
+transliterate
+sklearn
+torch==1.7.1
+torchtext==0.6.0
+lemminflect
+spacy
+pyspellchecker
+django-searchable-encrypted-fields
+gunicorn
+textdistance
+psycopg2
