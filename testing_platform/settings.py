@@ -21,13 +21,13 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # See https://docs.djangoproject.com/en/2.1/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = os.environ.get("SECRET_KEY")
+SECRET_KEY = 'MY-SECRET-KEY'
 
 # SECURITY WARNING: don't run with debug turned on in production!
 # DEBUG = False
-DEBUG = int(os.environ.get("DEBUG", default=0))
+DEBUG = True
 
-ALLOWED_HOSTS = os.environ.get("DJANGO_ALLOWED_HOSTS").split()
+ALLOWED_HOSTS = ['*']
 
 
 # Application definition
@@ -47,7 +47,9 @@ INSTALLED_APPS = [
 
 # A list of hex-encoded 32 byte keys
 # You only need one unless/until rotating keys
-FIELD_ENCRYPTION_KEYS = os.environ.get("DJANGO_ENCRYPTION_KEYS").split()
+FIELD_ENCRYPTION_KEYS = [
+    'c798ca31f75677edf0d5a268bff71440b1ba059625ffcc1faef994ade28a605d'
+]
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -58,7 +60,6 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
-
 
 X_FRAME_OPTIONS = 'SAMEORIGIN'
 
@@ -82,31 +83,13 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'testing_platform.wsgi.application'
 
-
-# Database
-# https://docs.djangoproject.com/en/2.1/ref/settings/#databases
-
-# DATABASES = {
-#     'default': {
-#         'ENGINE': 'django.db.backends.mysql',
-#         'NAME': 'realecTestingPla$default',
-#         'USER': 'realecTestingPla',
-#         'PASSWORD': '123realecTEST',
-#         'HOST': 'realecTestingPlatform.mysql.pythonanywhere-services.com'
-#     }, 
-# }
-
-
 DATABASES = {
-    "default": {
-        "ENGINE": os.environ.get("SQL_ENGINE", "django.db.backends.sqlite3"),
-        "NAME": os.environ.get("SQL_DATABASE", os.path.join("models_data", "localbase")),
-        "USER": os.environ.get("SQL_USER", "user"),
-        "PASSWORD": os.environ.get("SQL_PASSWORD", "password"),
-        "HOST": os.environ.get("SQL_HOST", "localhost"),
-        "PORT": os.environ.get("SQL_PORT", "5432"),
-    }
+    'default': {
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': 'localbase',
+    }, 
 }
+
 
 # Password validation
 # https://docs.djangoproject.com/en/2.1/ref/settings/#auth-password-validators
@@ -144,16 +127,18 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/2.1/howto/static-files/
 
-STATIC_URL = os.environ.get("DJANGO_STATIC_URL", default='/staticfiles/')
+STATIC_URL = '/static/'
 
-MEDIA_URL = os.environ.get("DJANGO_MEDIA_URL", default='/mediafiles/')
+MEDIA_URL = '/media/'
 
-MEDIA_ROOT = os.path.join(BASE_DIR, os.environ.get('DJANGO_MEDIA_ROOT',default='mediafiles'))
+MEDIA_ROOT = '/'.join([Path(BASE_DIR).as_posix(), "media/"])
 
-STATIC_ROOT = os.path.join(BASE_DIR, os.environ.get('DJANGO_STATIC_ROOT',default='staticfiles'))
+STATIC_ROOT = '/'.join([Path(BASE_DIR).as_posix(), "static/"])
 
-login_enc_key = os.environ.get("LANGEXBANK_ENC_KEY")
+REFERENCE_URL = 'http://realec-reference.site'
 
-encode = int(os.environ.get("LANGEXBANK_ENCODE_USERS", default=0))
+login_enc_key = ''
 
-registration_open = int(os.environ.get("LANGEXBANK_OPEN_SIGNUP", default=0))
+encode = False
+
+registration_open = False

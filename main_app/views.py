@@ -26,6 +26,7 @@ from .utils import *
 from .models import *
 from .management.commands.questions_from_folder import generate_questions
 from testing_platform.settings import login_enc_key, encode, registration_open
+from testing_platform.settings import REFERENCE_URL
 
 from testmaker import testmaker_old as testmaker
 from conf_files.tags import tagset
@@ -160,9 +161,14 @@ def display_quiz(request, quiz_id):
         ## конец варианта
 
         if request.session['rights'] in ('A', 'T'):
-            return redirect('student_answers', quiz_id=quizz.id, student_id=request.session['user_id'])
+            return redirect(
+                'student_answers',
+                quiz_id=quizz.id,
+                student_id=request.session['user_id']
+            )
         return redirect("index")
     elif 'rights' in request.session:
+        quizz = Quizz.objects.get(id=quiz_id)
         quiz_questions = list(Question.objects.filter(quiz__id=quiz_id))#.values_list('id', 'question_text'))
         random.seed(User.objects.get(login=request.session["user_id"]))
         random.shuffle(quiz_questions)
@@ -170,7 +176,16 @@ def display_quiz(request, quiz_id):
         for q in quiz_questions:
             if q.question_type == 'short_answer':
                 q.question_text = split_by_span(q.question_text)
-        return render(request, 'displayquiz.html', {'questions': enumerate(quiz_questions), 'quiz_id': quiz_id})
+        return render(
+            request,
+            'displayquiz.html',
+            {
+                'questions': enumerate(quiz_questions),
+                'quiz_id': quiz_id,
+                'reference_url': REFERENCE_URL,
+                'allow_reference': quizz.allow_reference
+            }
+        )
     else:
         request.session["prev_page"] = reverse("take_quiz", kwargs={"quiz_id": int(quiz_id)})
         return redirect('login')
@@ -200,8 +215,12 @@ def edit_quiz(request, quiz_id, page_num=1):
             strip_answers = False
             if 'strip_answers' in request.POST:
                 strip_answers = True
+            allow_reference = False
+            if 'allow_reference' in request.POST:
+                allow_reference = True
             quiz = Quizz.objects.get(id=quiz_id)
             quiz.strip_answers = strip_answers
+            quiz.allow_reference = allow_reference
             quiz.save()
 
             question_fields = set(field[field.find('_')+1:] for field in request.POST if re.fullmatch("question_[0-9]+", field))
@@ -286,13 +305,20 @@ def edit_quiz(request, quiz_id, page_num=1):
                         request.session['q_p_page'] = questions_per_page
                         request.session.modified = True
         quiz = Quizz.objects.get(id=quiz_id)
-        checked = ''
+
+        strip_checked = ''
         if quiz.strip_answers:
-            checked = "checked"
+            strip_checked = "checked"
+
+        ref_checked = ''
+        if quiz.allow_reference:
+            ref_checked = "checked"
+
         if quiz.name is not None:
             quiz_identifier = quiz.name
         else:
             quiz_identifier = quiz.id
+
         quiz_questions = Question.objects.filter(quiz=quiz).order_by('id')
         count = quiz_questions.count()
         page_num -= 1
@@ -303,7 +329,7 @@ def edit_quiz(request, quiz_id, page_num=1):
         #     question.append(tuple(Answer.objects.filter(question_id=question[0]).values_list('id', 'answer_text')))
         # print(quiz_questions)
         return render(request, 'editquiz.html', {'questions': enumerate(quiz_questions, start=questions_per_page*page_num), 'quiz_name': quiz_identifier, 'quiz_id': quiz.id,
-        'message': message, 'checked': checked, 'page_nums': [i for i in range(1, ceil(count/questions_per_page)+1)], 'page': page_num+1, 'total_pages': ceil(count/questions_per_page)})
+        'message': message, 'strip_checked': strip_checked, 'ref_checked': ref_checked,'page_nums': [i for i in range(1, ceil(count/questions_per_page)+1)], 'page': page_num+1, 'total_pages': ceil(count/questions_per_page)})
     else:
         request.session["prev_page"] = reverse("edit_quiz", kwargs={"quiz_id": int(quiz_id), "page_num": int(page_num)})
         request.session["asked_restricted"] = True
@@ -601,6 +627,7 @@ def questions_from_folder(request):
                 filter_query = None
                 path = request.POST['path']
                 tags = [field[4:] for field in request.POST if field.startswith('tag_')]
+                new_qfolder = False
                 if 'new_qfolder' in request.POST:
                     new_qfolder = True
                     if 'qfolder_name' in request.POST:

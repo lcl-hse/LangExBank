@@ -31,6 +31,9 @@
                     {{ question.1.question_text.0 }} <textarea cols="80" rows="1" name="question_{{ question.1.id }}"></textarea> {{ question.1.question_text.1 }} <br />
                     <!-- <b>Your answer:</b> <br /> <br /> -->
                   {% endif %}
+                {% if allow_reference %}
+                <a href="{{ reference_url }}/articlesByTag/{{ question.1.error_tag }}" target="_blank" rel="noopener noreferrer">See reference</a>
+                {% endif %}
                 </div>
                 {% endfor %}
             </form>

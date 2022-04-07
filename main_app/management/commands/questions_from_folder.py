@@ -8,6 +8,7 @@ import json
 
 import pandas as pd
 
+
 class Command(BaseCommand):
     help = 'Fills database with questions generated from error annotations of texts'
 
@@ -16,18 +17,24 @@ class Command(BaseCommand):
         parser.add_argument('-t', '--tag', nargs='+', type=str, help='Error tag to include')
         parser.add_argument('-s', '--strike', dest='strike', action='store_true', help='Whether to strike out wrong answers')
         parser.add_argument('-m', '--multchoice', dest='mult_choice', action='store_true', help='Whether to make generated questions multiple choice')
-    
+
     def handle(self, *args, **kwargs):
         ## To add: check for duplicate documents:
         generate_questions(kwargs['folder'], kwargs['tag'], kwargs['strike'])
-    
+
+
 def generate_questions(folder, tags, strike, delete_downloaded=True,
                        new_qfolder=False, qfolder_name=None, ukey_prefix='',
                        multiple_choice=False, filter_query=None, context=False):
     exercises = testmaker.download_folder_and_make_exercises(folder_name=folder,
     error_types=tags, file_output=False, moodle_output=False, make_two_variants=False,
     delete_downloaded=delete_downloaded, filter_query=filter_query, context=context)['short_answer']
-    last_id = Question.objects.last().id
+    last = Question.objects.last()
+
+    if last is not None:
+        last_id = last.id
+    else:
+        last_id = -1
 
     ukey = ukey_prefix + '_' + str(time.time())
 

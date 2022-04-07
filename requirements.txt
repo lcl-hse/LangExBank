@@ -6,7 +6,7 @@ xlrd
 openpyxl
 transliterate
 sklearn
-torch==1.7.0
+torch==1.7.1
 torchtext==0.6.0
 lemminflect
 spacy

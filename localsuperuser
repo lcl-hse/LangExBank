@@ -1,0 +1,9 @@
+Django Superuser
+Login: Admin
+Password: Admin
+
+Langexbank Admin
+Login: Admin
+Password: Admin
+
+Когда закончу изменения, переименовать settings_prod в settings, а settings - в settings1

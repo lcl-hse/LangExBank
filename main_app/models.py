@@ -54,6 +54,7 @@ class Quizz(models.Model):
     name = models.CharField(max_length=30, null=True, unique=True)
     deadline = models.DateTimeField(null=True)
     strip_answers = models.BooleanField(null=True)
+    allow_reference = models.BooleanField(default=False)
 
 
 class Folder(models.Model):

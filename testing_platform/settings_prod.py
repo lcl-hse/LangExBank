@@ -13,6 +13,8 @@ https://docs.djangoproject.com/en/2.1/ref/settings/
 import os
 from pathlib import Path
 
+from testing_platform.settings import REFERENCE_URL
+
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
@@ -21,13 +23,13 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # See https://docs.djangoproject.com/en/2.1/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = ''
+SECRET_KEY = os.environ.get("SECRET_KEY")
 
 # SECURITY WARNING: don't run with debug turned on in production!
 # DEBUG = False
-DEBUG = True
+DEBUG = int(os.environ.get("DEBUG", default=0))
 
-ALLOWED_HOSTS = ['*']
+ALLOWED_HOSTS = os.environ.get("DJANGO_ALLOWED_HOSTS").split()
 
 
 # Application definition
@@ -47,9 +49,7 @@ INSTALLED_APPS = [
 
 # A list of hex-encoded 32 byte keys
 # You only need one unless/until rotating keys
-FIELD_ENCRYPTION_KEYS = [
-    'c798ca31f75677edf0d5a268bff71440b1ba059625ffcc1faef994ade28a605d'
-]
+FIELD_ENCRYPTION_KEYS = os.environ.get("DJANGO_ENCRYPTION_KEYS").split()
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -60,6 +60,7 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
+
 
 X_FRAME_OPTIONS = 'SAMEORIGIN'
 
@@ -83,13 +84,31 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'testing_platform.wsgi.application'
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': 'localbase',
-    }, 
-}
 
+# Database
+# https://docs.djangoproject.com/en/2.1/ref/settings/#databases
+
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.mysql',
+#         'NAME': 'realecTestingPla$default',
+#         'USER': 'realecTestingPla',
+#         'PASSWORD': '123realecTEST',
+#         'HOST': 'realecTestingPlatform.mysql.pythonanywhere-services.com'
+#     }, 
+# }
+
+
+DATABASES = {
+    "default": {
+        "ENGINE": os.environ.get("SQL_ENGINE", "django.db.backends.sqlite3"),
+        "NAME": os.environ.get("SQL_DATABASE", os.path.join("models_data", "localbase")),
+        "USER": os.environ.get("SQL_USER", "user"),
+        "PASSWORD": os.environ.get("SQL_PASSWORD", "password"),
+        "HOST": os.environ.get("SQL_HOST", "localhost"),
+        "PORT": os.environ.get("SQL_PORT", "5432"),
+    }
+}
 
 # Password validation
 # https://docs.djangoproject.com/en/2.1/ref/settings/#auth-password-validators
@@ -127,16 +146,18 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/2.1/howto/static-files/
 
-STATIC_URL = '/static/'
+STATIC_URL = os.environ.get("DJANGO_STATIC_URL", default='/staticfiles/')
 
-MEDIA_URL = '/media/'
+MEDIA_URL = os.environ.get("DJANGO_MEDIA_URL", default='/mediafiles/')
 
-MEDIA_ROOT = '/'.join([Path(BASE_DIR).as_posix(), "media/"])
+MEDIA_ROOT = os.path.join(BASE_DIR, os.environ.get('DJANGO_MEDIA_ROOT',default='mediafiles'))
 
-STATIC_ROOT = '/'.join([Path(BASE_DIR).as_posix(), "static/"])
+STATIC_ROOT = os.path.join(BASE_DIR, os.environ.get('DJANGO_STATIC_ROOT',default='staticfiles'))
 
-login_enc_key = ''
+REFERENCE_URL = os.environ.get("REFERENCE_URL", default="http://realec-reference.site")
 
-encode = False
+login_enc_key = os.environ.get("LANGEXBANK_ENC_KEY")
 
-registration_open = False
+encode = int(os.environ.get("LANGEXBANK_ENCODE_USERS", default=0))
+
+registration_open = int(os.environ.get("LANGEXBANK_OPEN_SIGNUP", default=0))

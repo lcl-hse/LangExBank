@@ -82,7 +82,15 @@
                     {% endif %}
                 </div>
                 {% endfor %} <br /><br />
-                <input type="checkbox" name="strip_answers" {{checked}}> Strip punctuation and parenthesis from submitted answers </input> <br />
+                <div class="row">
+                    <div class="col-md-3">
+                        <input type="checkbox" name="strip_answers" {{strip_checked}}> Strip punctuation and parenthesis from submitted answers </input> <br />
+                    </div>
+                    <div class="col-md-3">
+                        <input type="checkbox" name="allow_reference" {{ref_checked}}> Allow access to reference </input> <br />
+                    </div>
+                    <div class="col-md-6"></div>
+                </div>
                 <button> Save changes </button>
             </form>
             <br /><br />
