@@ -12,6 +12,9 @@ Prerequisites:
  - IPython knowledge (for modifying database in interactive shell)
 
 
+<b>WARNING!</B> This manual is outdated and soon will be replaced with the up-to-date version
+
+
 ## Table of contents
 1. [Installation](#installation)
 2. [Creating users](#creating-users)
