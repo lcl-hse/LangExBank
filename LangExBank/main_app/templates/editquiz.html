@@ -1,0 +1,113 @@
+{% extends "index.html" %}
+{% block head %}
+{% load static %}
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+        <script type="text/javascript" src="{% static "tinymce/js/tinymce/tinymce.min.js" %}"></script>
+        <script type="text/javascript" src="{% static "question_editor.js" %}"></script>
+        <!-- Bootstrap CSS -->
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+        <link href="{% static "basic.css" %}" rel="stylesheet" />
+{% endblock %}
+{% block main_body %}
+    <div class="container-fluid">
+        <div class = "main">
+            <div>
+            {% autoescape off %}
+                <a href="/addQuestions/{{ quiz_id }}"> Add questions </a>
+            {% endautoescape %}
+            <h1>Quiz {{ quiz_name }} </h1>
+            <button class="navbutton" onclick="toBottom()"> Scroll to bottom</button>
+            <br /> <br />
+            <div class="pagelist">
+                Maximum questions per page: <input type="number" class="pagelist" min="1" max="400" id="QuestionCount"> <button type="button" onclick="changeNumQuest()">Change</button><br /><br />
+                Page {{ page }} out of {{ total_pages }} <br />
+                Pages: 
+                {% for page_num in page_nums %}
+                    {% if page_num == page %}
+                        <a class="pagelink">{{ page_num }}</a>
+                    {% else %}
+                        <a class="pagelink" href="/editQuiz/{{ quiz_id }}/{{ page_num }}"> {{ page_num }}  </a>
+                    {% endif %}
+                {% endfor %}<br /><br />
+            </div>
+            {% autoescape off %}
+                {{ message }} <br /> <br />
+            {% endautoescape %}
+            <form method="POST" id="editForm" class="container-fluid">
+                {% csrf_token %}
+                {% for question in questions %}
+                <div id="questionDiv{{ question.1.id }}" class="row questionEditor">
+                    <div class="col-md-6">
+                        <h2>Question {{ question.0 }}</h2>
+                        {% autoescape off %}
+                        <div id="question_{{ question.1.id }}_text" style="display: none;">{{ question.1.question_text }}</div>
+                        {% endautoescape %}
+                        <textarea name="question_{{ question.1.id }}" id="question_{{ question.1.id }}" class="rich_editor myTextArea"></textarea><br />
+                        <input type="checkbox" name="delete_{{ question.1.id }}">Delete this question from quiz</input>
+                        <button type="button" onclick="restoreQuestion({{ question.1.id }})">Restore to default</button><br />
+                    </div>
+                    {% if question.1.question_type == "short_answer" %}
+                    <div id="rightAnswers{{ question.1.id }}" class="col-md-6">
+                        <h3>Answers to Question {{ question.0 }}</h3>
+                            {% for answer in question.1.answer_set.all %}
+                            <div>
+                                <input type="text" name="answer_{{ question.1.id }}_{{ answer.id }}" id="{{ question.1.id }}_{{ answer.id }}" class="myInputText" value="{{ answer.answer_text }}"><br />
+                                <input type="checkbox" name="delete_{{ question.1.id }}_{{ answer.id }}">Delete this answer from question</input>
+                                <button type="button" id="restore_{{ question.1.id }}_{{ answer.id }}" onclick="restoreAnswer(this)">Restore to default</button><br />
+                            </div>
+                            {% endfor %}
+                        <button type="button" onclick="addAnswer(this, {{ question.1.id }})">Add another right answer</button> <br />
+                    </div>
+                    {% elif question.1.question_type == "multiple_choice" %}
+                    <div id="rightAnswer{{ question.1.id}}" class="col-md-3">
+                        <h3>Right answer to Question {{ question.0 }}</h3>
+                        {% for answer in question.1.answer_set.all %}
+                        <div>
+                            <input type="text" name="answer_{{ question.1.id }}_{{ answer.id }}" id="{{ question.1.id }}_{{ answer.id }}" class="myInputText" value="{{ answer.answer_text }}"><br />
+                            <button type="button" id="restore_{{ question.1.id }}_{{ answer.id }}" onclick="restoreAnswer(this)">Restore to default</button><br />
+                        </div>
+                        {% endfor %}
+                    </div>
+                    <div id="wrongAnswers{{ question.1.id }}" class="col-md-3">
+                        <h3>Distractors for Question {{ question.0 }}</h3>
+                            {% for wanswer in question.1.wronganswer_set.all %}
+                            <div>
+                                <input type="text" name="wanswer_{{ question.1.id }}_{{ wanswer.id }}" id="wrong_{{ question.1.id }}_{{ wanswer.id }}" class="myInputText" value="{{ wanswer.answer_text }}"><br />
+                                <input type="checkbox" name="wrong_delete_{{ question.1.id }}_{{ wanswer.id }}">Delete this answer from question</input>
+                                <button type="button" id="restore_wrong_{{ question.1.id }}_{{ wanswer.id }}" onclick="restoreWrongAnswer(this)">Restore to default</button><br />
+                            </div>
+                            {% endfor %}
+                        <button type="button" onclick="addWrongAnswer(this, {{ question.1.id }})">Add another wrong answer</button> <br />
+                    </div>
+                    {% endif %}
+                </div>
+                {% endfor %} <br /><br />
+                <div class="row">
+                    <div class="col-md-3">
+                        <input type="checkbox" name="strip_answers" {{strip_checked}}> Strip punctuation and parenthesis from submitted answers </input> <br />
+                    </div>
+                    <div class="col-md-3">
+                        <input type="checkbox" name="allow_reference" {{ref_checked}}> Allow access to reference </input> <br />
+                    </div>
+                    <div class="col-md-6"></div>
+                </div>
+                <button> Save changes </button>
+            </form>
+            <br /><br />
+            <button class="navbutton" onclick="toTop()">Scroll to top</button>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+{% block under_body %}
+<script>
+    var editors = document.getElementsByClassName("rich_editor");
+    for (var i = 0; i < editors.length; ++i) {
+        // Adding TinyMCEditor to textarea
+        addMCEWithContent(editors[i].id, document.getElementById(editors[i].id+"_text").innerHTML);
+        // Filling editor with text from hidden div
+        // console.log(editors[i].id);
+        // tinymce.get(editors[i].id).setContent(document.getElementById(editors[i].id+"_text").innerHTML);
+    }
+</script>
+{% endblock %}

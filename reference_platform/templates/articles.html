@@ -1,0 +1,43 @@
+{% extends "base.html" %}
+{% block content %}
+<h3>Articles on <i>{{ long_tag }}</i>:</h3>
+{% for article in articles %}
+<div class="text-preview" id="{{ article.name }}">
+    <div>
+        <a href="{{ url_for('view_article', article_name=article.name) }}">{{ article.name }}</a>
+        {% if authorized %}
+        <a href="{{ url_for('edit_article', article_name=article.name) }}">Edit</a>
+        <button onclick="deleteArticle(this.parentNode.parentNode)">Delete</a>
+        {% endif %}
+    </div>
+    <div>{{ article.preview }}</div>
+</div>
+{% endfor %}
+{% endblock %}
+{% block scripts %}
+<!-- <script type="text/javascript" src="{{ url_for('static', filename='article_editor.js') }}"></script> -->
+<script type="text/javascript">
+var deleteElem = function(elem) {
+    elem.parentNode.removeChild(elem);
+};
+
+var deleteArticle = function(articleNode) {
+    var articleName = articleNode.id;
+    if (confirm("Are you sure to delete article "+articleName+"?")) {
+        var xhttp = new XMLHttpRequest();
+        xhttp.onreadystatechange = function() {
+            if (this.status == 200) {
+                deleteElem(articleNode);
+                alert("Article "+articleName+" deleted");
+            } else if (this.status == 403) {
+                alert("Unable to delete "+articleName);
+            }
+        }
+        xhttp.open("GET", "{{ url_prefix }}/deleteArticle/"+articleName, true);
+        xhttp.send();
+      } else {
+        return;
+      }
+};
+</script>
+{% endblock %}

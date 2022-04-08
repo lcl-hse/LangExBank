@@ -26,3 +26,5 @@ __pycache__
 env.prod
 *.env
 .goutputstream*
+ТЗ.txt
+db.json

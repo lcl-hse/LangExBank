@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+{% block content %}
+<form method="POST">
+    <div>
+    Enter article name: <textarea name="article_name" cols="30" rows="1"></textarea>
+    <button class="btn btn-primary">Save article</button>
+    </div>
+    <br />
+    <textarea id="articleEditor" name="article_text" cols="50" rows="30"></textarea>
+    <br />
+    <div id="selectedTags"></div>
+</form>
+<br />
+Selected error tags for this article:
+{% autoescape false %}
+<select id="tags">
+    {% for tag in tags %}
+    <option value="{{ tag.0 }}">{{ tag.1 }}</option>
+    {% endfor %}
+</select> <button class="btn btn-primary" onclick="addSpan()">+ Add tag</button>
+{% endautoescape %}
+{% endblock %}
+
+{% block scripts %}
+<script type="text/javascript" src="{{ url_for('static', filename='tinymce/js/tinymce/tinymce.min.js') }}"></script>
+<script type="text/javascript" src="{{ url_for('static', filename='article_editor.js') }}"></script>
+<script>
+    addMCE("articleEditor");
+</script>
+{% endblock %}
