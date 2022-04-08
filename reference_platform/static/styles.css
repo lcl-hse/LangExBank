@@ -1,0 +1,81 @@
+table{
+    background-color: white;
+    border-left: 1px solid black;
+    border-top: 1px solid black;
+}
+
+tr, th{
+    border-bottom: 1px solid black;
+}
+
+td {
+    border-right: 1px solid black;
+}
+
+.my-container{
+    padding-left: 10%;
+    padding-right: 10%;
+    padding-top: 1%;
+}
+.sidenav{
+    background-color: blue;
+    color: white;
+    word-wrap: break-word;
+}
+.sidenav a{
+    color: white;
+}
+/* li {
+    padding-bottom: 2%;
+} */
+.bordered{
+    border: 2%;
+}
+.main{
+    background-color: white;
+}
+.example{
+    background-color: beige;
+    font-style: italic;
+    border: 1px solid black;
+}
+.realec-link{
+    font-style: normal;
+}
+ul{
+    list-style-type: none;
+}
+.inner-list{
+    display: none;
+}
+
+.tagLabel {
+    background-color: blue;
+    color: white;
+    border: 2px;
+    padding: 5px;
+    border-radius: 15px;
+}
+
+.text-preview{
+    margin: 5%;
+}
+
+/* taken from https://stackoverflow.com/a/14070126 */
+.fakeLink{
+    cursor: pointer;
+    color:blue;
+    text-decoration:underline;
+}
+
+.noDisplay{
+    display: none;
+}
+
+.errorMessage{
+    background-color: red;
+    color: white;
+}
+/* th, td {
+    border-right: 1px solid black;
+} */

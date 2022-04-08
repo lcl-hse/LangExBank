@@ -1,0 +1,911 @@
+Exception on /editArticle/Nounw%20with%20prepositions%20and%20determiners [GET]
+Traceback (most recent call last):
+  File "/var/www/u0947298/data/flaskenv/lib/python3.7/site-packages/flask/app.py", line 2446, in wsgi_app
+    response = self.full_dispatch_request()
+  File "/var/www/u0947298/data/flaskenv/lib/python3.7/site-packages/flask/app.py", line 1951, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "/var/www/u0947298/data/flaskenv/lib/python3.7/site-packages/flask/app.py", line 1820, in handle_user_exception
+    reraise(exc_type, exc_value, tb)
+  File "/var/www/u0947298/data/flaskenv/lib/python3.7/site-packages/flask/_compat.py", line 39, in reraise
+    raise value
+  File "/var/www/u0947298/data/flaskenv/lib/python3.7/site-packages/flask/app.py", line 1949, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "/var/www/u0947298/data/flaskenv/lib/python3.7/site-packages/flask/app.py", line 1935, in dispatch_request
+    return self.view_functions[rule.endpoint](**req.view_args)
+  File "/var/www/u0947298/data/www/realec-reference.site/app.py", line 72, in edit_article
+    article['tags'] = [{'shName': tag, 'fName': map_tag(tag)} for tag in article['tags']]
+TypeError: 'NoneType' object is not subscriptable
+Exception on /editArticle/CONDITIONAL%20SENTENCES [GET]
+Traceback (most recent call last):
+  File "/var/www/u0947298/data/flaskenv/lib/python3.7/site-packages/flask/app.py", line 2446, in wsgi_app
+    response = self.full_dispatch_request()
+  File "/var/www/u0947298/data/flaskenv/lib/python3.7/site-packages/flask/app.py", line 1951, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "/var/www/u0947298/data/flaskenv/lib/python3.7/site-packages/flask/app.py", line 1820, in handle_user_exception
+    reraise(exc_type, exc_value, tb)
+  File "/var/www/u0947298/data/flaskenv/lib/python3.7/site-packages/flask/_compat.py", line 39, in reraise
+    raise value
+  File "/var/www/u0947298/data/flaskenv/lib/python3.7/site-packages/flask/app.py", line 1949, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "/var/www/u0947298/data/flaskenv/lib/python3.7/site-packages/flask/app.py", line 1935, in dispatch_request
+    return self.view_functions[rule.endpoint](**req.view_args)
+  File "/var/www/u0947298/data/www/realec-reference.site/app.py", line 72, in edit_article
+    article['tags'] = [{'shName': tag, 'fName': map_tag(tag)} for tag in article['tags']]
+TypeError: 'NoneType' object is not subscriptable
+Exception on /viewArticle/CONDITIONAL%20SENTENCES [GET]
+Traceback (most recent call last):
+  File "/var/www/u0947298/data/flaskenv/lib/python3.7/site-packages/flask/app.py", line 2446, in wsgi_app
+    response = self.full_dispatch_request()
+  File "/var/www/u0947298/data/flaskenv/lib/python3.7/site-packages/flask/app.py", line 1951, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "/var/www/u0947298/data/flaskenv/lib/python3.7/site-packages/flask/app.py", line 1820, in handle_user_exception
+    reraise(exc_type, exc_value, tb)
+  File "/var/www/u0947298/data/flaskenv/lib/python3.7/site-packages/flask/_compat.py", line 39, in reraise
+    raise value
+  File "/var/www/u0947298/data/flaskenv/lib/python3.7/site-packages/flask/app.py", line 1949, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "/var/www/u0947298/data/flaskenv/lib/python3.7/site-packages/flask/app.py", line 1935, in dispatch_request
+    return self.view_functions[rule.endpoint](**req.view_args)
+  File "/var/www/u0947298/data/www/realec-reference.site/app.py", line 78, in view_article
+    return render_template('viewArticle.html', taglist=tag_list,  article=dbaccess.get_article(article_name), authorized=check_auth(session))
+  File "/var/www/u0947298/data/www/realec-reference.site/dbaccess.py", line 10, in get_article
+    raise Exception(f"No article named {article_name}")
+Exception: No article named CONDITIONAL%20SENTENCES
+Exception on /viewArticle/CONDITIONAL%20SENTENCES [GET]
+Traceback (most recent call last):
+  File "/var/www/u0947298/data/flaskenv/lib/python3.7/site-packages/flask/app.py", line 2446, in wsgi_app
+    response = self.full_dispatch_request()
+  File "/var/www/u0947298/data/flaskenv/lib/python3.7/site-packages/flask/app.py", line 1951, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "/var/www/u0947298/data/flaskenv/lib/python3.7/site-packages/flask/app.py", line 1820, in handle_user_exception
+    reraise(exc_type, exc_value, tb)
+  File "/var/www/u0947298/data/flaskenv/lib/python3.7/site-packages/flask/_compat.py", line 39, in reraise
+    raise value
+  File "/var/www/u0947298/data/flaskenv/lib/python3.7/site-packages/flask/app.py", line 1949, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "/var/www/u0947298/data/flaskenv/lib/python3.7/site-packages/flask/app.py", line 1935, in dispatch_request
+    return self.view_functions[rule.endpoint](**req.view_args)
+  File "/var/www/u0947298/data/www/realec-reference.site/app.py", line 81, in view_article
+    return render_template('viewArticle.html', taglist=tag_list,  article=dbaccess.get_article(article_name), authorized=check_auth(session))
+  File "/var/www/u0947298/data/www/realec-reference.site/dbaccess.py", line 10, in get_article
+    raise Exception(f"No article named {article_name}")
+Exception: No article named CONDITIONAL%20SENTENCES
+Exception on /viewArticle/CONDITIONAL%20SENTENCES [GET]
+Traceback (most recent call last):
+  File "/var/www/u0947298/data/flaskenv/lib/python3.7/site-packages/flask/app.py", line 2446, in wsgi_app
+    response = self.full_dispatch_request()
+  File "/var/www/u0947298/data/flaskenv/lib/python3.7/site-packages/flask/app.py", line 1951, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "/var/www/u0947298/data/flaskenv/lib/python3.7/site-packages/flask/app.py", line 1820, in handle_user_exception
+    reraise(exc_type, exc_value, tb)
+  File "/var/www/u0947298/data/flaskenv/lib/python3.7/site-packages/flask/_compat.py", line 39, in reraise
+    raise value
+  File "/var/www/u0947298/data/flaskenv/lib/python3.7/site-packages/flask/app.py", line 1949, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "/var/www/u0947298/data/flaskenv/lib/python3.7/site-packages/flask/app.py", line 1935, in dispatch_request
+    return self.view_functions[rule.endpoint](**req.view_args)
+  File "/var/www/u0947298/data/www/realec-reference.site/app.py", line 81, in view_article
+    return render_template('viewArticle.html', taglist=tag_list,  article=dbaccess.get_article(article_name), authorized=check_auth(session))
+  File "/var/www/u0947298/data/www/realec-reference.site/dbaccess.py", line 10, in get_article
+    raise Exception(f"No article named {article_name}")
+Exception: No article named CONDITIONAL%20SENTENCES
+Exception on /viewArticle/CONDITIONAL%20SENTENCES [GET]
+Traceback (most recent call last):
+  File "/var/www/u0947298/data/flaskenv/lib/python3.7/site-packages/flask/app.py", line 2446, in wsgi_app
+    response = self.full_dispatch_request()
+  File "/var/www/u0947298/data/flaskenv/lib/python3.7/site-packages/flask/app.py", line 1951, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "/var/www/u0947298/data/flaskenv/lib/python3.7/site-packages/flask/app.py", line 1820, in handle_user_exception
+    reraise(exc_type, exc_value, tb)
+  File "/var/www/u0947298/data/flaskenv/lib/python3.7/site-packages/flask/_compat.py", line 39, in reraise
+    raise value
+  File "/var/www/u0947298/data/flaskenv/lib/python3.7/site-packages/flask/app.py", line 1949, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "/var/www/u0947298/data/flaskenv/lib/python3.7/site-packages/flask/app.py", line 1935, in dispatch_request
+    return self.view_functions[rule.endpoint](**req.view_args)
+  File "/var/www/u0947298/data/www/realec-reference.site/app.py", line 81, in view_article
+    return render_template('viewArticle.html', taglist=tag_list,  article=dbaccess.get_article(article_name), authorized=check_auth(session))
+  File "/var/www/u0947298/data/www/realec-reference.site/dbaccess.py", line 10, in get_article
+    raise Exception(f"No article named {article_name}")
+Exception: No article named CONDITIONAL%20SENTENCES
+Exception on /viewArticle/CONDITIONAL%20SENTENCES [GET]
+Traceback (most recent call last):
+  File "/var/www/u0947298/data/flaskenv/lib/python3.7/site-packages/flask/app.py", line 2446, in wsgi_app
+    response = self.full_dispatch_request()
+  File "/var/www/u0947298/data/flaskenv/lib/python3.7/site-packages/flask/app.py", line 1951, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "/var/www/u0947298/data/flaskenv/lib/python3.7/site-packages/flask/app.py", line 1820, in handle_user_exception
+    reraise(exc_type, exc_value, tb)
+  File "/var/www/u0947298/data/flaskenv/lib/python3.7/site-packages/flask/_compat.py", line 39, in reraise
+    raise value
+  File "/var/www/u0947298/data/flaskenv/lib/python3.7/site-packages/flask/app.py", line 1949, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "/var/www/u0947298/data/flaskenv/lib/python3.7/site-packages/flask/app.py", line 1935, in dispatch_request
+    return self.view_functions[rule.endpoint](**req.view_args)
+  File "/var/www/u0947298/data/www/realec-reference.site/app.py", line 81, in view_article
+    return render_template('viewArticle.html', taglist=tag_list,  article=dbaccess.get_article(article_name), authorized=check_auth(session))
+  File "/var/www/u0947298/data/www/realec-reference.site/dbaccess.py", line 10, in get_article
+    raise Exception(f"No article named {article_name}")
+Exception: No article named CONDITIONAL%20SENTENCES
+Exception on /viewArticle/CONDITIONAL%20SENTENCES [GET]
+Traceback (most recent call last):
+  File "/var/www/u0947298/data/flaskenv/lib/python3.7/site-packages/flask/app.py", line 2446, in wsgi_app
+    response = self.full_dispatch_request()
+  File "/var/www/u0947298/data/flaskenv/lib/python3.7/site-packages/flask/app.py", line 1951, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "/var/www/u0947298/data/flaskenv/lib/python3.7/site-packages/flask/app.py", line 1820, in handle_user_exception
+    reraise(exc_type, exc_value, tb)
+  File "/var/www/u0947298/data/flaskenv/lib/python3.7/site-packages/flask/_compat.py", line 39, in reraise
+    raise value
+  File "/var/www/u0947298/data/flaskenv/lib/python3.7/site-packages/flask/app.py", line 1949, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "/var/www/u0947298/data/flaskenv/lib/python3.7/site-packages/flask/app.py", line 1935, in dispatch_request
+    return self.view_functions[rule.endpoint](**req.view_args)
+  File "/var/www/u0947298/data/www/realec-reference.site/app.py", line 81, in view_article
+    return render_template('viewArticle.html', taglist=tag_list,  article=dbaccess.get_article(article_name), authorized=check_auth(session))
+  File "/var/www/u0947298/data/www/realec-reference.site/dbaccess.py", line 10, in get_article
+    raise Exception(f"No article named {article_name}")
+Exception: No article named CONDITIONAL%20SENTENCES
+Exception on /viewArticle/CONDITIONAL%20SENTENCES [GET]
+Traceback (most recent call last):
+  File "/var/www/u0947298/data/flaskenv/lib/python3.7/site-packages/flask/app.py", line 2446, in wsgi_app
+    response = self.full_dispatch_request()
+  File "/var/www/u0947298/data/flaskenv/lib/python3.7/site-packages/flask/app.py", line 1951, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "/var/www/u0947298/data/flaskenv/lib/python3.7/site-packages/flask/app.py", line 1820, in handle_user_exception
+    reraise(exc_type, exc_value, tb)
+  File "/var/www/u0947298/data/flaskenv/lib/python3.7/site-packages/flask/_compat.py", line 39, in reraise
+    raise value
+  File "/var/www/u0947298/data/flaskenv/lib/python3.7/site-packages/flask/app.py", line 1949, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "/var/www/u0947298/data/flaskenv/lib/python3.7/site-packages/flask/app.py", line 1935, in dispatch_request
+    return self.view_functions[rule.endpoint](**req.view_args)
+  File "/var/www/u0947298/data/www/realec-reference.site/app.py", line 81, in view_article
+  File "/var/www/u0947298/data/www/realec-reference.site/dbaccess.py", line 10, in get_article
+    raise Exception(f"No article named {article_name}")
+Exception: No article named CONDITIONAL%20SENTENCES
+Exception on /viewArticle/CONDITIONAL%20SENTENCES [GET]
+Traceback (most recent call last):
+  File "/var/www/u0947298/data/flaskenv/lib/python3.7/site-packages/flask/app.py", line 2446, in wsgi_app
+    response = self.full_dispatch_request()
+  File "/var/www/u0947298/data/flaskenv/lib/python3.7/site-packages/flask/app.py", line 1951, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "/var/www/u0947298/data/flaskenv/lib/python3.7/site-packages/flask/app.py", line 1820, in handle_user_exception
+    reraise(exc_type, exc_value, tb)
+  File "/var/www/u0947298/data/flaskenv/lib/python3.7/site-packages/flask/_compat.py", line 39, in reraise
+    raise value
+  File "/var/www/u0947298/data/flaskenv/lib/python3.7/site-packages/flask/app.py", line 1949, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "/var/www/u0947298/data/flaskenv/lib/python3.7/site-packages/flask/app.py", line 1935, in dispatch_request
+    return self.view_functions[rule.endpoint](**req.view_args)
+  File "/var/www/u0947298/data/www/realec-reference.site/app.py", line 81, in view_article
+  File "/var/www/u0947298/data/www/realec-reference.site/dbaccess.py", line 10, in get_article
+    raise Exception(f"No article named {article_name}")
+Exception: No article named CONDITIONAL%20SENTENCES
+Exception on /viewArticle/CONDITIONAL%20SENTENCES [GET]
+Traceback (most recent call last):
+  File "/var/www/u0947298/data/flaskenv/lib/python3.7/site-packages/flask/app.py", line 2446, in wsgi_app
+    response = self.full_dispatch_request()
+  File "/var/www/u0947298/data/flaskenv/lib/python3.7/site-packages/flask/app.py", line 1951, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "/var/www/u0947298/data/flaskenv/lib/python3.7/site-packages/flask/app.py", line 1820, in handle_user_exception
+    reraise(exc_type, exc_value, tb)
+  File "/var/www/u0947298/data/flaskenv/lib/python3.7/site-packages/flask/_compat.py", line 39, in reraise
+    raise value
+  File "/var/www/u0947298/data/flaskenv/lib/python3.7/site-packages/flask/app.py", line 1949, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "/var/www/u0947298/data/flaskenv/lib/python3.7/site-packages/flask/app.py", line 1935, in dispatch_request
+    return self.view_functions[rule.endpoint](**req.view_args)
+  File "/var/www/u0947298/data/www/realec-reference.site/app.py", line 81, in view_article
+  File "/var/www/u0947298/data/www/realec-reference.site/dbaccess.py", line 10, in get_article
+    raise Exception(f"No article named {article_name}")
+Exception: No article named CONDITIONAL%20SENTENCES
+Exception on /viewArticle/CONDITIONAL%20SENTENCES [GET]
+Traceback (most recent call last):
+  File "/var/www/u0947298/data/flaskenv/lib/python3.7/site-packages/flask/app.py", line 2446, in wsgi_app
+    response = self.full_dispatch_request()
+  File "/var/www/u0947298/data/flaskenv/lib/python3.7/site-packages/flask/app.py", line 1951, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "/var/www/u0947298/data/flaskenv/lib/python3.7/site-packages/flask/app.py", line 1820, in handle_user_exception
+    reraise(exc_type, exc_value, tb)
+  File "/var/www/u0947298/data/flaskenv/lib/python3.7/site-packages/flask/_compat.py", line 39, in reraise
+    raise value
+  File "/var/www/u0947298/data/flaskenv/lib/python3.7/site-packages/flask/app.py", line 1949, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "/var/www/u0947298/data/flaskenv/lib/python3.7/site-packages/flask/app.py", line 1935, in dispatch_request
+    return self.view_functions[rule.endpoint](**req.view_args)
+  File "/var/www/u0947298/data/www/realec-reference.site/app.py", line 81, in view_article
+  File "/var/www/u0947298/data/www/realec-reference.site/dbaccess.py", line 10, in get_article
+    raise Exception(f"No article named {article_name}")
+Exception: No article named CONDITIONAL%20SENTENCES
+Exception on /viewArticle/CONDITIONAL%20SENTENCES [GET]
+Traceback (most recent call last):
+  File "/var/www/u0947298/data/flaskenv/lib/python3.7/site-packages/flask/app.py", line 2446, in wsgi_app
+    response = self.full_dispatch_request()
+  File "/var/www/u0947298/data/flaskenv/lib/python3.7/site-packages/flask/app.py", line 1951, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "/var/www/u0947298/data/flaskenv/lib/python3.7/site-packages/flask/app.py", line 1820, in handle_user_exception
+    reraise(exc_type, exc_value, tb)
+  File "/var/www/u0947298/data/flaskenv/lib/python3.7/site-packages/flask/_compat.py", line 39, in reraise
+    raise value
+  File "/var/www/u0947298/data/flaskenv/lib/python3.7/site-packages/flask/app.py", line 1949, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "/var/www/u0947298/data/flaskenv/lib/python3.7/site-packages/flask/app.py", line 1935, in dispatch_request
+    return self.view_functions[rule.endpoint](**req.view_args)
+  File "/var/www/u0947298/data/www/realec-reference.site/app.py", line 81, in view_article
+  File "/var/www/u0947298/data/www/realec-reference.site/dbaccess.py", line 10, in get_article
+    raise Exception(f"No article named {article_name}")
+Exception: No article named CONDITIONAL%20SENTENCES
+Exception on /viewArticle/CONDITIONAL%20SENTENCES [GET]
+Traceback (most recent call last):
+  File "/var/www/u0947298/data/flaskenv/lib/python3.7/site-packages/flask/app.py", line 2446, in wsgi_app
+    response = self.full_dispatch_request()
+  File "/var/www/u0947298/data/flaskenv/lib/python3.7/site-packages/flask/app.py", line 1951, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "/var/www/u0947298/data/flaskenv/lib/python3.7/site-packages/flask/app.py", line 1820, in handle_user_exception
+    reraise(exc_type, exc_value, tb)
+  File "/var/www/u0947298/data/flaskenv/lib/python3.7/site-packages/flask/_compat.py", line 39, in reraise
+    raise value
+  File "/var/www/u0947298/data/flaskenv/lib/python3.7/site-packages/flask/app.py", line 1949, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "/var/www/u0947298/data/flaskenv/lib/python3.7/site-packages/flask/app.py", line 1935, in dispatch_request
+    return self.view_functions[rule.endpoint](**req.view_args)
+  File "/var/www/u0947298/data/www/realec-reference.site/app.py", line 81, in view_article
+  File "/var/www/u0947298/data/www/realec-reference.site/dbaccess.py", line 10, in get_article
+    raise Exception(f"No article named {article_name}")
+Exception: No article named CONDITIONAL%20SENTENCES
+Exception on /viewArticle/CONDITIONAL%20SENTENCES [GET]
+Traceback (most recent call last):
+  File "/var/www/u0947298/data/flaskenv/lib/python3.7/site-packages/flask/app.py", line 2446, in wsgi_app
+    response = self.full_dispatch_request()
+  File "/var/www/u0947298/data/flaskenv/lib/python3.7/site-packages/flask/app.py", line 1951, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "/var/www/u0947298/data/flaskenv/lib/python3.7/site-packages/flask/app.py", line 1820, in handle_user_exception
+    reraise(exc_type, exc_value, tb)
+  File "/var/www/u0947298/data/flaskenv/lib/python3.7/site-packages/flask/_compat.py", line 39, in reraise
+    raise value
+  File "/var/www/u0947298/data/flaskenv/lib/python3.7/site-packages/flask/app.py", line 1949, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "/var/www/u0947298/data/flaskenv/lib/python3.7/site-packages/flask/app.py", line 1935, in dispatch_request
+    return self.view_functions[rule.endpoint](**req.view_args)
+  File "/var/www/u0947298/data/www/realec-reference.site/app.py", line 81, in view_article
+  File "/var/www/u0947298/data/www/realec-reference.site/dbaccess.py", line 10, in get_article
+    raise Exception(f"No article named {article_name}")
+Exception: No article named CONDITIONAL%20SENTENCES
+Exception on /viewArticle/CONDITIONAL%20SENTENCES [GET]
+Traceback (most recent call last):
+  File "/var/www/u0947298/data/flaskenv/lib/python3.7/site-packages/flask/app.py", line 2446, in wsgi_app
+    response = self.full_dispatch_request()
+  File "/var/www/u0947298/data/flaskenv/lib/python3.7/site-packages/flask/app.py", line 1951, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "/var/www/u0947298/data/flaskenv/lib/python3.7/site-packages/flask/app.py", line 1820, in handle_user_exception
+    reraise(exc_type, exc_value, tb)
+  File "/var/www/u0947298/data/flaskenv/lib/python3.7/site-packages/flask/_compat.py", line 39, in reraise
+    raise value
+  File "/var/www/u0947298/data/flaskenv/lib/python3.7/site-packages/flask/app.py", line 1949, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "/var/www/u0947298/data/flaskenv/lib/python3.7/site-packages/flask/app.py", line 1935, in dispatch_request
+    return self.view_functions[rule.endpoint](**req.view_args)
+  File "/var/www/u0947298/data/www/realec-reference.site/app.py", line 81, in view_article
+  File "/var/www/u0947298/data/www/realec-reference.site/dbaccess.py", line 10, in get_article
+    raise Exception(f"No article named {article_name}")
+Exception: No article named CONDITIONAL%20SENTENCES
+Exception on /viewArticle/CONDITIONAL%20SENTENCES [GET]
+Traceback (most recent call last):
+  File "/var/www/u0947298/data/flaskenv/lib/python3.7/site-packages/flask/app.py", line 2446, in wsgi_app
+    response = self.full_dispatch_request()
+  File "/var/www/u0947298/data/flaskenv/lib/python3.7/site-packages/flask/app.py", line 1951, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "/var/www/u0947298/data/flaskenv/lib/python3.7/site-packages/flask/app.py", line 1820, in handle_user_exception
+    reraise(exc_type, exc_value, tb)
+  File "/var/www/u0947298/data/flaskenv/lib/python3.7/site-packages/flask/_compat.py", line 39, in reraise
+    raise value
+  File "/var/www/u0947298/data/flaskenv/lib/python3.7/site-packages/flask/app.py", line 1949, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "/var/www/u0947298/data/flaskenv/lib/python3.7/site-packages/flask/app.py", line 1935, in dispatch_request
+    return self.view_functions[rule.endpoint](**req.view_args)
+  File "/var/www/u0947298/data/www/realec-reference.site/app.py", line 81, in view_article
+  File "/var/www/u0947298/data/www/realec-reference.site/dbaccess.py", line 10, in get_article
+    raise Exception(f"No article named {article_name}")
+Exception: No article named CONDITIONAL%20SENTENCES
+Exception on /viewArticle/CONDITIONAL%20SENTENCES [GET]
+Traceback (most recent call last):
+  File "/var/www/u0947298/data/flaskenv/lib/python3.7/site-packages/flask/app.py", line 2446, in wsgi_app
+    response = self.full_dispatch_request()
+  File "/var/www/u0947298/data/flaskenv/lib/python3.7/site-packages/flask/app.py", line 1951, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "/var/www/u0947298/data/flaskenv/lib/python3.7/site-packages/flask/app.py", line 1820, in handle_user_exception
+    reraise(exc_type, exc_value, tb)
+  File "/var/www/u0947298/data/flaskenv/lib/python3.7/site-packages/flask/_compat.py", line 39, in reraise
+    raise value
+  File "/var/www/u0947298/data/flaskenv/lib/python3.7/site-packages/flask/app.py", line 1949, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "/var/www/u0947298/data/flaskenv/lib/python3.7/site-packages/flask/app.py", line 1935, in dispatch_request
+    return self.view_functions[rule.endpoint](**req.view_args)
+  File "/var/www/u0947298/data/www/realec-reference.site/app.py", line 81, in view_article
+  File "/var/www/u0947298/data/www/realec-reference.site/dbaccess.py", line 10, in get_article
+    raise Exception(f"No article named {article_name}")
+Exception: No article named CONDITIONAL%20SENTENCES
+Exception on /viewArticle/CONDITIONAL%20SENTENCES [GET]
+Traceback (most recent call last):
+  File "/var/www/u0947298/data/flaskenv/lib/python3.7/site-packages/flask/app.py", line 2446, in wsgi_app
+    response = self.full_dispatch_request()
+  File "/var/www/u0947298/data/flaskenv/lib/python3.7/site-packages/flask/app.py", line 1951, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "/var/www/u0947298/data/flaskenv/lib/python3.7/site-packages/flask/app.py", line 1820, in handle_user_exception
+    reraise(exc_type, exc_value, tb)
+  File "/var/www/u0947298/data/flaskenv/lib/python3.7/site-packages/flask/_compat.py", line 39, in reraise
+    raise value
+  File "/var/www/u0947298/data/flaskenv/lib/python3.7/site-packages/flask/app.py", line 1949, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "/var/www/u0947298/data/flaskenv/lib/python3.7/site-packages/flask/app.py", line 1935, in dispatch_request
+    return self.view_functions[rule.endpoint](**req.view_args)
+  File "/var/www/u0947298/data/www/realec-reference.site/app.py", line 81, in view_article
+  File "/var/www/u0947298/data/www/realec-reference.site/dbaccess.py", line 10, in get_article
+    raise Exception(f"No article named {article_name}")
+Exception: No article named CONDITIONAL%20SENTENCES
+Exception on /viewArticle/CONDITIONAL%20SENTENCES [GET]
+Traceback (most recent call last):
+  File "/var/www/u0947298/data/flaskenv/lib/python3.7/site-packages/flask/app.py", line 2446, in wsgi_app
+    response = self.full_dispatch_request()
+  File "/var/www/u0947298/data/flaskenv/lib/python3.7/site-packages/flask/app.py", line 1951, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "/var/www/u0947298/data/flaskenv/lib/python3.7/site-packages/flask/app.py", line 1820, in handle_user_exception
+    reraise(exc_type, exc_value, tb)
+  File "/var/www/u0947298/data/flaskenv/lib/python3.7/site-packages/flask/_compat.py", line 39, in reraise
+    raise value
+  File "/var/www/u0947298/data/flaskenv/lib/python3.7/site-packages/flask/app.py", line 1949, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "/var/www/u0947298/data/flaskenv/lib/python3.7/site-packages/flask/app.py", line 1935, in dispatch_request
+    return self.view_functions[rule.endpoint](**req.view_args)
+  File "/var/www/u0947298/data/www/realec-reference.site/app.py", line 81, in view_article
+  File "/var/www/u0947298/data/www/realec-reference.site/dbaccess.py", line 10, in get_article
+    raise Exception(f"No article named {article_name}")
+Exception: No article named CONDITIONAL%20SENTENCES
+Exception on /viewArticle/CONDITIONAL%20SENTENCES [GET]
+Traceback (most recent call last):
+  File "/var/www/u0947298/data/flaskenv/lib/python3.7/site-packages/flask/app.py", line 2446, in wsgi_app
+    response = self.full_dispatch_request()
+  File "/var/www/u0947298/data/flaskenv/lib/python3.7/site-packages/flask/app.py", line 1951, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "/var/www/u0947298/data/flaskenv/lib/python3.7/site-packages/flask/app.py", line 1820, in handle_user_exception
+    reraise(exc_type, exc_value, tb)
+  File "/var/www/u0947298/data/flaskenv/lib/python3.7/site-packages/flask/_compat.py", line 39, in reraise
+    raise value
+  File "/var/www/u0947298/data/flaskenv/lib/python3.7/site-packages/flask/app.py", line 1949, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "/var/www/u0947298/data/flaskenv/lib/python3.7/site-packages/flask/app.py", line 1935, in dispatch_request
+    return self.view_functions[rule.endpoint](**req.view_args)
+  File "/var/www/u0947298/data/www/realec-reference.site/app.py", line 81, in view_article
+  File "/var/www/u0947298/data/www/realec-reference.site/dbaccess.py", line 10, in get_article
+    raise Exception(f"No article named {article_name}")
+Exception: No article named CONDITIONAL%20SENTENCES
+Exception on /viewArticle/CONDITIONAL%20SENTENCES [GET]
+Traceback (most recent call last):
+  File "/var/www/u0947298/data/flaskenv/lib/python3.7/site-packages/flask/app.py", line 2446, in wsgi_app
+    response = self.full_dispatch_request()
+  File "/var/www/u0947298/data/flaskenv/lib/python3.7/site-packages/flask/app.py", line 1951, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "/var/www/u0947298/data/flaskenv/lib/python3.7/site-packages/flask/app.py", line 1820, in handle_user_exception
+    reraise(exc_type, exc_value, tb)
+  File "/var/www/u0947298/data/flaskenv/lib/python3.7/site-packages/flask/_compat.py", line 39, in reraise
+    raise value
+  File "/var/www/u0947298/data/flaskenv/lib/python3.7/site-packages/flask/app.py", line 1949, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "/var/www/u0947298/data/flaskenv/lib/python3.7/site-packages/flask/app.py", line 1935, in dispatch_request
+    return self.view_functions[rule.endpoint](**req.view_args)
+  File "/var/www/u0947298/data/www/realec-reference.site/app.py", line 81, in view_article
+  File "/var/www/u0947298/data/www/realec-reference.site/dbaccess.py", line 10, in get_article
+    raise Exception(f"No article named {article_name}")
+Exception: No article named CONDITIONAL%20SENTENCES
+Exception on /viewArticle/CONDITIONAL%20SENTENCES [GET]
+Traceback (most recent call last):
+  File "/var/www/u0947298/data/flaskenv/lib/python3.7/site-packages/flask/app.py", line 2446, in wsgi_app
+    response = self.full_dispatch_request()
+  File "/var/www/u0947298/data/flaskenv/lib/python3.7/site-packages/flask/app.py", line 1951, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "/var/www/u0947298/data/flaskenv/lib/python3.7/site-packages/flask/app.py", line 1820, in handle_user_exception
+    reraise(exc_type, exc_value, tb)
+  File "/var/www/u0947298/data/flaskenv/lib/python3.7/site-packages/flask/_compat.py", line 39, in reraise
+    raise value
+  File "/var/www/u0947298/data/flaskenv/lib/python3.7/site-packages/flask/app.py", line 1949, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "/var/www/u0947298/data/flaskenv/lib/python3.7/site-packages/flask/app.py", line 1935, in dispatch_request
+    return self.view_functions[rule.endpoint](**req.view_args)
+  File "/var/www/u0947298/data/www/realec-reference.site/app.py", line 81, in view_article
+  File "/var/www/u0947298/data/www/realec-reference.site/dbaccess.py", line 10, in get_article
+    raise Exception(f"No article named {article_name}")
+Exception: No article named CONDITIONAL%20SENTENCES
+Exception on /viewArticle/CONDITIONAL%20SENTENCES [GET]
+Traceback (most recent call last):
+  File "/var/www/u0947298/data/flaskenv/lib/python3.7/site-packages/flask/app.py", line 2446, in wsgi_app
+    response = self.full_dispatch_request()
+  File "/var/www/u0947298/data/flaskenv/lib/python3.7/site-packages/flask/app.py", line 1951, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "/var/www/u0947298/data/flaskenv/lib/python3.7/site-packages/flask/app.py", line 1820, in handle_user_exception
+    reraise(exc_type, exc_value, tb)
+  File "/var/www/u0947298/data/flaskenv/lib/python3.7/site-packages/flask/_compat.py", line 39, in reraise
+    raise value
+  File "/var/www/u0947298/data/flaskenv/lib/python3.7/site-packages/flask/app.py", line 1949, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "/var/www/u0947298/data/flaskenv/lib/python3.7/site-packages/flask/app.py", line 1935, in dispatch_request
+    return self.view_functions[rule.endpoint](**req.view_args)
+  File "/var/www/u0947298/data/www/realec-reference.site/app.py", line 81, in view_article
+  File "/var/www/u0947298/data/www/realec-reference.site/dbaccess.py", line 10, in get_article
+    raise Exception(f"No article named {article_name}")
+Exception: No article named CONDITIONAL%20SENTENCES
+Exception on /viewArticle/CONDITIONALSENTENCES [GET]
+Traceback (most recent call last):
+  File "/var/www/u0947298/data/flaskenv/lib/python3.7/site-packages/flask/app.py", line 2446, in wsgi_app
+    response = self.full_dispatch_request()
+  File "/var/www/u0947298/data/flaskenv/lib/python3.7/site-packages/flask/app.py", line 1951, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "/var/www/u0947298/data/flaskenv/lib/python3.7/site-packages/flask/app.py", line 1820, in handle_user_exception
+    reraise(exc_type, exc_value, tb)
+  File "/var/www/u0947298/data/flaskenv/lib/python3.7/site-packages/flask/_compat.py", line 39, in reraise
+    raise value
+  File "/var/www/u0947298/data/flaskenv/lib/python3.7/site-packages/flask/app.py", line 1949, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "/var/www/u0947298/data/flaskenv/lib/python3.7/site-packages/flask/app.py", line 1935, in dispatch_request
+    return self.view_functions[rule.endpoint](**req.view_args)
+  File "/var/www/u0947298/data/www/realec-reference.site/app.py", line 80, in view_article
+    return render_template('viewArticle.html', taglist=tag_list,  article=dbaccess.get_article(article_name), authorized=check_auth(session))
+  File "/var/www/u0947298/data/www/realec-reference.site/dbaccess.py", line 10, in get_article
+    raise Exception(f"No article named {article_name}")
+Exception: No article named CONDITIONALSENTENCES
+Exception on /viewArticle/Nounswithprepositionsanddeterminers [GET]
+Traceback (most recent call last):
+  File "/var/www/u0947298/data/flaskenv/lib/python3.7/site-packages/flask/app.py", line 2446, in wsgi_app
+    response = self.full_dispatch_request()
+  File "/var/www/u0947298/data/flaskenv/lib/python3.7/site-packages/flask/app.py", line 1951, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "/var/www/u0947298/data/flaskenv/lib/python3.7/site-packages/flask/app.py", line 1820, in handle_user_exception
+    reraise(exc_type, exc_value, tb)
+  File "/var/www/u0947298/data/flaskenv/lib/python3.7/site-packages/flask/_compat.py", line 39, in reraise
+    raise value
+  File "/var/www/u0947298/data/flaskenv/lib/python3.7/site-packages/flask/app.py", line 1949, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "/var/www/u0947298/data/flaskenv/lib/python3.7/site-packages/flask/app.py", line 1935, in dispatch_request
+    return self.view_functions[rule.endpoint](**req.view_args)
+  File "/var/www/u0947298/data/www/realec-reference.site/app.py", line 80, in view_article
+    return render_template('viewArticle.html', taglist=tag_list,  article=dbaccess.get_article(article_name), authorized=check_auth(session))
+  File "/var/www/u0947298/data/www/realec-reference.site/dbaccess.py", line 10, in get_article
+    raise Exception(f"No article named {article_name}")
+Exception: No article named Nounswithprepositionsanddeterminers
+Exception on /viewArticle/CONDITIONALSENTENCES [GET]
+Traceback (most recent call last):
+  File "/var/www/u0947298/data/flaskenv/lib/python3.7/site-packages/flask/app.py", line 2446, in wsgi_app
+    response = self.full_dispatch_request()
+  File "/var/www/u0947298/data/flaskenv/lib/python3.7/site-packages/flask/app.py", line 1951, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "/var/www/u0947298/data/flaskenv/lib/python3.7/site-packages/flask/app.py", line 1820, in handle_user_exception
+    reraise(exc_type, exc_value, tb)
+  File "/var/www/u0947298/data/flaskenv/lib/python3.7/site-packages/flask/_compat.py", line 39, in reraise
+    raise value
+  File "/var/www/u0947298/data/flaskenv/lib/python3.7/site-packages/flask/app.py", line 1949, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "/var/www/u0947298/data/flaskenv/lib/python3.7/site-packages/flask/app.py", line 1935, in dispatch_request
+    return self.view_functions[rule.endpoint](**req.view_args)
+  File "/var/www/u0947298/data/www/realec-reference.site/app.py", line 80, in view_article
+    return render_template('viewArticle.html', taglist=tag_list,  article=dbaccess.get_article(article_name), authorized=check_auth(session))
+  File "/var/www/u0947298/data/www/realec-reference.site/dbaccess.py", line 10, in get_article
+    raise Exception(f"No article named {article_name}")
+Exception: No article named CONDITIONALSENTENCES
+Exception on /viewArticle/Nounswithprepositionsanddeterminers [GET]
+Traceback (most recent call last):
+  File "/var/www/u0947298/data/flaskenv/lib/python3.7/site-packages/flask/app.py", line 2446, in wsgi_app
+    response = self.full_dispatch_request()
+  File "/var/www/u0947298/data/flaskenv/lib/python3.7/site-packages/flask/app.py", line 1951, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "/var/www/u0947298/data/flaskenv/lib/python3.7/site-packages/flask/app.py", line 1820, in handle_user_exception
+    reraise(exc_type, exc_value, tb)
+  File "/var/www/u0947298/data/flaskenv/lib/python3.7/site-packages/flask/_compat.py", line 39, in reraise
+    raise value
+  File "/var/www/u0947298/data/flaskenv/lib/python3.7/site-packages/flask/app.py", line 1949, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "/var/www/u0947298/data/flaskenv/lib/python3.7/site-packages/flask/app.py", line 1935, in dispatch_request
+    return self.view_functions[rule.endpoint](**req.view_args)
+  File "/var/www/u0947298/data/www/realec-reference.site/app.py", line 80, in view_article
+    return render_template('viewArticle.html', taglist=tag_list,  article=dbaccess.get_article(article_name), authorized=check_auth(session))
+  File "/var/www/u0947298/data/www/realec-reference.site/dbaccess.py", line 10, in get_article
+    raise Exception(f"No article named {article_name}")
+Exception: No article named Nounswithprepositionsanddeterminers
+Exception on /viewArticle/CONDITIONALSENTENCES [GET]
+Traceback (most recent call last):
+  File "/var/www/u0947298/data/flaskenv/lib/python3.7/site-packages/flask/app.py", line 2446, in wsgi_app
+    response = self.full_dispatch_request()
+  File "/var/www/u0947298/data/flaskenv/lib/python3.7/site-packages/flask/app.py", line 1951, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "/var/www/u0947298/data/flaskenv/lib/python3.7/site-packages/flask/app.py", line 1820, in handle_user_exception
+    reraise(exc_type, exc_value, tb)
+  File "/var/www/u0947298/data/flaskenv/lib/python3.7/site-packages/flask/_compat.py", line 39, in reraise
+    raise value
+  File "/var/www/u0947298/data/flaskenv/lib/python3.7/site-packages/flask/app.py", line 1949, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "/var/www/u0947298/data/flaskenv/lib/python3.7/site-packages/flask/app.py", line 1935, in dispatch_request
+    return self.view_functions[rule.endpoint](**req.view_args)
+  File "/var/www/u0947298/data/www/realec-reference.site/app.py", line 80, in view_article
+    return render_template('viewArticle.html', taglist=tag_list,  article=dbaccess.get_article(article_name), authorized=check_auth(session))
+  File "/var/www/u0947298/data/www/realec-reference.site/dbaccess.py", line 10, in get_article
+    raise Exception(f"No article named {article_name}")
+Exception: No article named CONDITIONALSENTENCES
+Exception on /viewArticle/Nounswithprepositionsanddeterminers [GET]
+Traceback (most recent call last):
+  File "/var/www/u0947298/data/flaskenv/lib/python3.7/site-packages/flask/app.py", line 2446, in wsgi_app
+    response = self.full_dispatch_request()
+  File "/var/www/u0947298/data/flaskenv/lib/python3.7/site-packages/flask/app.py", line 1951, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "/var/www/u0947298/data/flaskenv/lib/python3.7/site-packages/flask/app.py", line 1820, in handle_user_exception
+    reraise(exc_type, exc_value, tb)
+  File "/var/www/u0947298/data/flaskenv/lib/python3.7/site-packages/flask/_compat.py", line 39, in reraise
+    raise value
+  File "/var/www/u0947298/data/flaskenv/lib/python3.7/site-packages/flask/app.py", line 1949, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "/var/www/u0947298/data/flaskenv/lib/python3.7/site-packages/flask/app.py", line 1935, in dispatch_request
+    return self.view_functions[rule.endpoint](**req.view_args)
+  File "/var/www/u0947298/data/www/realec-reference.site/app.py", line 80, in view_article
+    return render_template('viewArticle.html', taglist=tag_list,  article=dbaccess.get_article(article_name), authorized=check_auth(session))
+  File "/var/www/u0947298/data/www/realec-reference.site/dbaccess.py", line 10, in get_article
+    raise Exception(f"No article named {article_name}")
+Exception: No article named Nounswithprepositionsanddeterminers
+Exception on /viewArticle/CONDITIONALSENTENCES [GET]
+Traceback (most recent call last):
+  File "/var/www/u0947298/data/flaskenv/lib/python3.7/site-packages/flask/app.py", line 2446, in wsgi_app
+    response = self.full_dispatch_request()
+  File "/var/www/u0947298/data/flaskenv/lib/python3.7/site-packages/flask/app.py", line 1951, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "/var/www/u0947298/data/flaskenv/lib/python3.7/site-packages/flask/app.py", line 1820, in handle_user_exception
+    reraise(exc_type, exc_value, tb)
+  File "/var/www/u0947298/data/flaskenv/lib/python3.7/site-packages/flask/_compat.py", line 39, in reraise
+    raise value
+  File "/var/www/u0947298/data/flaskenv/lib/python3.7/site-packages/flask/app.py", line 1949, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "/var/www/u0947298/data/flaskenv/lib/python3.7/site-packages/flask/app.py", line 1935, in dispatch_request
+    return self.view_functions[rule.endpoint](**req.view_args)
+  File "/var/www/u0947298/data/www/realec-reference.site/app.py", line 80, in view_article
+    return render_template('viewArticle.html', taglist=tag_list,  article=dbaccess.get_article(article_name), authorized=check_auth(session))
+  File "/var/www/u0947298/data/www/realec-reference.site/dbaccess.py", line 10, in get_article
+    raise Exception(f"No article named {article_name}")
+Exception: No article named CONDITIONALSENTENCES
+Exception on /viewArticle/Nounswithprepositionsanddeterminers [GET]
+Traceback (most recent call last):
+  File "/var/www/u0947298/data/flaskenv/lib/python3.7/site-packages/flask/app.py", line 2446, in wsgi_app
+    response = self.full_dispatch_request()
+  File "/var/www/u0947298/data/flaskenv/lib/python3.7/site-packages/flask/app.py", line 1951, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "/var/www/u0947298/data/flaskenv/lib/python3.7/site-packages/flask/app.py", line 1820, in handle_user_exception
+    reraise(exc_type, exc_value, tb)
+  File "/var/www/u0947298/data/flaskenv/lib/python3.7/site-packages/flask/_compat.py", line 39, in reraise
+    raise value
+  File "/var/www/u0947298/data/flaskenv/lib/python3.7/site-packages/flask/app.py", line 1949, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "/var/www/u0947298/data/flaskenv/lib/python3.7/site-packages/flask/app.py", line 1935, in dispatch_request
+    return self.view_functions[rule.endpoint](**req.view_args)
+  File "/var/www/u0947298/data/www/realec-reference.site/app.py", line 80, in view_article
+    return render_template('viewArticle.html', taglist=tag_list,  article=dbaccess.get_article(article_name), authorized=check_auth(session))
+  File "/var/www/u0947298/data/www/realec-reference.site/dbaccess.py", line 10, in get_article
+    raise Exception(f"No article named {article_name}")
+Exception: No article named Nounswithprepositionsanddeterminers
+Exception on /viewArticle/CONDITIONAL%20SENTENCES']]] [GET]
+Traceback (most recent call last):
+  File "/var/www/u0947298/data/flaskenv/lib/python3.7/site-packages/flask/app.py", line 2446, in wsgi_app
+    response = self.full_dispatch_request()
+  File "/var/www/u0947298/data/flaskenv/lib/python3.7/site-packages/flask/app.py", line 1951, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "/var/www/u0947298/data/flaskenv/lib/python3.7/site-packages/flask/app.py", line 1820, in handle_user_exception
+    reraise(exc_type, exc_value, tb)
+  File "/var/www/u0947298/data/flaskenv/lib/python3.7/site-packages/flask/_compat.py", line 39, in reraise
+    raise value
+  File "/var/www/u0947298/data/flaskenv/lib/python3.7/site-packages/flask/app.py", line 1949, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "/var/www/u0947298/data/flaskenv/lib/python3.7/site-packages/flask/app.py", line 1935, in dispatch_request
+    return self.view_functions[rule.endpoint](**req.view_args)
+  File "/var/www/u0947298/data/www/realec-reference.site/app.py", line 80, in view_article
+    return render_template('viewArticle.html', taglist=tag_list,  article=dbaccess.get_article(article_name), authorized=check_auth(session))
+  File "/var/www/u0947298/data/www/realec-reference.site/dbaccess.py", line 10, in get_article
+    raise Exception(f"No article named {article_name}")
+Exception: No article named CONDITIONAL SENTENCES']]]
+Exception on /viewArticle/CONDITIONAL%20SENTENCES'], [GET]
+Traceback (most recent call last):
+  File "/var/www/u0947298/data/flaskenv/lib/python3.7/site-packages/flask/app.py", line 2446, in wsgi_app
+    response = self.full_dispatch_request()
+  File "/var/www/u0947298/data/flaskenv/lib/python3.7/site-packages/flask/app.py", line 1951, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "/var/www/u0947298/data/flaskenv/lib/python3.7/site-packages/flask/app.py", line 1820, in handle_user_exception
+    reraise(exc_type, exc_value, tb)
+  File "/var/www/u0947298/data/flaskenv/lib/python3.7/site-packages/flask/_compat.py", line 39, in reraise
+    raise value
+  File "/var/www/u0947298/data/flaskenv/lib/python3.7/site-packages/flask/app.py", line 1949, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "/var/www/u0947298/data/flaskenv/lib/python3.7/site-packages/flask/app.py", line 1935, in dispatch_request
+    return self.view_functions[rule.endpoint](**req.view_args)
+  File "/var/www/u0947298/data/www/realec-reference.site/app.py", line 80, in view_article
+    return render_template('viewArticle.html', taglist=tag_list,  article=dbaccess.get_article(article_name), authorized=check_auth(session))
+  File "/var/www/u0947298/data/www/realec-reference.site/dbaccess.py", line 10, in get_article
+    raise Exception(f"No article named {article_name}")
+Exception: No article named CONDITIONAL SENTENCES'],
+Exception on /viewArticle/CONDITIONAL%20SENTENCES'], [GET]
+Traceback (most recent call last):
+  File "/var/www/u0947298/data/flaskenv/lib/python3.7/site-packages/flask/app.py", line 2446, in wsgi_app
+    response = self.full_dispatch_request()
+  File "/var/www/u0947298/data/flaskenv/lib/python3.7/site-packages/flask/app.py", line 1951, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "/var/www/u0947298/data/flaskenv/lib/python3.7/site-packages/flask/app.py", line 1820, in handle_user_exception
+    reraise(exc_type, exc_value, tb)
+  File "/var/www/u0947298/data/flaskenv/lib/python3.7/site-packages/flask/_compat.py", line 39, in reraise
+    raise value
+  File "/var/www/u0947298/data/flaskenv/lib/python3.7/site-packages/flask/app.py", line 1949, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "/var/www/u0947298/data/flaskenv/lib/python3.7/site-packages/flask/app.py", line 1935, in dispatch_request
+    return self.view_functions[rule.endpoint](**req.view_args)
+  File "/var/www/u0947298/data/www/realec-reference.site/app.py", line 80, in view_article
+    return render_template('viewArticle.html', taglist=tag_list,  article=dbaccess.get_article(article_name), authorized=check_auth(session))
+  File "/var/www/u0947298/data/www/realec-reference.site/dbaccess.py", line 10, in get_article
+    raise Exception(f"No article named {article_name}")
+Exception: No article named CONDITIONAL SENTENCES'],
+Exception on /viewArticle/CONDITIONALSENTENCES [GET]
+Traceback (most recent call last):
+  File "/var/www/u0947298/data/flaskenv/lib/python3.7/site-packages/flask/app.py", line 2446, in wsgi_app
+    response = self.full_dispatch_request()
+  File "/var/www/u0947298/data/flaskenv/lib/python3.7/site-packages/flask/app.py", line 1951, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "/var/www/u0947298/data/flaskenv/lib/python3.7/site-packages/flask/app.py", line 1820, in handle_user_exception
+    reraise(exc_type, exc_value, tb)
+  File "/var/www/u0947298/data/flaskenv/lib/python3.7/site-packages/flask/_compat.py", line 39, in reraise
+    raise value
+  File "/var/www/u0947298/data/flaskenv/lib/python3.7/site-packages/flask/app.py", line 1949, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "/var/www/u0947298/data/flaskenv/lib/python3.7/site-packages/flask/app.py", line 1935, in dispatch_request
+    return self.view_functions[rule.endpoint](**req.view_args)
+  File "/var/www/u0947298/data/www/realec-reference.site/app.py", line 80, in view_article
+    return render_template('viewArticle.html', taglist=tag_list,  article=dbaccess.get_article(article_name), authorized=check_auth(session))
+  File "/var/www/u0947298/data/www/realec-reference.site/dbaccess.py", line 10, in get_article
+    raise Exception(f"No article named {article_name}")
+Exception: No article named CONDITIONALSENTENCES
+Exception on /viewArticle/Nounswithprepositionsanddeterminers [GET]
+Traceback (most recent call last):
+  File "/var/www/u0947298/data/flaskenv/lib/python3.7/site-packages/flask/app.py", line 2446, in wsgi_app
+    response = self.full_dispatch_request()
+  File "/var/www/u0947298/data/flaskenv/lib/python3.7/site-packages/flask/app.py", line 1951, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "/var/www/u0947298/data/flaskenv/lib/python3.7/site-packages/flask/app.py", line 1820, in handle_user_exception
+    reraise(exc_type, exc_value, tb)
+  File "/var/www/u0947298/data/flaskenv/lib/python3.7/site-packages/flask/_compat.py", line 39, in reraise
+    raise value
+  File "/var/www/u0947298/data/flaskenv/lib/python3.7/site-packages/flask/app.py", line 1949, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "/var/www/u0947298/data/flaskenv/lib/python3.7/site-packages/flask/app.py", line 1935, in dispatch_request
+    return self.view_functions[rule.endpoint](**req.view_args)
+  File "/var/www/u0947298/data/www/realec-reference.site/app.py", line 80, in view_article
+    return render_template('viewArticle.html', taglist=tag_list,  article=dbaccess.get_article(article_name), authorized=check_auth(session))
+  File "/var/www/u0947298/data/www/realec-reference.site/dbaccess.py", line 10, in get_article
+    raise Exception(f"No article named {article_name}")
+Exception: No article named Nounswithprepositionsanddeterminers
+Exception on /viewArticle/CONDITIONALSENTENCES [GET]
+Traceback (most recent call last):
+  File "/var/www/u0947298/data/flaskenv/lib/python3.7/site-packages/flask/app.py", line 2446, in wsgi_app
+    response = self.full_dispatch_request()
+  File "/var/www/u0947298/data/flaskenv/lib/python3.7/site-packages/flask/app.py", line 1951, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "/var/www/u0947298/data/flaskenv/lib/python3.7/site-packages/flask/app.py", line 1820, in handle_user_exception
+    reraise(exc_type, exc_value, tb)
+  File "/var/www/u0947298/data/flaskenv/lib/python3.7/site-packages/flask/_compat.py", line 39, in reraise
+    raise value
+  File "/var/www/u0947298/data/flaskenv/lib/python3.7/site-packages/flask/app.py", line 1949, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "/var/www/u0947298/data/flaskenv/lib/python3.7/site-packages/flask/app.py", line 1935, in dispatch_request
+    return self.view_functions[rule.endpoint](**req.view_args)
+  File "/var/www/u0947298/data/www/realec-reference.site/app.py", line 80, in view_article
+    return render_template('viewArticle.html', taglist=tag_list,  article=dbaccess.get_article(article_name), authorized=check_auth(session))
+  File "/var/www/u0947298/data/www/realec-reference.site/dbaccess.py", line 10, in get_article
+    raise Exception(f"No article named {article_name}")
+Exception: No article named CONDITIONALSENTENCES
+Exception on /viewArticle/Nounswithprepositionsanddeterminers [GET]
+Traceback (most recent call last):
+  File "/var/www/u0947298/data/flaskenv/lib/python3.7/site-packages/flask/app.py", line 2446, in wsgi_app
+    response = self.full_dispatch_request()
+  File "/var/www/u0947298/data/flaskenv/lib/python3.7/site-packages/flask/app.py", line 1951, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "/var/www/u0947298/data/flaskenv/lib/python3.7/site-packages/flask/app.py", line 1820, in handle_user_exception
+    reraise(exc_type, exc_value, tb)
+  File "/var/www/u0947298/data/flaskenv/lib/python3.7/site-packages/flask/_compat.py", line 39, in reraise
+    raise value
+  File "/var/www/u0947298/data/flaskenv/lib/python3.7/site-packages/flask/app.py", line 1949, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "/var/www/u0947298/data/flaskenv/lib/python3.7/site-packages/flask/app.py", line 1935, in dispatch_request
+    return self.view_functions[rule.endpoint](**req.view_args)
+  File "/var/www/u0947298/data/www/realec-reference.site/app.py", line 80, in view_article
+    return render_template('viewArticle.html', taglist=tag_list,  article=dbaccess.get_article(article_name), authorized=check_auth(session))
+  File "/var/www/u0947298/data/www/realec-reference.site/dbaccess.py", line 10, in get_article
+    raise Exception(f"No article named {article_name}")
+Exception: No article named Nounswithprepositionsanddeterminers
+Exception on /viewArticle/CONDITIONAL [GET]
+Traceback (most recent call last):
+  File "/var/www/u0947298/data/flaskenv/lib/python3.7/site-packages/flask/app.py", line 2446, in wsgi_app
+    response = self.full_dispatch_request()
+  File "/var/www/u0947298/data/flaskenv/lib/python3.7/site-packages/flask/app.py", line 1951, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "/var/www/u0947298/data/flaskenv/lib/python3.7/site-packages/flask/app.py", line 1820, in handle_user_exception
+    reraise(exc_type, exc_value, tb)
+  File "/var/www/u0947298/data/flaskenv/lib/python3.7/site-packages/flask/_compat.py", line 39, in reraise
+    raise value
+  File "/var/www/u0947298/data/flaskenv/lib/python3.7/site-packages/flask/app.py", line 1949, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "/var/www/u0947298/data/flaskenv/lib/python3.7/site-packages/flask/app.py", line 1935, in dispatch_request
+    return self.view_functions[rule.endpoint](**req.view_args)
+  File "/var/www/u0947298/data/www/realec-reference.site/app.py", line 80, in view_article
+    return render_template('viewArticle.html', taglist=tag_list,  article=dbaccess.get_article(article_name), authorized=check_auth(session))
+  File "/var/www/u0947298/data/www/realec-reference.site/dbaccess.py", line 10, in get_article
+    raise Exception(f"No article named {article_name}")
+Exception: No article named CONDITIONAL
+Exception on /viewArticle/CONDITIONAL [GET]
+Traceback (most recent call last):
+  File "/var/www/u0947298/data/flaskenv/lib/python3.7/site-packages/flask/app.py", line 2446, in wsgi_app
+    response = self.full_dispatch_request()
+  File "/var/www/u0947298/data/flaskenv/lib/python3.7/site-packages/flask/app.py", line 1951, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "/var/www/u0947298/data/flaskenv/lib/python3.7/site-packages/flask/app.py", line 1820, in handle_user_exception
+    reraise(exc_type, exc_value, tb)
+  File "/var/www/u0947298/data/flaskenv/lib/python3.7/site-packages/flask/_compat.py", line 39, in reraise
+    raise value
+  File "/var/www/u0947298/data/flaskenv/lib/python3.7/site-packages/flask/app.py", line 1949, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "/var/www/u0947298/data/flaskenv/lib/python3.7/site-packages/flask/app.py", line 1935, in dispatch_request
+    return self.view_functions[rule.endpoint](**req.view_args)
+  File "/var/www/u0947298/data/www/realec-reference.site/app.py", line 80, in view_article
+    return render_template('viewArticle.html', taglist=tag_list,  article=dbaccess.get_article(article_name), authorized=check_auth(session))
+  File "/var/www/u0947298/data/www/realec-reference.site/dbaccess.py", line 10, in get_article
+    raise Exception(f"No article named {article_name}")
+Exception: No article named CONDITIONAL
+Exception on /viewArticle/CONDITIONALSENTENCES [GET]
+Traceback (most recent call last):
+  File "/var/www/u0947298/data/flaskenv/lib/python3.7/site-packages/flask/app.py", line 2446, in wsgi_app
+    response = self.full_dispatch_request()
+  File "/var/www/u0947298/data/flaskenv/lib/python3.7/site-packages/flask/app.py", line 1951, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "/var/www/u0947298/data/flaskenv/lib/python3.7/site-packages/flask/app.py", line 1820, in handle_user_exception
+    reraise(exc_type, exc_value, tb)
+  File "/var/www/u0947298/data/flaskenv/lib/python3.7/site-packages/flask/_compat.py", line 39, in reraise
+    raise value
+  File "/var/www/u0947298/data/flaskenv/lib/python3.7/site-packages/flask/app.py", line 1949, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "/var/www/u0947298/data/flaskenv/lib/python3.7/site-packages/flask/app.py", line 1935, in dispatch_request
+    return self.view_functions[rule.endpoint](**req.view_args)
+  File "/var/www/u0947298/data/www/realec-reference.site/app.py", line 80, in view_article
+    return render_template('viewArticle.html', taglist=tag_list,  article=dbaccess.get_article(article_name), authorized=check_auth(session))
+  File "/var/www/u0947298/data/www/realec-reference.site/dbaccess.py", line 10, in get_article
+    raise Exception(f"No article named {article_name}")
+Exception: No article named CONDITIONALSENTENCES
+Exception on /viewArticle/Nounswithprepositionsanddeterminers [GET]
+Traceback (most recent call last):
+  File "/var/www/u0947298/data/flaskenv/lib/python3.7/site-packages/flask/app.py", line 2446, in wsgi_app
+    response = self.full_dispatch_request()
+  File "/var/www/u0947298/data/flaskenv/lib/python3.7/site-packages/flask/app.py", line 1951, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "/var/www/u0947298/data/flaskenv/lib/python3.7/site-packages/flask/app.py", line 1820, in handle_user_exception
+    reraise(exc_type, exc_value, tb)
+  File "/var/www/u0947298/data/flaskenv/lib/python3.7/site-packages/flask/_compat.py", line 39, in reraise
+    raise value
+  File "/var/www/u0947298/data/flaskenv/lib/python3.7/site-packages/flask/app.py", line 1949, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "/var/www/u0947298/data/flaskenv/lib/python3.7/site-packages/flask/app.py", line 1935, in dispatch_request
+    return self.view_functions[rule.endpoint](**req.view_args)
+  File "/var/www/u0947298/data/www/realec-reference.site/app.py", line 80, in view_article
+    return render_template('viewArticle.html', taglist=tag_list,  article=dbaccess.get_article(article_name), authorized=check_auth(session))
+  File "/var/www/u0947298/data/www/realec-reference.site/dbaccess.py", line 10, in get_article
+    raise Exception(f"No article named {article_name}")
+Exception: No article named Nounswithprepositionsanddeterminers
+Exception on /viewArticle/CONDITIONALSENTENCES [GET]
+Traceback (most recent call last):
+  File "/var/www/u0947298/data/flaskenv/lib/python3.7/site-packages/flask/app.py", line 2446, in wsgi_app
+    response = self.full_dispatch_request()
+  File "/var/www/u0947298/data/flaskenv/lib/python3.7/site-packages/flask/app.py", line 1951, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "/var/www/u0947298/data/flaskenv/lib/python3.7/site-packages/flask/app.py", line 1820, in handle_user_exception
+    reraise(exc_type, exc_value, tb)
+  File "/var/www/u0947298/data/flaskenv/lib/python3.7/site-packages/flask/_compat.py", line 39, in reraise
+    raise value
+  File "/var/www/u0947298/data/flaskenv/lib/python3.7/site-packages/flask/app.py", line 1949, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "/var/www/u0947298/data/flaskenv/lib/python3.7/site-packages/flask/app.py", line 1935, in dispatch_request
+    return self.view_functions[rule.endpoint](**req.view_args)
+  File "/var/www/u0947298/data/www/realec-reference.site/app.py", line 80, in view_article
+    return render_template('viewArticle.html', taglist=tag_list,  article=dbaccess.get_article(article_name), authorized=check_auth(session))
+  File "/var/www/u0947298/data/www/realec-reference.site/dbaccess.py", line 10, in get_article
+    raise Exception(f"No article named {article_name}")
+Exception: No article named CONDITIONALSENTENCES
+Exception on /viewArticle/Nounswithprepositionsanddeterminers [GET]
+Traceback (most recent call last):
+  File "/var/www/u0947298/data/flaskenv/lib/python3.7/site-packages/flask/app.py", line 2446, in wsgi_app
+    response = self.full_dispatch_request()
+  File "/var/www/u0947298/data/flaskenv/lib/python3.7/site-packages/flask/app.py", line 1951, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "/var/www/u0947298/data/flaskenv/lib/python3.7/site-packages/flask/app.py", line 1820, in handle_user_exception
+    reraise(exc_type, exc_value, tb)
+  File "/var/www/u0947298/data/flaskenv/lib/python3.7/site-packages/flask/_compat.py", line 39, in reraise
+    raise value
+  File "/var/www/u0947298/data/flaskenv/lib/python3.7/site-packages/flask/app.py", line 1949, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "/var/www/u0947298/data/flaskenv/lib/python3.7/site-packages/flask/app.py", line 1935, in dispatch_request
+    return self.view_functions[rule.endpoint](**req.view_args)
+  File "/var/www/u0947298/data/www/realec-reference.site/app.py", line 80, in view_article
+    return render_template('viewArticle.html', taglist=tag_list,  article=dbaccess.get_article(article_name), authorized=check_auth(session))
+  File "/var/www/u0947298/data/www/realec-reference.site/dbaccess.py", line 10, in get_article
+    raise Exception(f"No article named {article_name}")
+Exception: No article named Nounswithprepositionsanddeterminers
+Exception on /viewArticle/CONDITIONALSENTENCES [GET]
+Traceback (most recent call last):
+  File "/var/www/u0947298/data/flaskenv/lib/python3.7/site-packages/flask/app.py", line 2446, in wsgi_app
+    response = self.full_dispatch_request()
+  File "/var/www/u0947298/data/flaskenv/lib/python3.7/site-packages/flask/app.py", line 1951, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "/var/www/u0947298/data/flaskenv/lib/python3.7/site-packages/flask/app.py", line 1820, in handle_user_exception
+    reraise(exc_type, exc_value, tb)
+  File "/var/www/u0947298/data/flaskenv/lib/python3.7/site-packages/flask/_compat.py", line 39, in reraise
+    raise value
+  File "/var/www/u0947298/data/flaskenv/lib/python3.7/site-packages/flask/app.py", line 1949, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "/var/www/u0947298/data/flaskenv/lib/python3.7/site-packages/flask/app.py", line 1935, in dispatch_request
+    return self.view_functions[rule.endpoint](**req.view_args)
+  File "/var/www/u0947298/data/www/realec-reference.site/app.py", line 80, in view_article
+    return render_template('viewArticle.html', taglist=tag_list,  article=dbaccess.get_article(article_name), authorized=check_auth(session))
+  File "/var/www/u0947298/data/www/realec-reference.site/dbaccess.py", line 10, in get_article
+    raise Exception(f"No article named {article_name}")
+Exception: No article named CONDITIONALSENTENCES
+Exception on /viewArticle/Nounswithprepositionsanddeterminers [GET]
+Traceback (most recent call last):
+  File "/var/www/u0947298/data/flaskenv/lib/python3.7/site-packages/flask/app.py", line 2446, in wsgi_app
+    response = self.full_dispatch_request()
+  File "/var/www/u0947298/data/flaskenv/lib/python3.7/site-packages/flask/app.py", line 1951, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "/var/www/u0947298/data/flaskenv/lib/python3.7/site-packages/flask/app.py", line 1820, in handle_user_exception
+    reraise(exc_type, exc_value, tb)
+  File "/var/www/u0947298/data/flaskenv/lib/python3.7/site-packages/flask/_compat.py", line 39, in reraise
+    raise value
+  File "/var/www/u0947298/data/flaskenv/lib/python3.7/site-packages/flask/app.py", line 1949, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "/var/www/u0947298/data/flaskenv/lib/python3.7/site-packages/flask/app.py", line 1935, in dispatch_request
+    return self.view_functions[rule.endpoint](**req.view_args)
+  File "/var/www/u0947298/data/www/realec-reference.site/app.py", line 80, in view_article
+    return render_template('viewArticle.html', taglist=tag_list,  article=dbaccess.get_article(article_name), authorized=check_auth(session))
+  File "/var/www/u0947298/data/www/realec-reference.site/dbaccess.py", line 10, in get_article
+    raise Exception(f"No article named {article_name}")
+Exception: No article named Nounswithprepositionsanddeterminers
+Exception on /viewArticle/CONDITIONALSENTENCES [GET]
+Traceback (most recent call last):
+  File "/var/www/u0947298/data/flaskenv/lib/python3.7/site-packages/flask/app.py", line 2446, in wsgi_app
+    response = self.full_dispatch_request()
+  File "/var/www/u0947298/data/flaskenv/lib/python3.7/site-packages/flask/app.py", line 1951, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "/var/www/u0947298/data/flaskenv/lib/python3.7/site-packages/flask/app.py", line 1820, in handle_user_exception
+    reraise(exc_type, exc_value, tb)
+  File "/var/www/u0947298/data/flaskenv/lib/python3.7/site-packages/flask/_compat.py", line 39, in reraise
+    raise value
+  File "/var/www/u0947298/data/flaskenv/lib/python3.7/site-packages/flask/app.py", line 1949, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "/var/www/u0947298/data/flaskenv/lib/python3.7/site-packages/flask/app.py", line 1935, in dispatch_request
+    return self.view_functions[rule.endpoint](**req.view_args)
+  File "/var/www/u0947298/data/www/realec-reference.site/app.py", line 80, in view_article
+    return render_template('viewArticle.html', taglist=tag_list,  article=dbaccess.get_article(article_name), authorized=check_auth(session))
+  File "/var/www/u0947298/data/www/realec-reference.site/dbaccess.py", line 10, in get_article
+    raise Exception(f"No article named {article_name}")
+Exception: No article named CONDITIONALSENTENCES
+Exception on /viewArticle/Nounswithprepositionsanddeterminers [GET]
+Traceback (most recent call last):
+  File "/var/www/u0947298/data/flaskenv/lib/python3.7/site-packages/flask/app.py", line 2446, in wsgi_app
+    response = self.full_dispatch_request()
+  File "/var/www/u0947298/data/flaskenv/lib/python3.7/site-packages/flask/app.py", line 1951, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "/var/www/u0947298/data/flaskenv/lib/python3.7/site-packages/flask/app.py", line 1820, in handle_user_exception
+    reraise(exc_type, exc_value, tb)
+  File "/var/www/u0947298/data/flaskenv/lib/python3.7/site-packages/flask/_compat.py", line 39, in reraise
+    raise value
+  File "/var/www/u0947298/data/flaskenv/lib/python3.7/site-packages/flask/app.py", line 1949, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "/var/www/u0947298/data/flaskenv/lib/python3.7/site-packages/flask/app.py", line 1935, in dispatch_request
+    return self.view_functions[rule.endpoint](**req.view_args)
+  File "/var/www/u0947298/data/www/realec-reference.site/app.py", line 80, in view_article
+    return render_template('viewArticle.html', taglist=tag_list,  article=dbaccess.get_article(article_name), authorized=check_auth(session))
+  File "/var/www/u0947298/data/www/realec-reference.site/dbaccess.py", line 10, in get_article
+    raise Exception(f"No article named {article_name}")
+Exception: No article named Nounswithprepositionsanddeterminers
