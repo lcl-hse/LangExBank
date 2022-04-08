@@ -2,9 +2,14 @@ from tinydb import TinyDB, Query
 from utils import get_preview
 
 
+def db_connect():
+    db = TinyDB("reference_data/db.json")
+    return db
+
+
 def get_article(article_name):
     """Returns article with its associated tags"""
-    db = TinyDB("db.json")
+    db = db_connect()
     Article = Query()
     article = db.get(Article.name == article_name)
     if not article:
@@ -14,7 +19,7 @@ def get_article(article_name):
 
 def articles_by_tag(tag):
     """Return articles associated with provided tag"""
-    db = TinyDB("db.json")
+    db = db_connect()
     Article = Query()
     articles = db.search(Article.tags.test(lambda x: tag in x))
     return articles
@@ -22,14 +27,14 @@ def articles_by_tag(tag):
 
 def all_articles():
     """Return all articles"""
-    db = TinyDB("db.json")
+    db = db_connect()
     articles = db.all()
     return articles
 
 
 def write_article(article_name, article_text, article_tags):
     """Writes article with its associated tags to database"""
-    db = TinyDB("db.json")
+    db = db_connect()
     db.insert(
         {
             "name": article_name,
@@ -47,7 +52,7 @@ def update_article(
     article_new_tags
 ):
     """Updates selected article in database"""
-    db = TinyDB("db.json")
+    db = db_connect()
     Article = Query()
     db.update(
         {
@@ -62,14 +67,14 @@ def update_article(
 
 def delete_article(article_name):
     """Delete selected article from database"""
-    db = TinyDB("db.json")
+    db = db_connect()
     Article = Query()
     db.remove(Article.name == article_name)
 
 
 def name_not_present(article_name):
     """Checks if article with provided name exists in the database"""
-    db = TinyDB("db.json")
+    db = db_connect()
     Article = Query()
     search_result = db.search(Article.name == article_name)
     if search_result:

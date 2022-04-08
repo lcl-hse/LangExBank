@@ -16,7 +16,7 @@ error_handler.setLevel(logging.WARNING)
 
 tag_list, tags = get_html_taglist(), get_str_taglist()
 
-URL_PREFIX = os.getenv("URL_PREFIX", default="")
+URL_PREFIX = os.getenv("REF_URL_PREFIX", default="")
 
 application = Flask(
     __name__,

@@ -5,7 +5,7 @@ import os
 import re
 
 URL_PREFIX = os.getenv(
-    "URL_PREFIX",
+    "REF_URL_PREFIX",
     default=""
 )
 
