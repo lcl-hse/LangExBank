@@ -156,7 +156,7 @@ MEDIA_ROOT = os.path.join(BASE_DIR, os.environ.get('DJANGO_MEDIA_ROOT',default='
 
 STATIC_ROOT = os.path.join(BASE_DIR, os.environ.get('DJANGO_STATIC_ROOT',default='staticfiles'))
 
-REFERENCE_URL = os.environ.get("REFERENCE_URL", default="http://realec-reference.site")
+REFERENCE_URL = os.environ.get("REFERENCE_URL", default="/reference_platform")
 
 login_enc_key = os.environ.get("LANGEXBANK_ENC_KEY")
 
