@@ -7,7 +7,6 @@ meta_fields = [
     'task_id',
     'ann_checked',
     'work_type',
-    'task_id'
 ]
 
 def empty_meta():
