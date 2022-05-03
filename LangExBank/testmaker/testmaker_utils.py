@@ -1,6 +1,14 @@
 import os, json, re
 
-meta_fields = ['text_type','ielts']
+meta_fields = [
+    'text_type',
+    'ielts',
+    'CEFR_level',
+    'task_id',
+    'ann_checked',
+    'work_type',
+    'task_id'
+]
 
 def empty_meta():
     meta = {key:None for key in meta_fields}
