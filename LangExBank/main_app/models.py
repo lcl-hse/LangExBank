@@ -78,7 +78,7 @@ class IELTS_Test(models.Model):
 
 class Section(models.Model):
     ielts_test = models.ManyToManyField(IELTS_Test, blank=True)
-    text = models.CharField(max_length=100000)
+    text = models.TextField()
     section_type = models.CharField(max_length=1,
     choices = (('L', 'Listening'), ('R', "Reading"), ("W", "Writing")), null=True)
     supplement = models.FileField(null=True)

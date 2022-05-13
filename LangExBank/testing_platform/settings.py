@@ -46,8 +46,12 @@ INSTALLED_APPS = [
     'encrypted_fields'
 ]
 
-# A list of hex-encoded 32 byte keys
-# You only need one unless/until rotating keys
+# A list of hex-encoded 32 byte keys.
+# You only need one unless/until rotating keys.
+# If you want to rotate the encryption key
+# just prepend settings.FIELD_ENCRYPTION_KEYS with a new key.
+# To rotate keys execute: python manage.py rotate_keys.
+# After that you may delete the old key.
 FIELD_ENCRYPTION_KEYS = os.environ.get("DJANGO_ENCRYPTION_KEYS").split()
 
 MIDDLEWARE = [
@@ -163,3 +167,7 @@ login_enc_key = os.environ.get("LANGEXBANK_ENC_KEY")
 encode = int(os.environ.get("LANGEXBANK_ENCODE_USERS", default=0))
 
 registration_open = int(os.environ.get("LANGEXBANK_OPEN_SIGNUP", default=0))
+
+TRIES = int(os.environ.get("TRIES", default=3))
+
+TIME_PER_TRY = int(os.environ.get("TIME_PER_TRY", default=10)) * 1000

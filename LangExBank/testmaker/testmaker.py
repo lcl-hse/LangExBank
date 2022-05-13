@@ -1349,7 +1349,8 @@ def download_folder_and_make_exercises(folder_name, output_path=None, maintain_l
  path_to_downloaded='downloaded_'+get_fname_time(),
  delete_downloaded=False,
  filter_query=None, keep_all_exercises=False,
- keep_intersec_tags=False):
+ keep_intersec_tags=False
+ ):
     r = realec_helper.realecHelper()
     r.download_folder(folder_name, path_to_saved_folder=path_to_downloaded)
     if check_duplicates:

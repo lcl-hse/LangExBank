@@ -47,9 +47,6 @@ RUN pip install --no-cache /wheels/*
 RUN python -m spacy download en_core_web_sm
 RUN python -m nltk.downloader punkt
 
-# copy entrypoint-prod.sh
-COPY ./entrypoint.prod.sh $APP_HOME
-
 # copy project
 COPY . $APP_HOME
 

@@ -21,10 +21,10 @@ __pycache__
 .vscode
 .idea
 *.bat
-*.sh
 *.xlsx
 env.prod
 *.env
 .goutputstream*
 ТЗ.txt
 db.json
+*_mediafiles/

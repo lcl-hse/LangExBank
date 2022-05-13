@@ -26,7 +26,7 @@ from .utils import *
 from .models import *
 from .management.commands.questions_from_folder import generate_questions
 from testing_platform.settings import login_enc_key, encode, registration_open
-from testing_platform.settings import REFERENCE_URL
+from testing_platform.settings import REFERENCE_URL, TRIES, TIME_PER_TRY
 
 from testmaker import testmaker_old as testmaker
 from conf_files.tags import tagset
@@ -183,7 +183,9 @@ def display_quiz(request, quiz_id):
                 'questions': enumerate(quiz_questions),
                 'quiz_id': quiz_id,
                 'reference_url': REFERENCE_URL,
-                'allow_reference': quizz.allow_reference
+                'allow_reference': quizz.allow_reference,
+                'tries': TRIES,
+                'time_per_try': TIME_PER_TRY
             }
         )
     else:
