@@ -3,7 +3,7 @@ version: '3.3'
 services:
   web:
     build:
-      context: langexbank
+      context: ./LangExBank
       dockerfile: Dockerfile.prod
     command: gunicorn testing_platform.wsgi:application --bind 0.0.0.0:8000 -t 10000
     volumes:
@@ -32,7 +32,7 @@ services:
       - ./env.prod
   reference_platform:
     build:
-      context: reference_platform
+      context: ./reference_platform
       dockerfile: Dockerfile
     command: uwsgi --http 0.0.0.0:8000 --wsgi-file app.py --callable application --static-map /reference_platform/static=/usr/src/app/static
     expose:
