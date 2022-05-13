@@ -28,3 +28,4 @@ env.prod
 .goutputstream*
 ТЗ.txt
 db.json
+*_mediafiles/
