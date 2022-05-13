@@ -163,3 +163,7 @@ login_enc_key = os.environ.get("LANGEXBANK_ENC_KEY")
 encode = int(os.environ.get("LANGEXBANK_ENCODE_USERS", default=0))
 
 registration_open = int(os.environ.get("LANGEXBANK_OPEN_SIGNUP", default=0))
+
+TRIES = int(os.environ.get("TRIES", default=3))
+
+TIME_PER_TRY = int(os.environ.get("TIME_PER_TRY", default=10)) * 1000
