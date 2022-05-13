@@ -39,3 +39,40 @@ POSTGRES_PASSWORD - пароль пользователя БД Postgres
 POSTGRES_DB - название БД Postgres
 
 PGDATA - Путь к каталогу с данными Postgres на томе postgres_volume
+
+Инструкция по первоначальному запуску:
+
+1. Собрать и запустить контейнеры
+```bash
+sudo docker-compose up -d --build
+```
+
+2. Создать нужные таблицы в базе данных
+```bash
+sudo docker exec langexbank_web_1 python manage.py makemigrations main_app
+sudo docker exec langexbank_web_1 python manage.py migrate
+```
+
+3. Собрать static_files
+```bash
+sudo docker exec langexbank_web_1 python manage.py collectstatic --no-input
+```
+
+4. Скопировать медиафайлы
+```
+sudo docker cp mediafiles_latest/ langexbank_web_1:/home/app/web/mediafiles/
+```
+
+5. Загрузить дамп БД
+```bash
+sudo docker exec langexbank_web_1 python manage.py loaddata dump_latest.json main_app
+```
+
+Как менять переменные среды:
+
+1. Поменять значения в файле docker-compose.yml
+
+2. Перезапустить сервис
+```bash
+sudo docker-compose up -d
+```
