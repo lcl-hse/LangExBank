@@ -1,76 +1,106 @@
 {% extends "index.html" %}
 {% block head %}
 {% load static %}
-        <script>
-          var tries = 3;
-          var time_per_try = 10000;
-          var focused = true;
+  {% if not allow_reference %}
+  <script>
+    var tries = {{ tries }};
+    var time_per_try = {{ time_per_try }};
+    var focused = true;
 
-          window.onblur = function() {
-            if (tries == 0) {
-              submitAnswers();
-            } else {
-              displayAlert();
-            }
-          };
+    window.onblur = function() {
+      if (tries == 0) {
+        submitAnswers();
+      } else {
+        displayAlert();
+      }
+    };
 
-          var displayAlert = function() {
-            if (focused) {
-              tries -= 1;
-              focused = false;
-              showPopUp();
-            }
-          };
+    var displayAlert = function() {
+      if (focused) {
+        tries -= 1;
+        focused = false;
+        showPopUp();
+      }
+    };
 
-          var showPopUp = function() {
-            focused = false;
-            popup = document.getElementById("my-popup");
-            
-            // Change number of tries
-            popup_tries = document.getElementById("popup-tries");
-            popup_tries.innerText = tries;
+    var showPopUp = function() {
+      focused = false;
+      popup = document.getElementById("my-popup");
+      
+      // Change number of tries
+      popup_tries = document.getElementById("popup-tries");
+      popup_tries.innerText = tries;
 
-            //Start countdown
-            popup_seconds = document.getElementById("popup-seconds");
-            popup_seconds.innerText = time_per_try / 1000;
+      //Start countdown
+      popup_seconds = document.getElementById("popup-seconds");
+      popup_seconds.innerText = time_per_try / 1000;
 
-            // Move countdown every sec
-            cntdwn_interval = setInterval(moveCountdown, 1000);
+      // Move countdown every sec
+      cntdwn_interval = setInterval(moveCountdown, 1000);
 
-            // Submit answers on timeout
-            submit_timeout = setTimeout(submitAnswers, time_per_try)
+      // Submit answers on timeout
+      submit_timeout = setTimeout(submitAnswers, time_per_try)
 
-            popup.style.display = "block";
-          };
+      popup.style.display = "block";
+    };
 
-          var moveCountdown = function() {
-            if (popup_seconds.innerText > 0) {
-              popup_seconds.innerText -= 1;
-            }
-          };
+    var moveCountdown = function() {
+      if (popup_seconds.innerText > 0) {
+        popup_seconds.innerText -= 1;
+      }
+    };
 
-          var deletePopUp = function() {
-            clearTimeout(submit_timeout);
-            clearInterval(cntdwn_interval);
-            focused = true;
-            popup.style.display = "none";
-          };
+    var deletePopUp = function() {
+      clearTimeout(submit_timeout);
+      clearInterval(cntdwn_interval);
+      focused = true;
+      popup.style.display = "none";
+    };
 
-          var submitAnswers = function() {
-            document.getElementById("answerForm").submit();
-          };
+    var submitAnswers = function() {
+      document.getElementById("answerForm").submit();
+    };
 
-        </script>
-        <!-- Bootstrap CSS -->
-        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
-        <link href="{% static "basic.css" %}" rel="stylesheet" />
+  </script>
+  {% endif %}
+  <style>
+    /* Taken from https://insidethediv.com/how-to-create-popup-modal-box-in-javascript */
+    #my-popup{
+      Background: white;
+      border: 1px solid blue;
+        border-radius: 5%;
+      Padding: 20px;
+
+      Position: fixed;
+      top: 50%;
+      left: 50%;
+      Transform: translate(-50%,-50%);
+
+      display: none;
+    }
+
+    #popup-cntdwn{
+        padding-left: 20%;
+        padding-right: 20%;
+    }
+
+    #popup-close-btn{
+        padding-left: 20%;
+        padding-right: 20%;
+    }
+  </style>
+  <!-- Bootstrap CSS -->
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+  <link href="{% static "basic.css" %}" rel="stylesheet" />
 {% endblock %}
 {% block main_body %}
+{% if not allow_reference %}
 <div id="my-popup">
   <div id="popup-text">Opening new tabs is not allowed. <label id="popup-tries">tries</label> tries left</div>
   <div id="popup-cntdwn">You have <h1><label id="popup-seconds">N</label></h1> seconds left</div>
   <button id="popup-close-btn" onclick="deletePopUp()">Continue test</button>
 </div>
+{% endif %}
 <div class="container-fluid">
     <div class = "main">
       <div>

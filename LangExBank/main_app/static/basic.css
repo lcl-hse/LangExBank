@@ -159,28 +159,3 @@ th, td {
 .writing-editor{
     margin-bottom: 20%;
 }
-
-/* Taken from https://insidethediv.com/how-to-create-popup-modal-box-in-javascript */
-#my-popup{
-	Background: white;
-	border: 1px solid blue;
-    border-radius: 5%;
-	Padding: 20px;
-
-	Position: fixed;
-	top: 50%;
-	left: 50%;
-	Transform: translate(-50%,-50%);
-
-	display:none;
-}
-
-#popup-cntdwn{
-    padding-left: 20%;
-    padding-right: 20%;
-}
-
-#popup-close-btn{
-    padding-left: 20%;
-    padding-right: 20%;
-}
