@@ -46,8 +46,12 @@ INSTALLED_APPS = [
     'encrypted_fields'
 ]
 
-# A list of hex-encoded 32 byte keys
-# You only need one unless/until rotating keys
+# A list of hex-encoded 32 byte keys.
+# You only need one unless/until rotating keys.
+# If you want to rotate the encryption key
+# just prepend settings.FIELD_ENCRYPTION_KEYS with a new key.
+# To rotate keys execute: python manage.py rotate_keys.
+# After that you may delete the old key.
 FIELD_ENCRYPTION_KEYS = os.environ.get("DJANGO_ENCRYPTION_KEYS").split()
 
 MIDDLEWARE = [
