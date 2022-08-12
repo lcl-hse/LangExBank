@@ -3,7 +3,8 @@
 ###########
 
 # pull official base image
-FROM python:3.7 as builder
+# если так и не будет работать, убрать slim
+FROM python:3.7-slim as builder
 
 # set work directory
 WORKDIR /usr/src/app
@@ -15,8 +16,8 @@ ENV PYTHONUNBUFFERED 1
 # COPY . /usr/src/app/
 
 # install dependencies
-COPY ./requirements.txt .
-RUN pip wheel --no-cache-dir --wheel-dir /usr/src/app/wheels -r requirements.txt
+COPY ./requirements-final.txt .
+RUN pip wheel --no-cache-dir --wheel-dir /usr/src/app/wheels -r requirements-final.txt
 
 
 #########
@@ -24,7 +25,8 @@ RUN pip wheel --no-cache-dir --wheel-dir /usr/src/app/wheels -r requirements.txt
 #########
 
 # pull official base image
-FROM python:3.7
+# если не будет работать, убрать slim
+FROM python:3.7-slim
 
 # create directory for the app user
 RUN mkdir -p /home/app
@@ -41,7 +43,8 @@ WORKDIR $APP_HOME
 
 # install dependencies
 COPY --from=builder /usr/src/app/wheels /wheels
-COPY --from=builder /usr/src/app/requirements.txt .
+# COPY --from=builder /usr/src/app/requirements-final.txt .
+RUN apt update && apt install --no-install-recommends -y netcat
 RUN pip install --upgrade pip
 RUN pip install --no-cache /wheels/*
 RUN python -m spacy download en_core_web_sm

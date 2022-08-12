@@ -4,7 +4,7 @@ services:
   web:
     build:
       context: ./LangExBank
-      dockerfile: Dockerfile.prod
+      dockerfile: new.Dockerfile
     volumes:
       - static_volume:/home/app/web/staticfiles
       - media_volume:/home/app/web/mediafiles
@@ -14,7 +14,7 @@ services:
       - ./env.prod
     depends_on:
       - db
-    entrypoint: entrypoint.sh
+    entrypoint: ./entrypoint.sh
     command: gunicorn testing_platform.wsgi:application --bind 0.0.0.0:8000 -t 10000
   nginx:
     build: ./nginx

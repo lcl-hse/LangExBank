@@ -1,0 +1,6 @@
+*.ipynb
+.git
+localbase
+moodle_exercises
+.ipynb_checkpoints
+__pycache__
