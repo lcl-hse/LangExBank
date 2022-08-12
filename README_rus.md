@@ -60,12 +60,18 @@ sudo docker exec langexbank_web_1 python manage.py collectstatic --no-input
 
 4. Скопировать медиафайлы
 ```
-sudo docker cp mediafiles_latest/ langexbank_web_1:/home/app/web/mediafiles/
+sudo docker cp ./latest_mediafiles/. langexbank_web_1:/home/app/web/mediafiles
 ```
 
 5. Загрузить дамп БД
 ```bash
-sudo docker exec langexbank_web_1 python manage.py loaddata dump_latest.json main_app
+sudo docker cp ./latest_dump.json langexbank_web_1:/home/app/web/latest_dump.json
+sudo docker exec langexbank_web_1 python manage.py loaddata --app main_app latest_dump.json
+```
+
+6. Создать суперпользователя и записать логин и пароль
+```bash
+sudo docker exec -it langexbank_web_1 python manage.py createsuperuser
 ```
 
 Как менять переменные среды:
