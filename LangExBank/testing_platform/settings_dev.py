@@ -146,3 +146,7 @@ login_enc_key = ''
 encode = False
 
 registration_open = False
+
+TRIES = 3
+
+TIME_PER_TRY = 10000 # 10 sec

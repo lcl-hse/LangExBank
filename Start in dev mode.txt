@@ -1,0 +1,3 @@
+To start in dev mode:
+
+python manage.py runserver --settings=testing_platform.settings_dev
