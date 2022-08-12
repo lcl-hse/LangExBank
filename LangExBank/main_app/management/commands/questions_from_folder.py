@@ -22,7 +22,7 @@ class Command(BaseCommand):
         ## To add: check for duplicate documents:
         generate_questions(kwargs['folder'], kwargs['tag'], kwargs['strike'])
 
-
+# TODO: Add mult choice from disselector
 def generate_questions(folder, tags, strike, delete_downloaded=True,
                        new_qfolder=False, qfolder_name=None, ukey_prefix='',
                        multiple_choice=False, filter_query=None, context=False):

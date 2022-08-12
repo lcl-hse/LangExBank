@@ -637,6 +637,7 @@ def display_questions(request, err_type=None):
     request.session["asked_restricted"] = True
     return render(request, "403.html")
 
+# TODO: Add mult choice from disselector
 @del_prev_page
 def questions_from_folder(request):
     if 'rights' in request.session:
