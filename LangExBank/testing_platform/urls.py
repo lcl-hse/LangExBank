@@ -24,10 +24,11 @@ from django.contrib.auth import views as auth_views
 
 
 from main_app import views
+from main_app.admin import admin_site
 
 
 urlpatterns = [
-    path('admin/', admin.site.urls),
+    path('admin/', admin_site.urls),
     path('generateQuestions/<coll>/<doc>', views.show_generated_questions, name="show_generated_questions"),
     path('accounts/login/', auth_views.LoginView.as_view()),
     path('takeQuiz/<int:quiz_id>', views.display_quiz, name="take_quiz"),
