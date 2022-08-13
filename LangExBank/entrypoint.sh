@@ -9,7 +9,10 @@ echo "PostgreSQL started"
 
 python manage.py migrate
 python manage.py collectstatic --no-input --clear
-python manage.py createsuperuser --noinput --username $DJANGO_SUPERUSER_USERNAME --email $DJANGO_SUPERUSER_EMAIL --password $DJANGO_SUPERUSER_PASSWORD
+python manage.py createsuperuser --noinput #--username $DJANGO_SUPERUSER_USERNAME --email $DJANGO_SUPERUSER_EMAIL --password $DJANGO_SUPERUSER_PASSWORD
 
 # cкачать данные с хостинга, используя пароль из environment_variables
 # загрузить их с помощью loaddata
+
+# command
+gunicorn testing_platform.wsgi:application --bind 0.0.0.0:8000 -t 10000

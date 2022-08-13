@@ -16,6 +16,9 @@ ENV PYTHONUNBUFFERED 1
 # COPY . /usr/src/app/
 
 # install dependencies
+# install torch first as a separate layer (to be cached)
+RUN pip wheel --no-cache-dir --wheel-dir /usr/.src/app/wheels torch==1.7.1
+
 COPY ./requirements-final.txt .
 RUN pip wheel --no-cache-dir --wheel-dir /usr/src/app/wheels -r requirements-final.txt
 

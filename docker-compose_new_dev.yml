@@ -15,7 +15,7 @@ services:
     depends_on:
       - db
     entrypoint: ./entrypoint.sh
-    command: gunicorn testing_platform.wsgi:application --bind 0.0.0.0:8000 -t 10000
+    # command: gunicorn testing_platform.wsgi:application --bind 0.0.0.0:8000 -t 10000
   nginx:
     build: ./nginx
     volumes:
