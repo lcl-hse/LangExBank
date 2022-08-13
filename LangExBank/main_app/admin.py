@@ -17,3 +17,9 @@ admin.site.register(Answer)
 admin.site.register(WrongAnswer)
 admin.site.register(IELTSWritingTask)
 admin.site.register(IELTSWritingResponse)
+
+## как вызывать management commands через API
+## from djamgo.core.management import call_command
+##
+## call_command("dumpdata", "<app_label[.ModelName]>", output="<filename>.json")
+## call_command("loaddata", "<filename>.json", app="<APP_LABEL>")
