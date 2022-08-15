@@ -11,6 +11,7 @@ class MyAdminSite(admin.AdminSite):
     def get_urls(self):
         from django.urls import path
         urls = super().get_urls()
+        last_url = urls.pop()
 
         # подсовываем в urls новую главную страницу
         # urls[0] = [
@@ -18,8 +19,10 @@ class MyAdminSite(admin.AdminSite):
         # ]
 
         urls += [
-            path('my_view/', self.admin_view(self.my_view), name="my_view")
+            path('my_view/', self.admin_view(self.my_view), name="my_view"),
+            last_url
         ]
+        print(urls)
         return urls
 
     # # view новой главной страницы
