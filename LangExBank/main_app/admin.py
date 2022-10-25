@@ -14,21 +14,19 @@ class MyAdminSite(admin.AdminSite):
         from django.urls import path
         urls = super().get_urls()
 
-        # подсовываем в urls новую главную страницу
-        urls[0] = [
-            path('^$', self.admin_view(self.index))
-        ]
-
+        last_url = urls.pop()
         urls += [
-            path('my_view/', self.admin_view(self.my_view))
+            path(
+                'my_view/',
+                self.admin_view(self.my_view),
+                name="my_view"
+            ),
+            last_url
         ]
-        return urls
-    
-    # view новой главной страницы
-    def index(self):
-        return render("admin_index.html")
 
-    def my_view(self, request):
+        return urls
+
+    def my_view(self, request, extra_context=None):
         return HttpResponse("Hello!")
 
 admin_site = MyAdminSite()
