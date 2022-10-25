@@ -2,6 +2,8 @@ from django.contrib import admin
 from django.http import HttpResponse
 from django.shortcuts import render, redirect
 
+from django.core.management import call_command
+
 # Register your models here.
 
 from .models import User, Student, Quizz, Question, Results, Folder, IELTS_Test, Section, Answer, WrongAnswer, IELTSWritingTask, IELTSWritingResponse

@@ -14,8 +14,8 @@ services:
       - ./env.prod
     depends_on:
       - db
-    entrypoint: ./entrypoint.sh
-    # command: gunicorn testing_platform.wsgi:application --bind 0.0.0.0:8000 -t 10000
+    entrypoint: ./entrypoint.sh # For initial set-up
+    # command: gunicorn testing_platform.wsgi:application --bind 0.0.0.0:8000 -t 10000 # For later launches
   nginx:
     build: ./nginx
     volumes:
