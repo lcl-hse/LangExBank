@@ -16,18 +16,117 @@ class MyAdminSite(admin.AdminSite):
 
         last_url = urls.pop()
         urls += [
+            # path(
+            #     'my_view/',
+            #     self.admin_view(self.my_view),
+            #     name="my_view"
+            # ),
             path(
-                'my_view/',
-                self.admin_view(self.my_view),
-                name="my_view"
+                'management/',
+                self.admin_view(self.management),
+                name="management"
+            ),
+            path(
+                "management/load_data/",
+                self.admin_view(self.load_data),
+                name="load_data"
+            ),
+            path(
+                "management/dump_data/",
+                self.admin_view(self.dump_data),
+                name="dump_data"
+            ),
+            path(
+                "management/load_mediafiles/",
+                self.admin_view(self.load_mediafiles),
+                name="load_mediafiles"
+            ),
+            path(
+                "management/dump_mediafiles/",
+                self.admin_view(self.dump_mediafiles),
+                name="dump_mediafiles"
+            ),
+            path(
+                "management/random_users/",
+                self.admin_view(self.random_users),
+                name="random_users"
+            ),
+            path(
+                "management/save_right_answers/",
+                self.admin_view(self.save_right_answers),
+                name="save_right_answers"
+            ),
+            path(
+                "management/user_info_table/",
+                self.admin_view(self.user_info_table),
+                name="user_info_table"
             ),
             last_url
         ]
 
         return urls
 
-    def my_view(self, request, extra_context=None):
-        return HttpResponse("Hello!")
+    # def my_view(self, request, extra_context=None):
+    #     return HttpResponse("Hello!")
+    
+    def management(self, request, extra_context=None):
+        return render(request, "admin/management.html")
+
+    def load_data(self, request, extra_context=None):
+        # load file from form
+
+        # execute command
+
+        return render(request, "admin/debug_url.html", {"page_name": "load_data"})
+
+    def dump_data(self, request, extra_context=None):
+        # read form
+
+        # execute command
+
+        # send JSON file with data
+
+        return render(request, "admin/debug_url.html", {"page_name": "dump_data"})
+
+    def load_mediafiles(self, request, extra_context=None):
+        # load zip file from form
+
+        # unzip files and move them to mediafiles folder
+
+        raise render(request, "admin/debug_url.html", {"page_name": "load_mediafiles"})
+
+    def dump_mediafiles(self, request, extra_context=None):
+        # load zip file from form
+
+        # unzip files and move them to mediafiles folder
+
+        raise render(request, "admin/debug_url.html", {"page_name": "dump_mediafiles"})
+
+    def random_users(self, request, extra_context=None):
+        # load data from form
+
+        # execute command
+
+        return render(request, "admin/debug_url.html", {"page_name": "random_users"})
+    
+    def save_right_answers(self, request, extra_context=None):
+        # load data from form
+
+        # execute command
+
+        # send generated file
+
+        return render(request, "admin/debug_url.html", {"page_name": "save_right_answers"})
+    
+    def user_info_table(self, request, extra_context=None):
+        # load data from form
+
+        # execute command
+
+        # send generated data
+
+        return render(request, "admin/debug_url.html", {"page_name": "user_info_table"})
+
 
 admin_site = MyAdminSite()
 
