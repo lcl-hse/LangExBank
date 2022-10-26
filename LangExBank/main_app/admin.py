@@ -22,6 +22,7 @@ class MyAdminSite(admin.AdminSite):
     def get_urls(self):
         from django.urls import path
         urls = super().get_urls()
+        last_url = urls.pop()
 
         last_url = urls.pop()
         urls += [
@@ -182,6 +183,7 @@ class MyAdminSite(admin.AdminSite):
             "admin/debug_url.html",
             {"page_name": "user_info_table"}
         )
+
 
 
 admin_site = MyAdminSite()
