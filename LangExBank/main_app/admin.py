@@ -24,7 +24,6 @@ class MyAdminSite(admin.AdminSite):
         urls = super().get_urls()
         last_url = urls.pop()
 
-        last_url = urls.pop()
         urls += [
             path(
                 "management/",
