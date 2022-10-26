@@ -135,7 +135,7 @@ STATIC_URL = '/static/'
 
 MEDIA_URL = '/media/'
 
-MEDIA_ROOT = '/'.join([Path(BASE_DIR).as_posix(), "media/"])
+MEDIA_ROOT = '/'.join([Path(BASE_DIR).as_posix(), "mediafiles/"])
 
 STATIC_ROOT = '/'.join([Path(BASE_DIR).as_posix(), "static/"])
 

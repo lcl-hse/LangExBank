@@ -1,12 +1,21 @@
+import os, time
+
 from django.contrib import admin
 from django.http import HttpResponse
 from django.shortcuts import render, redirect
+from django.urls import reverse
 
 from django.core.management import call_command
+from django.core.files.base import ContentFile
+from django.core.files.storage import default_storage
 
 # Register your models here.
 
-from .models import User, Student, Quizz, Question, Results, Folder, IELTS_Test, Section, Answer, WrongAnswer, IELTSWritingTask, IELTSWritingResponse
+from main_app.models import User, Student, Quizz, Question, Results
+from main_app.models import Folder, IELTS_Test, Section, Answer
+from main_app.models import WrongAnswer, IELTSWritingTask, IELTSWritingResponse
+
+from testing_platform.settings import MEDIA_ROOT
 
 
 class MyAdminSite(admin.AdminSite):
@@ -16,13 +25,8 @@ class MyAdminSite(admin.AdminSite):
 
         last_url = urls.pop()
         urls += [
-            # path(
-            #     'my_view/',
-            #     self.admin_view(self.my_view),
-            #     name="my_view"
-            # ),
             path(
-                'management/',
+                "management/",
                 self.admin_view(self.management),
                 name="management"
             ),
@@ -66,18 +70,46 @@ class MyAdminSite(admin.AdminSite):
 
         return urls
 
-    # def my_view(self, request, extra_context=None):
-    #     return HttpResponse("Hello!")
-    
     def management(self, request, extra_context=None):
-        return render(request, "admin/management.html")
+        return render(
+            request,
+            "admin/management.html",
+            extra_context
+        )
 
     def load_data(self, request, extra_context=None):
-        # load file from form
+        if request.FILES:
+            options = {}
+            # load file from form
+            path = default_storage.save(
+                'data.json',
+                ContentFile(request.FILES['datafile'].read())
+            )
+            path = os.path.join(MEDIA_ROOT, path)
+            time.sleep(5)
+            # insert selected fields from form to options
 
-        # execute command
+            print(path)
 
-        return render(request, "admin/debug_url.html", {"page_name": "load_data"})
+            # execute command
+            call_command(
+                "loaddata",
+                path
+            )
+            
+            os.remove(path)
+
+            return redirect(
+                reverse(
+                    "admin:management"
+                )
+            )
+        else:
+            return render(
+                request,
+                "admin/load_data.html",
+                extra_context
+            )
 
     def dump_data(self, request, extra_context=None):
         # read form
@@ -86,28 +118,44 @@ class MyAdminSite(admin.AdminSite):
 
         # send JSON file with data
 
-        return render(request, "admin/debug_url.html", {"page_name": "dump_data"})
+        return render(
+            request,
+            "admin/debug_url.html",
+            {"page_name": "dump_data"}
+        )
 
     def load_mediafiles(self, request, extra_context=None):
         # load zip file from form
 
         # unzip files and move them to mediafiles folder
 
-        raise render(request, "admin/debug_url.html", {"page_name": "load_mediafiles"})
+        raise render(
+            request,
+            "admin/debug_url.html",
+            {"page_name": "load_mediafiles"}
+        )
 
     def dump_mediafiles(self, request, extra_context=None):
         # load zip file from form
 
         # unzip files and move them to mediafiles folder
 
-        raise render(request, "admin/debug_url.html", {"page_name": "dump_mediafiles"})
+        raise render(
+            request,
+            "admin/debug_url.html",
+            {"page_name": "dump_mediafiles"}
+        )
 
     def random_users(self, request, extra_context=None):
         # load data from form
 
         # execute command
 
-        return render(request, "admin/debug_url.html", {"page_name": "random_users"})
+        return render(
+            request,
+            "admin/debug_url.html",
+            {"page_name": "random_users"}
+        )
     
     def save_right_answers(self, request, extra_context=None):
         # load data from form
@@ -116,7 +164,11 @@ class MyAdminSite(admin.AdminSite):
 
         # send generated file
 
-        return render(request, "admin/debug_url.html", {"page_name": "save_right_answers"})
+        return render(
+            request, 
+            "admin/debug_url.html",
+            {"page_name": "save_right_answers"}
+        )
     
     def user_info_table(self, request, extra_context=None):
         # load data from form
@@ -125,7 +177,11 @@ class MyAdminSite(admin.AdminSite):
 
         # send generated data
 
-        return render(request, "admin/debug_url.html", {"page_name": "user_info_table"})
+        return render(
+            request,
+            "admin/debug_url.html",
+            {"page_name": "user_info_table"}
+        )
 
 
 admin_site = MyAdminSite()
