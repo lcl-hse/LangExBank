@@ -1,0 +1,32 @@
+{% extends "admin/base_site.html" %}
+{% load i18n static %}
+
+{% block extrastyle %}
+<link rel="stylesheet" type="text/css" href="{% static "admin/css/forms.css" %}">
+{% endblock %}
+
+{% block content_title %} <h1>Dump data</h1> {% endblock %}
+{% block content_subtitle %} Dump and download application data {% endblock %}
+
+{% block content %}
+<div>
+    <form method="GET" enctype="multipart/form-data">
+        <div>
+            <div class="form-row">App label: <input type="text" name="app_label" id="app_label" value=""/></div>
+            <div class="form-row">
+                Output type: <select name="format" id="format">
+                                <option value="json" selected>JSON</option>
+                                <option value="xml">XML</option>
+                                <option value="yaml">YAML</option>
+                             </select>
+            </div>
+            <div class="form-row">Indentation level: <input type="number" name="indent" id="indent" value="4"></div>
+            <div class="form-row">Output filename: <input type="text" name="output" id="output" value="dump.json"/></div>
+            <div class="form-row"><input type="checkbox" name="zip" id="zip" /> Zip output file</div>
+        </div>
+        <div>
+            <input type="submit" class="form-row" value="Dump and download model data" />
+        </div>
+    </form>
+</div>
+{% endblock %}

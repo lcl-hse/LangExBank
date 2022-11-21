@@ -1,0 +1,22 @@
+{% extends "admin/base_site.html" %}
+{% load i18n static %}
+
+{% block extrastyle %}
+<link rel="stylesheet" type="text/css" href="{% static "admin/css/forms.css" %}">
+{% endblock %}
+
+{% block content_title %} <h1>Dump mediafiles</h1> {% endblock %}
+{% block content_subtitle %} Dump and download mediafiles in form of ZipFile {% endblock %}
+
+{% block content %}
+<div>
+    <form method="GET" enctype="multipart/form-data">
+        <div>
+            <div class="form-row">Output filename: <input type="text" name="output" id="output" value="mediafiles.zip"/></div>
+        </div>
+        <div>
+            <input type="submit" class="form-row" value="Dump and download model data" />
+        </div>
+    </form>
+</div>
+{% endblock %}

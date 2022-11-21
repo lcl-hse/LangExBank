@@ -1,4 +1,7 @@
-import os, time
+import os, time, shutil
+
+from zipfile import ZipFile
+from io import BytesIO
 
 from django.contrib import admin
 from django.http import HttpResponse
@@ -79,7 +82,6 @@ class MyAdminSite(admin.AdminSite):
 
     def load_data(self, request, extra_context=None):
         if request.FILES:
-            options = {}
             # load file from form
             path = default_storage.save(
                 'data.json',
@@ -87,9 +89,6 @@ class MyAdminSite(admin.AdminSite):
             )
             path = os.path.join(MEDIA_ROOT, path)
             time.sleep(5)
-            # insert selected fields from form to options
-
-            print(path)
 
             # execute command
             call_command(
@@ -112,39 +111,115 @@ class MyAdminSite(admin.AdminSite):
             )
 
     def dump_data(self, request, extra_context=None):
-        # read form
+        if "output" in request.GET:
+            filename = request.GET["output"]
+            if filename:
+                # execute command
+                os.system(
+                    f"python -Xutf8 manage.py dumpdata {request.GET['app_label']} -o {filename} --format {request.GET['format']} --indent {request.GET['indent']}"
+                )
+                while not os.path.exists(filename):
+                    time.sleep(1)
 
-        # execute command
+                # read data from file
+                data = bytes()
+                file_format = str()
+                if "zip" in request.GET:
+                    # zip output if needed
+                    data = BytesIO()
+                    zfile = ZipFile(data, 'w')
+                    zfile.write(filename)
+                    zfile.close()
+                    os.remove(filename)
+                    filename = f"{filename}.zip"
+                    file_format = "zip"
+                    data = data.getvalue()
+                else:
+                    with open(filename, 'rb') as inp:
+                        data = inp.read()
+                    file_format = request.GET["format"]
+                    os.remove(filename)
 
-        # send JSON file with data
+                # send file with data
+                response = HttpResponse(
+                    data,
+                    content_type=f"application/{file_format}"
+                )
+                response['Content-Disposition'] = f'attachment; filename = "{filename}"'
+                return response
 
         return render(
             request,
-            "admin/debug_url.html",
-            {"page_name": "dump_data"}
+            "admin/dump_data.html",
+            extra_context
         )
+
+
 
     def load_mediafiles(self, request, extra_context=None):
-        # load zip file from form
+        if request.FILES:
+            # load zip file from form
+            path = default_storage.save(
+                'mediafiles.zip',
+                ContentFile(request.FILES['datafile'].read())
+            )
+            path = os.path.join(MEDIA_ROOT, path)
+            time.sleep(5)
 
-        # unzip files and move them to mediafiles folder
+            # unzip files and move them to mediafiles folder
+            # https://stackoverflow.com/a/46954950
+            zfile = ZipFile(path)
+            for name in zfile.namelist():
+                file = zfile.open(name)
+                name = os.path.basename(name) # Keep structure with no subfolders in mediafiles
+                if name:
+                    # filenames must be in UTF-8:
+                    with open(
+                        os.path.join(MEDIA_ROOT, name),
+                        'wb'
+                    ) as outp_file:
+                        shutil.copyfileobj(file, outp_file)
+                file.close()
+            zfile.close()
+            
+            os.remove(path)
 
-        raise render(
-            request,
-            "admin/debug_url.html",
-            {"page_name": "load_mediafiles"}
-        )
+            return redirect(
+                reverse(
+                    "admin:management"
+                )
+            )
+        else:
+            return render(
+                request,
+                "admin/load_mediafiles.html",
+                extra_context
+            )
 
     def dump_mediafiles(self, request, extra_context=None):
-        # load zip file from form
-
-        # unzip files and move them to mediafiles folder
-
-        raise render(
-            request,
-            "admin/debug_url.html",
-            {"page_name": "dump_mediafiles"}
-        )
+        if "output" in request.GET:
+            filename = request.GET["output"]
+            if filename:
+                # zip mediafiles
+                stream = BytesIO()
+                zfile = ZipFile(stream, 'w')
+                for root, dirs, files in os.walk(MEDIA_ROOT):
+                    for file in files:
+                        zfile.write(os.path.join(MEDIA_ROOT, root, file))
+                zfile.close()
+                # send zipped data
+                response = HttpResponse(
+                    stream.getvalue(),
+                    content_type="application/zip"
+                )
+                response['Content-Disposition'] = f"attachment; filename = {filename}"
+                return response
+        else:
+            return render(
+                request,
+                "admin/dump_mediafiles.html",
+                extra_context
+            )
 
     def random_users(self, request, extra_context=None):
         # load data from form

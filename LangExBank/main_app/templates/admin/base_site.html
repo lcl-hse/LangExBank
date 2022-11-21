@@ -26,8 +26,8 @@
         {% if user.has_usable_password %}
         <a href="{% url 'admin:password_change' %}">{% translate 'Change password' %}</a> /
         {% endif %}
-        <a href="{% url 'admin:logout' %}">{% translate 'Log out' %}</a>
-        <a href="{% url 'admin:my_view' %}">{% translate 'Import/Export Data' %}</a>
+        <a href="{% url 'admin:logout' %}">{% translate 'Log out' %}</a> /
+        <a href="{% url 'admin:management' %}">{% translate 'Management' %}</a>
     {% endblock %}
 </div>
 {% endif %}
