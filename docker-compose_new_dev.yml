@@ -14,8 +14,8 @@ services:
       - ./env.prod
     depends_on:
       - db
-    entrypoint: ./entrypoint.sh # For initial set-up
-    # command: gunicorn testing_platform.wsgi:application --bind 0.0.0.0:8000 -t 10000 # For later launches
+    # entrypoint: ./entrypoint.sh # For initial set-up
+    command: gunicorn testing_platform.wsgi:application --bind 0.0.0.0:8000 -t 500000 # For later launches
   nginx:
     build: ./nginx
     volumes:
@@ -35,7 +35,7 @@ services:
     build:
       context: ./reference_platform
       dockerfile: Dockerfile
-    command: uwsgi --http 0.0.0.0:8000 --wsgi-file app.py --callable application --static-map /reference_platform/static=/usr/src/app/static
+    command: uwsgi --master --http 0.0.0.0:8000 --wsgi-file app.py --callable application --static-map /reference_platform/static=/usr/src/app/static
     expose:
       - 8000
     env_file:

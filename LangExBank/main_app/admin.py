@@ -81,6 +81,8 @@ class MyAdminSite(admin.AdminSite):
         )
 
     def load_data(self, request, extra_context=None):
+        # TODO: Добавить возможность загружать данные конкретных приложений/моделей
+        # TODO: make it async
         if request.FILES:
             # load file from form
             path = default_storage.save(
@@ -111,6 +113,7 @@ class MyAdminSite(admin.AdminSite):
             )
 
     def dump_data(self, request, extra_context=None):
+        # TODO: make it async
         if "output" in request.GET:
             filename = request.GET["output"]
             if filename:
@@ -157,6 +160,7 @@ class MyAdminSite(admin.AdminSite):
 
 
     def load_mediafiles(self, request, extra_context=None):
+        # TODO: make it async
         if request.FILES:
             # load zip file from form
             path = default_storage.save(
@@ -197,6 +201,7 @@ class MyAdminSite(admin.AdminSite):
             )
 
     def dump_mediafiles(self, request, extra_context=None):
+        # TODO: make it async
         if "output" in request.GET:
             filename = request.GET["output"]
             if filename:
