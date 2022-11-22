@@ -1,7 +1,7 @@
 import os, time, shutil
 
 from zipfile import ZipFile
-from io import BytesIO
+from io import BytesIO, StringIO
 
 from django.contrib import admin
 from django.http import HttpResponse
@@ -212,7 +212,7 @@ class MyAdminSite(admin.AdminSite):
                     stream.getvalue(),
                     content_type="application/zip"
                 )
-                response['Content-Disposition'] = f"attachment; filename = {filename}"
+                response['Content-Disposition'] = f'attachment; filename = "{filename}"'
                 return response
         else:
             return render(
@@ -222,42 +222,95 @@ class MyAdminSite(admin.AdminSite):
             )
 
     def random_users(self, request, extra_context=None):
-        # load data from form
+        if request.POST:
+            #   -n NUMBER, --number NUMBER
+            #                         How many users to create
+            #   -r RIGHTS, --rights RIGHTS
+            #                         Which type of rights (A - Admin, T - Teacher, S -
+            #                         Student) created users should have
+            #   -s, --save            Save created user list to a CSV file
+            #   -fn FILENAME, --filename FILENAME
+            #                         Filename for the saved userlist
 
-        # execute command
-
+            # load data from form
+            command_kwargs = {
+                'number': int(request.POST['number']),
+                'rights': request.POST['rights'],
+                'save': bool(request.POST.get('save')),
+                'filename': request.POST.get('filename')
+            }
+            # execute command
+            call_command(
+                "random_users",
+                **command_kwargs
+            )
+            # send generated file
+            if command_kwargs["save"] and command_kwargs["filename"]:
+                with open(command_kwargs["filename"], 'rb') as inp:
+                    data = inp.read()
+                os.remove(command_kwargs["filename"])
+                response = HttpResponse(
+                    data,
+                    content_type="application/json"
+                )
+                response['Content-Disposition'] = f"attachment; filename = \"{command_kwargs['filename']}\""
+                return response
+            else:
+                return redirect(
+                    reverse(
+                        "admin:management"
+                    )
+                )
+        if extra_context is None:
+            extra_context = {
+                "rights": User.rights.field.choices
+            }
         return render(
             request,
-            "admin/debug_url.html",
-            {"page_name": "random_users"}
+            "admin/random_users.html",
+            extra_context
         )
-    
+
     def save_right_answers(self, request, extra_context=None):
-        # load data from form
-
-        # execute command
-
-        # send generated file
-
+        if "output" in request.GET:
+            #   -q QUIZ, --quiz QUIZ  Id of a quiz
+            if request.GET["output"]:
+                file = StringIO()
+                call_command(
+                    "save_right_answers",
+                    quiz=request.GET["quiz"],
+                    stdout=file
+                )
+                response = HttpResponse(
+                    file.getvalue(),
+                    content_type="application/json"
+                )
+                response['Content-Disposition'] = f"attachment; filename = \"{request.GET['output']}\""
+                return response
+        if extra_context is None:
+            extra_context = {
+                "quizzes": Quizz.objects.only("id", "name")
+            }
         return render(
             request, 
-            "admin/debug_url.html",
-            {"page_name": "save_right_answers"}
+            "admin/save_right_answers.html",
+            extra_context
         )
-    
+
     def user_info_table(self, request, extra_context=None):
-        # load data from form
-
-        # execute command
-
-        # send generated data
-
-        return render(
-            request,
-            "admin/debug_url.html",
-            {"page_name": "user_info_table"}
-        )
-
+        if request.method == "GET":
+            call_command(
+                "user_info_table"
+            )
+            with open("Users.xlsx", 'rb') as inp:
+                data = inp.read()
+            os.remove("Users.xlsx")
+            response = HttpResponse(
+                data,
+                content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
+            )
+            response['Content-Disposition'] = f'attachment; filename = "Users.xlsx"'
+            return response
 
 
 admin_site = MyAdminSite()

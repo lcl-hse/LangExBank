@@ -1,0 +1,29 @@
+{% extends "admin/base_site.html" %}
+{% load i18n static %}
+
+{% block extrastyle %}
+<link rel="stylesheet" type="text/css" href="{% static "admin/css/forms.css" %}">
+{% endblock %}
+
+{% block content_title %} <h1>Save right answers</h1> {% endblock %}
+{% block content_subtitle %} Use this page to download answers for the given Quiz {% endblock %}
+
+{% block content %}
+<div>
+    <form method="GET" enctype="multipart/form-data">
+        <div>
+            <div class="form-row">
+                Select a quiz: <select id="quiz" name="quiz" required>
+                                    {% for quiz in quizzes %}
+                                    <option value="{{ quiz.id }}"> {{ quiz.name }} </option>
+                                    {% endfor %}
+                               </select>
+            </div>
+            <div class="form-row">Output filename: <input type="text" name="output" id="output" value="Answers.json" required/></div>
+        </div>
+        <div>
+            <input type="submit" class="form-row" value="Download quiz results"/>
+        </div>
+    </form>
+</div>
+{% endblock %}

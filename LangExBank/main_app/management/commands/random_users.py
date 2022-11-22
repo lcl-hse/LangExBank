@@ -37,7 +37,7 @@ class Command(BaseCommand):
     
     def handle(self, *args, **kwargs):
         new_users = [User(login=random_login(), 
-                          password=random_password(),
+                          enc_password=random_password(),
                           full_name=random_name(),
                           rights=kwargs['rights']
                           ) for i in range(kwargs['number'])]
@@ -50,7 +50,7 @@ class Command(BaseCommand):
                 self.save_users(new_users)
     
     def save_users(self, users, fn=None):
-        userlist = [{"login": u.login, "password": u.password} for u in users]
+        userlist = [{"login": u.login, "password": u.enc_password} for u in users]
 
         if not fn:
             fn = default_fn()

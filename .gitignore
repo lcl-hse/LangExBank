@@ -20,7 +20,7 @@ DisGen/distractor_service_output_files/**
 localbase
 __pycache__
 *dump*.json
-*.ipynb
+.ipynb_checkpoints
 .vscode
 .idea
 *.bat
@@ -32,3 +32,4 @@ env.prod
 db.json
 *_mediafiles/
 admins.txt
+*.xlsx
