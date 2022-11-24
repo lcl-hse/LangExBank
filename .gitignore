@@ -29,3 +29,4 @@ env.prod
 ТЗ.txt
 db.json
 *_mediafiles/
+admins.txt
