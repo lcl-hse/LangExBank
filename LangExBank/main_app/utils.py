@@ -1,12 +1,13 @@
 import base64
 import re
 import ast
+import requests
 
 from math import ceil
 from collections import namedtuple
 
 from main_app.models import *
-from testing_platform.settings import login_enc_key, encode
+from testing_platform.settings import login_enc_key, encode, DISSELECTOR_URL
 
 PageLink = namedtuple('PageLink', ['text', 'link'])
 
@@ -282,6 +283,10 @@ def has_access(user, page):
             return True
     return False
 
+def get_distractors_from_disselector(data):
+    distractors = requests.post(DISSELECTOR_URL, data)
+    return distractors
+
 ## Decorators
 
 ## Decorator for deleting session data after leaving restricted-acces page:
@@ -294,3 +299,4 @@ def del_prev_page(view):
         request.session.modified = True
         return view(request, *args, **kwargs)
     return wrapper_del_prev_page
+

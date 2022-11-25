@@ -163,3 +163,5 @@ registration_open = int(os.environ.get("LANGEXBANK_OPEN_SIGNUP", default=0))
 TRIES = int(os.environ.get("TRIES", default=3))
 
 TIME_PER_TRY = int(os.environ.get("TIME_PER_TRY", default=10)) * 1000
+
+DISSELECTOR_URL = os.environ.get("DISSELECTOR_URL", default="http://disselector:5000/")

@@ -653,8 +653,11 @@ def questions_from_folder(request):
                         qfolder_name = request.POST['qfolder_name']
                 ukey_prefix = request.session['user_id']
                 multiple_choice = False
+                distractor_model = None
                 if 'multiple_choice' in request.POST:
                     multiple_choice = True
+                if 'distractor_model' in request.POST:
+                    distractor_model = request.POST[distractor_model]
                 if 'filter_query' in request.POST:
                     filter_query = request.POST['filter_query']
                     try:
@@ -680,7 +683,7 @@ def questions_from_folder(request):
                         context = True
                 generate_questions(folder=path, tags=tags, strike=True, delete_downloaded=True,
                 new_qfolder=new_qfolder, qfolder_name=qfolder_name, multiple_choice=multiple_choice,
-                filter_query=filter_query, context=context)
+                filter_query=filter_query, context=context, distractor_model=distractor_model)
                 return redirect('display_questions')
             err_tags = [(False, tag, tag_map[tag]) if tag in tag_map else (False, tag, tag) for tag in tagset]
             return render(request, 'questions_from_folder.html',

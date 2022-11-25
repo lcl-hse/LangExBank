@@ -2,9 +2,11 @@ from main_app.models import *
 from django.core.management.base import BaseCommand
 from testmaker import testmaker
 from DisGen.distractor_generator import get_distractors
+from main_app.utils import get_distractors_from_disselector
 
 import time
 import json
+import re
 
 import pandas as pd
 
@@ -25,7 +27,8 @@ class Command(BaseCommand):
 # TODO: Add mult choice from disselector
 def generate_questions(folder, tags, strike, delete_downloaded=True,
                        new_qfolder=False, qfolder_name=None, ukey_prefix='',
-                       multiple_choice=False, filter_query=None, context=False):
+                       multiple_choice=False, filter_query=None, context=False,
+                       distractor_model=None):
     exercises = testmaker.download_folder_and_make_exercises(folder_name=folder,
     error_types=tags, file_output=False, moodle_output=False, make_two_variants=False,
     delete_downloaded=delete_downloaded, filter_query=filter_query, context=context)['short_answer']
@@ -39,38 +42,86 @@ def generate_questions(folder, tags, strike, delete_downloaded=True,
     ukey = ukey_prefix + '_' + str(time.time())
 
     if multiple_choice:
-        data = [(i[0], i[1][0], i[3], i[4]['folder'], i[4]['filename']) for i in exercises]
-        data = pd.DataFrame(data,
-                            columns=['Sentence', 'Right answer', 'Error type',
-                                     'Folder', 'Filename'])
-        data = json.loads(get_distractors(data).to_json(orient="records"))
+        if distractor_model == 'disgen':
+            data = [(i[0], i[1][0], i[3], i[4]['folder'], i[4]['filename']) for i in exercises]
+            data = pd.DataFrame(data,
+                                columns=['Sentence', 'Right answer', 'Error type',
+                                        'Folder', 'Filename'])
+            data = json.loads(get_distractors(data).to_json(orient="records"))
 
-        if data:
-            for i in range(len(data)):
-                data[i]['id'] = last_id + i +1
-            questions = [Question(id=q['id'], question_text=q['Sentence'],
-                                error_tag=q['Error type'], question_type='multiple_choice',
-                                question_level=0, ukey=ukey) for q in data]
-            Question.objects.bulk_create(questions)
-            answers = [Answer(question_id_id=q['id'], answer_text=q['Right answer']) for q in data]
-            Answer.objects.bulk_create(answers)
+            if data:
+                for i in range(len(data)):
+                    data[i]['id'] = last_id + i +1
+                questions = [Question(id=q['id'], question_text=q['Sentence'],
+                                    error_tag=q['Error type'], question_type='multiple_choice',
+                                    question_level=0, ukey=ukey) for q in data]
+                Question.objects.bulk_create(questions)
+                answers = [Answer(question_id_id=q['id'], answer_text=q['Right answer']) for q in data]
+                Answer.objects.bulk_create(answers)
 
-            wrong_answers = []
-        
-            for record in data:
-                wrong_answers.append(WrongAnswer(question_id=record['id'],
-                                                answer_text=record['Wrong answer']))
-                for column in record:
-                    if column.startswith('Distractor'):
-                        if record[column]:
-                            wrong_answers.append(WrongAnswer(question_id=record['id'],
-                                                            answer_text=record[column],
-                                                            is_generated=True))
+                wrong_answers = []
+            
+                for record in data:
+                    wrong_answers.append(WrongAnswer(question_id=record['id'],
+                                                    answer_text=record['Wrong answer']))
+                    for column in record:
+                        if column.startswith('Distractor'):
+                            if record[column]:
+                                wrong_answers.append(WrongAnswer(question_id=record['id'],
+                                                                answer_text=record[column],
+                                                                is_generated=True))
 
-            WrongAnswer.objects.bulk_create(wrong_answers)
-        else:
-            return
+                WrongAnswer.objects.bulk_create(wrong_answers)
+            else:
+                return
+        elif distractor_model == "disselector":
+            records = [
+                {
+                    "Sentence": ex[0],
+                    "Right answer": ex[1][0],
+                    "Error type": ex[3],
+                    "Folder": ex[4]["Folder"],
+                    'Filename': ex[4]["Filename"]
+                } for ex in exercises
+            ]
+            if records:
+                data = [
+                    {
+                        "id": el['id'],
+                        "masked_sent": re.sub("<b>.*?</b>", "[MASK]", el['Sentence']),
+                        "correction": el['Right answer']
+                    } for i, el in enumerate(records)
+                ]
+                distractors = get_distractors_from_disselector(data)
 
+                questions = [
+                        Question(
+                            id=q['id'], question_text=q['Sentence'],
+                            error_tag=q['Error type'], question_type='multiple_choice',
+                            question_level=0, ukey=ukey
+                        ) for q in records
+                ]
+                Question.objects.bulk_create(questions)
+                answers = [Answer(question_id_id=q['id'], answer_text=q['Right answer']) for q in data]
+                Answer.objects.bulk_create(answers)
+
+                wrong_answers = []
+
+
+                for record, distractor_set in zip(records, distractors):
+                    for distractor in distractor_set:
+                        wrong_answers.append(
+                            WrongAnswer(
+                                question_id=record['id'],
+                                answer_text=distractor,
+                                is_generated=True,
+                                distractor_model="disselector"
+                            )
+                        )
+
+                WrongAnswer.objects.bulk_create(wrong_answers)
+            else:
+                return
     else:
         if strike:
             questions = [Question(id=last_id+idx+1, question_text=ex[0].replace('<b>','<b><s>').replace('</b>', '</s></b>')

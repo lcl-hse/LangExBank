@@ -173,6 +173,7 @@ class WrongAnswer(models.Model):
     on_delete=models.CASCADE, null=True)
     answer_text = models.CharField(max_length=300)
     is_generated = models.BooleanField(default=False)
+    distractor_model = models.CharField(max_length=20, null=True)
 
 
 class Results(models.Model):
