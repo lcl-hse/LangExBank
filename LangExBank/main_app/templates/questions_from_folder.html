@@ -1,6 +1,5 @@
 {% extends "index.html" %}
 {% block head %}
-<!-- TODO: Add mult choice from disselector-->
 {% load static %}
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
@@ -81,11 +80,11 @@
                 </div>
             </div>
             <br />
-            <input type="checkbox" name="multiple_choice"> Make questions multiple choice
-            Select distractor generator: <select name="distractor_model" id="distractor_model">
+            <input type="checkbox" name="multiple_choice"> Make questions multiple choice with distractor generation model:
+                                        <select name="distractor_model" id="distractor_model">
                                             <option value="disselector" selected>DisSelector</option>
                                             <option value="disgen">DisGen</option>
-                                         </select>
+                                        </select>
             <br />
             <input type="checkbox" name="context" checked="checked"> Include context of 3 sentences
             <br />

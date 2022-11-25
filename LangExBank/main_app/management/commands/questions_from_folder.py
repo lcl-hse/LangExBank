@@ -24,7 +24,7 @@ class Command(BaseCommand):
         ## To add: check for duplicate documents:
         generate_questions(kwargs['folder'], kwargs['tag'], kwargs['strike'])
 
-# TODO: Add mult choice from disselector
+
 def generate_questions(folder, tags, strike, delete_downloaded=True,
                        new_qfolder=False, qfolder_name=None, ukey_prefix='',
                        multiple_choice=False, filter_query=None, context=False,
@@ -79,18 +79,16 @@ def generate_questions(folder, tags, strike, delete_downloaded=True,
                 {
                     "Sentence": ex[0],
                     "Right answer": ex[1][0],
-                    "Error type": ex[3],
-                    "Folder": ex[4]["Folder"],
-                    'Filename': ex[4]["Filename"]
+                    "Error type": ex[3]
                 } for ex in exercises
             ]
             if records:
                 data = [
                     {
-                        "id": el['id'],
+                        "id": last_id + id,
                         "masked_sent": re.sub("<b>.*?</b>", "[MASK]", el['Sentence']),
                         "correction": el['Right answer']
-                    } for i, el in enumerate(records)
+                    } for id, el in enumerate(records)
                 ]
                 distractors = get_distractors_from_disselector(data)
 

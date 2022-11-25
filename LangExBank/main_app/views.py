@@ -637,7 +637,7 @@ def display_questions(request, err_type=None):
     request.session["asked_restricted"] = True
     return render(request, "403.html")
 
-# TODO: Add mult choice from disselector
+
 @del_prev_page
 def questions_from_folder(request):
     if 'rights' in request.session:
@@ -647,6 +647,7 @@ def questions_from_folder(request):
                 path = request.POST['path']
                 tags = [field[4:] for field in request.POST if field.startswith('tag_')]
                 new_qfolder = False
+                qfolder_name = None
                 if 'new_qfolder' in request.POST:
                     new_qfolder = True
                     if 'qfolder_name' in request.POST:
@@ -657,7 +658,7 @@ def questions_from_folder(request):
                 if 'multiple_choice' in request.POST:
                     multiple_choice = True
                 if 'distractor_model' in request.POST:
-                    distractor_model = request.POST[distractor_model]
+                    distractor_model = request.POST["distractor_model"]
                 if 'filter_query' in request.POST:
                     filter_query = request.POST['filter_query']
                     try:
