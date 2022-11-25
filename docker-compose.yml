@@ -4,8 +4,7 @@ services:
   web:
     build:
       context: ./LangExBank
-      dockerfile: Dockerfile.prod
-    command: gunicorn testing_platform.wsgi:application --bind 0.0.0.0:8000 -t 10000
+      dockerfile: new.Dockerfile
     volumes:
       - static_volume:/home/app/web/staticfiles
       - media_volume:/home/app/web/mediafiles
@@ -15,6 +14,8 @@ services:
       - ./env.prod
     depends_on:
       - db
+    # entrypoint: ./entrypoint.sh # For initial set-up
+    command: gunicorn testing_platform.wsgi:application --bind 0.0.0.0:8000 -t 500000 # For later launches
   nginx:
     build: ./nginx
     volumes:
@@ -34,13 +35,18 @@ services:
     build:
       context: ./reference_platform
       dockerfile: Dockerfile
-    command: uwsgi --http 0.0.0.0:8000 --wsgi-file app.py --callable application --static-map /reference_platform/static=/usr/src/app/static
+    command: uwsgi --master --http 0.0.0.0:8000 --wsgi-file app.py --callable application --static-map /reference_platform/static=/usr/src/app/static
     expose:
       - 8000
     env_file:
       - ./env.prod
     volumes:
       - reference_volume:/usr/src/app/reference_data
+  distractor_selector:
+    image: niklogin/disselector:latest
+    expose:
+      - 5000
+    command: python -m api
 
 volumes:
   static_volume:
