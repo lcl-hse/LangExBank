@@ -114,8 +114,10 @@ class Question(models.Model):
     # question_group = models.CharField(max_length=45, null=True)
 
 
-    ## special field for retrieving previously created questions:
-    ukey = models.CharField(max_length=100, null=True)
+    ## special fields for retrieving previously created questions:
+    ukey = models.CharField(max_length=100, null=True) # batch id
+    batch_elem_id = models.IntegerField(null = True) # id in batch
+
 
     def get_answers(self):
         # print("called")

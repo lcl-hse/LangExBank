@@ -34,12 +34,14 @@ def generate_questions(folder, tags, strike, delete_downloaded=True,
     delete_downloaded=delete_downloaded, filter_query=filter_query, context=context)['short_answer']
     last = Question.objects.last()
 
-    if last is not None:
-        last_id = last.id
-    else:
-        last_id = -1
+    # Исправить, не доставать id эскплицитно
+    # а доставать по ukey
+    # if last is not None:
+    #     last_id = last.id
+    # else:
+    #     last_id = -1
 
-    ukey = ukey_prefix + '_' + str(time.time())
+    ukey = ukey_prefix + "_" + str(time.time())
 
     if multiple_choice:
         if distractor_model == 'disgen':
@@ -50,26 +52,40 @@ def generate_questions(folder, tags, strike, delete_downloaded=True,
             data = json.loads(get_distractors(data).to_json(orient="records"))
 
             if data:
-                for i in range(len(data)):
-                    data[i]['id'] = last_id + i +1
-                questions = [Question(id=q['id'], question_text=q['Sentence'],
+                # for i in range(len(data)):
+                #     data[i]['id'] = last_id + i +1
+                questions = [Question(question_text=q['Sentence'],
                                     error_tag=q['Error type'], question_type='multiple_choice',
-                                    question_level=0, ukey=ukey) for q in data]
+                                    question_level=0, ukey=ukey,
+                                    batch_elem_id=i) for i, q in enumerate(data)]
                 Question.objects.bulk_create(questions)
-                answers = [Answer(question_id_id=q['id'], answer_text=q['Right answer']) for q in data]
+
+                questions = Question.objects.filter(ukey=ukey).order_by("batch_elem_id")
+                answers = [
+                    Answer(question_id=q, answer_text=data[q.batch_elem_id]["Right answer"])
+                    for q in questions
+                ]
                 Answer.objects.bulk_create(answers)
 
                 wrong_answers = []
             
-                for record in data:
-                    wrong_answers.append(WrongAnswer(question_id=record['id'],
-                                                    answer_text=record['Wrong answer']))
+                for record, question in zip(data, questions):
+                    wrong_answers.append(
+                        WrongAnswer(
+                            question=question,
+                            answer_text=record['Wrong answer']
+                        )
+                    )
                     for column in record:
                         if column.startswith('Distractor'):
                             if record[column]:
-                                wrong_answers.append(WrongAnswer(question_id=record['id'],
-                                                                answer_text=record[column],
-                                                                is_generated=True))
+                                wrong_answers.append(
+                                    WrongAnswer(
+                                        question=question,
+                                        answer_text=record[column],
+                                        is_generated=True
+                                    )
+                                )
 
                 WrongAnswer.objects.bulk_create(wrong_answers)
             else:
@@ -80,37 +96,47 @@ def generate_questions(folder, tags, strike, delete_downloaded=True,
                     "Sentence": ex[0],
                     "Right answer": ex[1][0],
                     "Error type": ex[3]
-                } for ex in exercises
+                } for ex in exercises if ex[3] == "lex_item_choice" and
+                    len(ex[1][0].split()) == 1
             ]
             if records:
                 data = [
                     {
-                        "id": last_id + id,
+                        "id": idx,
                         "masked_sent": re.sub("<b>.*?</b>", "[MASK]", el['Sentence']),
                         "correction": el['Right answer']
-                    } for id, el in enumerate(records)
+                    } for idx, el in enumerate(records)
                 ]
                 distractors = get_distractors_from_disselector(data)
 
                 questions = [
                         Question(
-                            id=q['id'], question_text=q['Sentence'],
+                            question_text=re.sub("<b>.*?</b>", "_"*8, q['Sentence']),
                             error_tag=q['Error type'], question_type='multiple_choice',
-                            question_level=0, ukey=ukey
-                        ) for q in records
+                            question_level=0, ukey=ukey, batch_elem_id=el['id']
+                        ) for q, el, d in zip(records, data, distractors) if d
                 ]
+                distractors = [d for d in distractors if d]
                 Question.objects.bulk_create(questions)
-                answers = [Answer(question_id_id=q['id'], answer_text=q['Right answer']) for q in data]
+
+                questions = Question.objects.filter(ukey=ukey).order_by(
+                    "batch_elem_id"
+                )
+                answers = [
+                    Answer(
+                        question_id=q,
+                        answer_text=data[q.batch_elem_id]["correction"]
+                    ) for q in questions
+                ]
                 Answer.objects.bulk_create(answers)
 
                 wrong_answers = []
 
-
-                for record, distractor_set in zip(records, distractors):
+                for question, distractor_set in zip(questions, distractors):
                     for distractor in distractor_set:
                         wrong_answers.append(
                             WrongAnswer(
-                                question_id=record['id'],
+                                question=question,
                                 answer_text=distractor,
                                 is_generated=True,
                                 distractor_model="disselector"
@@ -122,17 +148,18 @@ def generate_questions(folder, tags, strike, delete_downloaded=True,
                 return
     else:
         if strike:
-            questions = [Question(id=last_id+idx+1, question_text=ex[0].replace('<b>','<b><s>').replace('</b>', '</s></b>')
-            ,error_tag=ex[3], question_type="short_answer", question_level=0, ukey=ukey) for idx, ex in enumerate(exercises)]
+            questions = [Question(question_text=ex[0].replace('<b>','<b><s>').replace('</b>', '</s></b>')
+            ,error_tag=ex[3], question_type="short_answer", question_level=0, ukey=ukey, batch_elem_id=idx) for idx, ex in enumerate(exercises)]
         else:
-            questions = [Question(id=last_id+idx,question_text=ex[0], error_tag=ex[3],
-            question_type="short_answer", question_level=0, ukey=ukey) for idx, ex in enumerate(exercises)]
+            questions = [Question(question_text=ex[0], error_tag=ex[3],
+            question_type="short_answer", question_level=0, ukey=ukey, batch_elem_id=idx) for idx, ex in enumerate(exercises)]
     
         Question.objects.bulk_create(questions)
-        answers=[Answer(question_id_id=q.id, answer_text=ans) for ex, q in zip(exercises, questions) for ans in ex[1]]
+        questions = Question.objects.filter(ukey=ukey).order_by("batch_elem_id")
+        answers=[Answer(question_id=q, answer_text=ans) for ex, q in zip(exercises, questions) for ans in ex[1]]
         Answer.objects.bulk_create(answers)
 
-    generated_questions = Question.objects.filter(ukey=ukey)
+    # generated_questions = Question.objects.filter(ukey=ukey)
 
     if new_qfolder:
         if not qfolder_name:
@@ -142,6 +169,5 @@ def generate_questions(folder, tags, strike, delete_downloaded=True,
         qfolder = Folder.objects.get(name=qfolder_name)
         qtf_table = Question.folder.through
         new_relations = [qtf_table(question=question,
-        folder=qfolder) for question in generated_questions]
+        folder=qfolder) for question in questions]
         qtf_table.objects.bulk_create(new_relations)
-    
