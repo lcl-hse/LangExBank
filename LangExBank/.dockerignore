@@ -2,6 +2,7 @@
 .git
 localbase
 moodle_exercises
-LangExBank/mediafiles
+mediafiles
 .ipynb_checkpoints
 __pycache__
+*dump.json
