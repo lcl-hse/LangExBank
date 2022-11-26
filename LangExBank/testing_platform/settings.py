@@ -164,4 +164,4 @@ TRIES = int(os.environ.get("TRIES", default=3))
 
 TIME_PER_TRY = int(os.environ.get("TIME_PER_TRY", default=10)) * 1000
 
-DISSELECTOR_URL = os.environ.get("DISSELECTOR_URL", default="http://disselector:5000/")
+DISSELECTOR_URL = os.environ.get("DISSELECTOR_URL", default="http://distarctor_selector:5000/")
