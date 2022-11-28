@@ -135,7 +135,7 @@ STATIC_URL = '/static/'
 
 MEDIA_URL = '/media/'
 
-MEDIA_ROOT = '/'.join([Path(BASE_DIR).as_posix(), "media/"])
+MEDIA_ROOT = '/'.join([Path(BASE_DIR).as_posix(), "mediafiles/"])
 
 STATIC_ROOT = '/'.join([Path(BASE_DIR).as_posix(), "static/"])
 
@@ -146,3 +146,9 @@ login_enc_key = ''
 encode = False
 
 registration_open = False
+
+TRIES = 3
+
+TIME_PER_TRY = 10000 # 10 sec
+
+DISSELECTOR_URL = "http://localhost:5000/"

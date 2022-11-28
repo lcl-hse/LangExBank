@@ -19,16 +19,16 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 
 # Quick-start development settings - unsuitable for production
-# See https://docs.djangoproject.com/en/2.1/howto/deployment/checklist/
+# See https://docs.djangoproject.com/en/3.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = os.environ.get("SECRET_KEY")
+SECRET_KEY = os.environ.get("SECRET_KEY", default="MY-SECRET-KEY")
 
 # SECURITY WARNING: don't run with debug turned on in production!
 # DEBUG = False
 DEBUG = bool(int(os.environ.get("DEBUG", default=0)))
 
-ALLOWED_HOSTS = os.environ.get("DJANGO_ALLOWED_HOSTS").split()
+ALLOWED_HOSTS = os.environ.get("DJANGO_ALLOWED_HOSTS", default="*").split()
 
 
 # Application definition
@@ -52,7 +52,10 @@ INSTALLED_APPS = [
 # just prepend settings.FIELD_ENCRYPTION_KEYS with a new key.
 # To rotate keys execute: python manage.py rotate_keys.
 # After that you may delete the old key.
-FIELD_ENCRYPTION_KEYS = os.environ.get("DJANGO_ENCRYPTION_KEYS").split()
+FIELD_ENCRYPTION_KEYS = os.environ.get(
+    "DJANGO_ENCRYPTION_KEYS",
+    default="d798ca31f78677edf0d5a268bff71440b1ba059625ffcc1faef994ade28a605d"
+).split()
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -89,18 +92,7 @@ WSGI_APPLICATION = 'testing_platform.wsgi.application'
 
 
 # Database
-# https://docs.djangoproject.com/en/2.1/ref/settings/#databases
-
-# DATABASES = {
-#     'default': {
-#         'ENGINE': 'django.db.backends.mysql',
-#         'NAME': 'realecTestingPla$default',
-#         'USER': 'realecTestingPla',
-#         'PASSWORD': '123realecTEST',
-#         'HOST': 'realecTestingPlatform.mysql.pythonanywhere-services.com'
-#     }, 
-# }
-
+# https://docs.djangoproject.com/en/3.0/ref/settings/#databases
 
 DATABASES = {
     "default": {
@@ -136,7 +128,7 @@ AUTH_PASSWORD_VALIDATORS = [
 
 
 # Internationalization
-# https://docs.djangoproject.com/en/2.1/topics/i18n/
+# https://docs.djangoproject.com/en/3.0/topics/i18n/
 
 LANGUAGE_CODE = 'en-us'
 
@@ -150,7 +142,7 @@ USE_TZ = True
 
 
 # Static files (CSS, JavaScript, Images)
-# https://docs.djangoproject.com/en/2.1/howto/static-files/
+# https://docs.djangoproject.com/en/3.0/howto/static-files/
 
 STATIC_URL = os.environ.get("DJANGO_STATIC_URL", default='/staticfiles/')
 
@@ -162,7 +154,7 @@ STATIC_ROOT = os.path.join(BASE_DIR, os.environ.get('DJANGO_STATIC_ROOT',default
 
 REFERENCE_URL = os.environ.get("REFERENCE_URL", default="/reference_platform")
 
-login_enc_key = os.environ.get("LANGEXBANK_ENC_KEY")
+login_enc_key = os.environ.get("LANGEXBANK_ENC_KEY", default="")
 
 encode = int(os.environ.get("LANGEXBANK_ENCODE_USERS", default=0))
 
@@ -171,3 +163,5 @@ registration_open = int(os.environ.get("LANGEXBANK_OPEN_SIGNUP", default=0))
 TRIES = int(os.environ.get("TRIES", default=3))
 
 TIME_PER_TRY = int(os.environ.get("TIME_PER_TRY", default=10)) * 1000
+
+DISSELECTOR_URL = os.environ.get("DISSELECTOR_URL", default="http://distarctor_selector:5000/")

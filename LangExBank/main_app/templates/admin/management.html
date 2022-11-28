@@ -1,0 +1,16 @@
+{% extends "admin/base_site.html" %}
+
+{% block content_title %} Management commands {% endblock %}
+{% block content_subtitle %}{% endblock %}
+
+{% block content %}
+<ul>
+    <li><a href="/admin/management/load_data/"> Load data to DB </a></li>
+    <li><a href="/admin/management/dump_data/"> Dump data from DB </a></li>
+    <li><a href="/admin/management/load_mediafiles/"> Load mediafiles to site </a></li>
+    <li><a href="/admin/management/dump_mediafiles/"> Download mediafiles from site </a></li>
+    <li><a href="/admin/management/random_users/"> Generate K random users for the platform </a></li>
+    <li><a href="/admin/management/save_right_answers/"> Download right answers for selected Quiz </a></li>
+    <li><a href="/admin/management/user_info_table/"> Download User info data </a></li>
+</ul>
+{% endblock %}

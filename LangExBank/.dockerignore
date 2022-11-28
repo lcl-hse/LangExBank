@@ -1,0 +1,8 @@
+*.ipynb
+.git
+localbase
+moodle_exercises
+mediafiles
+.ipynb_checkpoints
+__pycache__
+*dump.json

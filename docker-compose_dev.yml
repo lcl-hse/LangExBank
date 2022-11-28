@@ -2,7 +2,9 @@ version: '3.3'
 
 services:
   web:
-    image: niklogin/langexbank_web:latest
+    build:
+      context: ./LangExBank
+      dockerfile: Dockerfile
     volumes:
       - static_volume:/home/app/web/staticfiles
       - media_volume:/home/app/web/mediafiles
@@ -15,7 +17,7 @@ services:
     # entrypoint: ./entrypoint.sh # For initial set-up
     command: gunicorn testing_platform.wsgi:application --bind 0.0.0.0:8000 -t 500000 # For later launches
   nginx:
-    image: niklogin/langexbank_nginx:latest
+    build: ./nginx
     volumes:
       - static_volume:/home/app/web/staticfiles
       - media_volume:/home/app/web/mediafiles
@@ -30,7 +32,9 @@ services:
     env_file:
       - ./env.prod
   reference_platform:
-    image: niklogin/langexbank_reference_platform:latest
+    build:
+      context: ./reference_platform
+      dockerfile: Dockerfile
     command: uwsgi --master --http 0.0.0.0:8000 --wsgi-file app.py --callable application --static-map /reference_platform/static=/usr/src/app/static
     expose:
       - 8000

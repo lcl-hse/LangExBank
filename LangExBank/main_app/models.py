@@ -114,8 +114,10 @@ class Question(models.Model):
     # question_group = models.CharField(max_length=45, null=True)
 
 
-    ## special field for retrieving previously created questions:
-    ukey = models.CharField(max_length=100, null=True)
+    ## special fields for retrieving previously created questions:
+    ukey = models.CharField(max_length=100, null=True) # batch id
+    batch_elem_id = models.IntegerField(null = True) # id in batch
+
 
     def get_answers(self):
         # print("called")
@@ -173,6 +175,7 @@ class WrongAnswer(models.Model):
     on_delete=models.CASCADE, null=True)
     answer_text = models.CharField(max_length=300)
     is_generated = models.BooleanField(default=False)
+    distractor_model = models.CharField(max_length=20, null=True)
 
 
 class Results(models.Model):

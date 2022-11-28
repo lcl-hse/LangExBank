@@ -637,6 +637,7 @@ def display_questions(request, err_type=None):
     request.session["asked_restricted"] = True
     return render(request, "403.html")
 
+
 @del_prev_page
 def questions_from_folder(request):
     if 'rights' in request.session:
@@ -646,14 +647,18 @@ def questions_from_folder(request):
                 path = request.POST['path']
                 tags = [field[4:] for field in request.POST if field.startswith('tag_')]
                 new_qfolder = False
+                qfolder_name = None
                 if 'new_qfolder' in request.POST:
                     new_qfolder = True
                     if 'qfolder_name' in request.POST:
                         qfolder_name = request.POST['qfolder_name']
                 ukey_prefix = request.session['user_id']
                 multiple_choice = False
+                distractor_model = None
                 if 'multiple_choice' in request.POST:
                     multiple_choice = True
+                if 'distractor_model' in request.POST:
+                    distractor_model = request.POST["distractor_model"]
                 if 'filter_query' in request.POST:
                     filter_query = request.POST['filter_query']
                     try:
@@ -668,7 +673,6 @@ def questions_from_folder(request):
                             if tag in tags:
                                 tag_triplet[0] = True
                             err_tags.append(tag_triplet)
-                        print(err_tags)
                         return render(request,
                         'questions_from_folder.html',
                         {'err_tags': err_tags,
@@ -679,7 +683,7 @@ def questions_from_folder(request):
                         context = True
                 generate_questions(folder=path, tags=tags, strike=True, delete_downloaded=True,
                 new_qfolder=new_qfolder, qfolder_name=qfolder_name, multiple_choice=multiple_choice,
-                filter_query=filter_query, context=context)
+                filter_query=filter_query, context=context, distractor_model=distractor_model, ukey_prefix=ukey_prefix)
                 return redirect('display_questions')
             err_tags = [(False, tag, tag_map[tag]) if tag in tag_map else (False, tag, tag) for tag in tagset]
             return render(request, 'questions_from_folder.html',

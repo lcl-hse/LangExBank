@@ -1,4 +1,7 @@
-from flask import Flask, render_template, redirect, request, session, abort, url_for
+from flask import Flask
+from flask import render_template, redirect, request
+from flask import session, abort, url_for
+from flask import make_response
 
 from secret_data import secret_key, editors
 from utils import get_str_taglist, get_html_taglist
@@ -17,11 +20,13 @@ error_handler.setLevel(logging.WARNING)
 tag_list, tags = get_html_taglist(), get_str_taglist()
 
 URL_PREFIX = os.getenv("REF_URL_PREFIX", default="")
+UPLOAD_FOLDER = os.getenv("REF_DATA_FOLDER", default="reference_data")
 
 application = Flask(
     __name__,
     static_url_path=URL_PREFIX+"/static"
 )
+application.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 
 # Error logging
 application.logger.addHandler(error_handler)
@@ -211,6 +216,45 @@ def delete_article(article_name):
     if check_auth(session):
         dbaccess.delete_article(article_name)
         return "ok"
+    else:
+        return abort(403)
+
+@application.route(URL_PREFIX+"/load_data", methods=["GET", "POST"])
+def load_data():
+    # TODO: make it async
+    if check_auth(session):
+        if request.method == "POST":
+            if "file" in request.files:
+                print("ok")
+                file = request.files["file"]
+                if file.filename.endswith(".json"):
+                    file.save(os.path.join(application.config["UPLOAD_FOLDER"], "db.json"))
+                    return redirect(url_for("show_main_page"))
+            else:
+                return abort(500)
+        return render_template(
+                "load_data.html",
+                taglist=tag_list,
+                authorized=check_auth(session)
+            )
+    else:
+        return abort(403)
+
+@application.route(URL_PREFIX+"/dump_data", methods=["GET"])
+def dump_data():
+    # TODO: make it async
+    if check_auth(session):
+        with open(
+            os.path.join(application.config["UPLOAD_FOLDER"], "db.json"),
+            "rb"
+        ) as inp:
+            data = inp.read()
+        response = make_response(data)
+        response.headers.set('Content-Type', 'application/json')
+        response.headers.set(
+            'Content-Disposition', 'attachment', filename='db.json'
+        )
+        return response
     else:
         return abort(403)
 

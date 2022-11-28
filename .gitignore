@@ -10,14 +10,17 @@ test_data/
 testing_platform/settings.py
 trash/
 ve_win/
-ve/g
+ve/
+langexbank_env/
+*_env/
+env/
 api_test_files/
 DisGen/distractor_service_input_files/**
 DisGen/distractor_service_output_files/**
 localbase
 __pycache__
 *dump*.json
-*.ipynb
+.ipynb_checkpoints
 .vscode
 .idea
 *.bat
@@ -28,3 +31,6 @@ env.prod
 ТЗ.txt
 db.json
 *_mediafiles/
+admins.txt
+admins.txt
+*.xlsx

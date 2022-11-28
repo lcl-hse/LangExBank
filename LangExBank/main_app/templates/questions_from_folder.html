@@ -80,7 +80,11 @@
                 </div>
             </div>
             <br />
-            <input type="checkbox" name="multiple_choice"> Make questions multiple choice
+            <input type="checkbox" name="multiple_choice"> Make questions multiple choice with distractor generation model:
+                                        <select name="distractor_model" id="distractor_model">
+                                            <option value="disselector" selected>DisSelector</option>
+                                            <option value="disgen">DisGen</option>
+                                        </select>
             <br />
             <input type="checkbox" name="context" checked="checked"> Include context of 3 sentences
             <br />
