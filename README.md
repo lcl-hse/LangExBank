@@ -7,23 +7,21 @@ LangExBank is an open-source language testing platform that supports:
 # Instruction manual
 
 Prerequisites:
- - Docker
+ - Basic Docker knowledge
  - Basic terminal knowledge
  - IPython knowledge (for modifying database in interactive shell)
-
-
-<b>WARNING!</B> This manual is outdated and soon will be replaced with the up-to-date version
 
 
 ## Table of contents
 1. [Installation](#installation)
 2. [Creating users](#creating-users)
+    2.1. [Creating users via web interface](#creating-users-via-web)
 
-    2.1. [Creating users with Django-admin](#creating-users-with-django-admin)
+    2.2. [Creating users with Django-admin](#creating-users-with-django-admin)
 
-    2.2. [Creating users in terminal](#creating-users-in-ipython-terminal)
+    2.3. [Creating users in terminal](#creating-users-in-ipython-terminal)
 
-    2.3. [Creating random users](#creating-random-users)
+    2.4. [Creating random users](#creating-random-users)
     
 3. [New users registration](#new-users-registration)
 4. [Corpus-based quizzes](#corpus-based-quizzes)
@@ -52,27 +50,9 @@ Prerequisites:
 ##  Installation
 Learner Corpora Laboratory uses Docker to deploy LangExBank.
 
-### In testing environment
-To install LangExBank in testing environment clone this repository to your machine and build Docker container from the source code with.
+Copy <i>docker-compose.yml</i> file from the root of this respository to your machine
 
-Enter your terminal emulator and type:
-```bash
-git clone https://github.com/lcl-hse/LangExBank.git
-docker build -f ./langexbank/Dockerfile.prod -t langexbank ./langexbank
-docker create --name langexbank_1 langexbank
-docker start langexbank_1
-docker exec langexbank_1 python manage.py migrate
-docker exec -p 8000:8000 -e DEBUG=1 SECRET_KEY=please-change-me DJANGO_ALLOWED_HOSTS=* DJANGO_ENCRYPTION_KEYS=please-change-me LANGEXBANK_ENC_KEY=please-change-me LANGEXBANK_ENCODE_USERS=0 LANGEXBANK_OPEN_SIGNUP=1 gunicorn testing_platform.wsgi:application --bind 0.0.0.0:8000 -t 12000
-```
-
-Then go to http://localhost:8000 in your web browser to access LangExBank. However, in this mode LangExBank will be accessible only from your computer so your students will not be able to take tests.
-
-### In production environment
-To make your LangExBank accessible from the web you will need to follow the following instructions: 
-
-To use LangExBank in testing environment, you will need to create a separate Docker container for a web server app (e.g. nginx, apache etc.) and orchestrate containers with docker-compose command. In this manual we will use nginx as a containerized web server as nginx Dockerfile and configuration are already present in this repository.
-
-First, open your favourite text editor and create a file in the LangExBank folder called <i>env.prod</i>. This file will contain environment variables needed for LangExBank to run in a Docker environment. Fill the file with the following contents (Meaning of every variable will be explained later):
+Then, open your favourite text editor and create a file in the LangExBank folder called <i>env.prod</i>. This file will contain environment variables needed for LangExBank to run in a Docker environment. Fill the file with the following contents (Meaning of every variable will be explained later):
 ```
 # ./LangExBank/env.prod
 DEBUG=0
@@ -82,8 +62,18 @@ DJANGO_ENCRYPTION_KEYS=please-change-me
 LANGEXBANK_ENC_KEY=please-change-me
 LANGEXBANK_ENCODE_USERS=0
 LANGEXBANK_OPEN_SIGNUP=1
-DJANGO_MEDIA_ROOT=mediafiles
-DJANGO_STATIC_ROOT=staticfiles
+PGDATA=/var/lib/postgresql/data/langexbank_data
+REF_EDITOR_LOGIN=login
+REF_EDITOR_PASSWORD=password
+REF_SECRET_KEY=please-change-me
+REF_URL_PREFIX=/reference_platform
+REF_DATA_FOLDER=/usr/src/app/reference_data # check
+TRIES=3
+TIMES_PER_TRY=10
+DJANGO_SUPERUSER_USERNAME=Username
+DJANGO_SUPERUSER_PASSWORD=Password
+DJANGO_SUPERUSER_EMAIL=example@example.com
+PRODUCTION=1 # check
 ```
 Where:
 <table>
@@ -144,20 +134,92 @@ Where:
  </td>
 </tr>
 <tr>
- <td>
-  <code>DJANGO_MEDIA_ROOT</code>
- </td>
- <td>
-  String (respective path). Where to store media files (PDFs, audios, videos).
- </td>
+  <td>
+    <code>PGDATA</code>
+  </td>
+  <td>
+    The location of where data will be stored inside PostgreSQL container. Set it to "var/lib/postgresql/data/langexbank_data" (the value is not set implicitly due to architecture issues).
+  </td>
 </tr>
 <tr>
- <td>
-  <code>DJANGO_STATIC_ROOT</code>
- </td>
- <td>
-  String (respective path). Where to store static files (JS, CSS).
- </td>
+  <td>
+    <code>REF_EDITOR_LOGIN</code>
+  </td>
+  <td>
+    Login for the Reference platform administrator user
+  </td>
+</tr>
+<tr>
+  <td>
+    <code>REF_EDITOR_PASSWORD</code>
+  </td>
+  <td>
+    Password for the Reference platform administrator user
+  </td>
+</tr>
+<tr>
+  <td>
+    <code>REF_SECRET_KEY</code>
+  </td>
+  <td>
+    Secret key for the reference platform. Used to encrypt session data. Set it to a string value and keep secret.
+  </td>
+</tr>
+<tr>
+  <td>
+    <code>REF_URL_PREFIX</code>
+  </td>
+  <td>
+    Set it to "/reference_platform" (the value is not set implicitly due to compatibility issues).
+  </td>
+</tr>
+<tr>
+  <td>
+    <code>REF_DATA_FOLDER</code>
+  </td>
+  <td>
+    Folder inside Reference platform used to store it data. Set it to "/usr/src/app/reference_data" (The value is not set implicitly due to architecture issues).
+  </td>
+</tr>
+<tr>
+  <td>
+    <code>TRIES</code>
+  </td>
+  <td>
+    How many tries (switches away from the tab with quiz) are allowed for quizzes without the "Allow access to reference" option checked (default = 3).
+  </td>
+</tr>
+<tr>
+  <td>
+    <code>TIME_PER_TRY</code>
+  </td>
+  <td>
+    For how long a student user is allowed to stay away from the tab with quiz if option "Allow access to reference" is not checked (default = 10 seconds).
+  </td>
+</tr>
+<tr>
+  <td>
+    <code>DJANGO_SUPERUSER_USERNAME</code>
+  </td>
+  <td>
+    Username for the LangExBank superuser (to be able to create/delete/update DB objects and dump/load data/files from Django-Admin web interface)
+  </td>
+</tr>
+<tr>
+  <td>
+    <code>DJANGO_SUPERUSER_PASSWORD</code>
+  </td>
+  <td>
+    Password for the LangExBank superuser (to be able to create/delete/update DB objects and dump/load data/files from Django-Admin web interface)
+  </td>
+</tr>
+<tr>
+  <td>
+    <code>PRODUCTION</code>
+  </td>
+  <td>
+    Set to 1 (the value is not set implicitly due to architecture issues).
+  </td>
 </tr>
 </table>
 
