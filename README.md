@@ -14,61 +14,59 @@ Prerequisites:
 
 ## Table of contents
 1. [Installation](#installation)
-2. [Creating users](#creating-users)
 
-    2.1. [Creating users via web interface](#creating-users-via-web)
+2. [Admin panel](#admin-panel)
 
-    2.2. [Creating users with Django-admin](#creating-users-with-django-admin)
+3. [Creating users](#creating-users)
 
-    2.3. [Creating users in terminal](#creating-users-in-ipython-terminal)
+    3.1. [Creating users in IPython terminal](#creating-users-in-ipython-terminal)
 
-    2.4. [Creating random users](#creating-random-users)
+    3.2. [Creating users from admin panel](#creating-users-from-admin-panel)
 
-    2.5. [Creating random users with django-admin][#creating-django-admin]
-    
-3. [New users registration](#new-users-registration)
-4. [Corpus-based quizzes](#corpus-based-quizzes)
+4. [New users registration](#new-users-registration)
 
-   4.1. [Filling exercise bank](#filling-exercise-bank)
+5. [Corpus-based quizzes](#corpus-based-quizzes)
+
+   5.1. [Filling exercise bank](#filling-exercise-bank)
    
-   4.2. [Creating new quiz](#creating-new-quiz)
+   5.2. [Creating new quiz](#creating-new-quiz)
    
-   4.3. [Editing created quiz](#editing-created-quiz)
+   5.3. [Editing created quiz](#editing-created-quiz)
    
-   4.4. [Previewing and taking a quiz](#previewing-and-taking-a-quiz)
+   5.4. [Previewing and taking a quiz](#previewing-and-taking-a-quiz)
    
-   4.5. [Deleting quizzes](#deleting-quizzes)
-5. [IELTS-like tests](#ielts-like-tests)
+   5.5. [Deleting quizzes](#deleting-quizzes)
+6. [IELTS-like tests](#ielts-like-tests)
 
-    5.1. [Reading](#reading)
+    6.1. [Reading](#reading)
  
-    5.2. [Listening](#listening)
+    6.2. [Listening](#listening)
     
-6. [Reviewing results](#reviewing-results)
+7. [Reviewing results](#reviewing-results)
 
-    6.1. [Reviewing corpus-based quiz results](#reviewing-corpus-based-quiz-results)
+    7.1. [Reviewing corpus-based quiz results](#reviewing-corpus-based-quiz-results)
     
-    6.2. [Reviewing IELTS-like test results](#reviewing-ielts-like-test-results)
+    7.2. [Reviewing IELTS-like test results](#reviewing-ielts-like-test-results)
 
-7. [Reference materials webiste][# reference]
+8. [Reference materials webiste](#reference-materials)
 
-  7.1. [Accessing reference materials][#access-reference]
+  8.1. [Accessing reference materials](#accessing-reference)
 
-  7.2. [Adding and editing reference materials][#edit-reference]
+  8.2. [Adding and editing reference materials](#adding-and-editing-reference)
 
-8. [Migrating data and mediafiles][#migration]
+9. [Migrating data and mediafiles](#migrating-data-and-mediafiles)
 
-  8.1. [Dumping platform data][#migration-dump-data]
+  9.1. [Dumping platform data](#dumping-platform-data)
 
-  8.2. [Dumping platform mediafiles][#migration-dump-media]
+  9.2. [Dumping platform mediafiles](#dumping-platform-mediafiles)
 
-  8.3. [Loading platform data][#migration-load-data]
+  9.3. [Loading platform data](#loading-platform-data)
 
-  8.4. [Loading platform mediafiles][#migration-load-media]
+  9.4. [Loading platform mediafiles](#loading-platform-mediafiles)
 
-  8.5. [Dumping reference materials][#migration-dump-reference]
+  9.5. [Dumping reference materials](#dumping-reference-materials)
 
-  8.6. [Loading reference materials][#migration-load-reference]
+  9.6. [Loading reference materials](#loading-reference-materials)
 
 ##  Installation
 Learner Corpora Laboratory uses Docker to deploy LangExBank.
@@ -280,20 +278,15 @@ docker-compose up -d
 To update and restart LangExBanke navigate to the folder containing <i>docker-compose.yml</i> file and execute the following commands:
 ```bash
 docker-compose pull
-docker-compose 
-
-## Creating users
-LangExBank support three type of users: Admin, Teacher and Student. To start using LangExBank after deploy you will need to create at least 1 admin user.
-
-You can create new users with three different approaches:
-
-### Creating users with django-admin
-To add, edit and delete users with Django-Admin web application you need to create a superuser first:
-```bash
-docker-compose exec web python manage.py createsuperuser
+docker-compose down
+docker-compose up -d
 ```
 
-Enter new superuser data according to <a href="https://docs.djangoproject.com/en/3.0/intro/tutorial02/#creating-an-admin-user">Django documentation</a>. Then navigate to <i>yoursite.example.com/admin</i> in your web browser and enter your superuser name and password to access database editing. Then in section <b>MAIN_APP</b> section select <i>Users</i> option (please do not confuse it with <i>Users</i> in <b>AUTHENTICATION AND AUTHORIZATION</b> section.  Then click on <b>ADD USER</b> button and input user data, including username, full name, password and rights (Student, Teacher or Admin) and password(<i>Enc passsword</i> field).
+## Creating users
+
+LangExBank support three type of users: Admin, Teacher and Student. To start using LangExBank after deploy you will need to create at least 1 admin user.
+
+You can create new users with two different approaches:
 
 ### Creating users in IPython terminal
 You can create, delete and edit users in Django IPython console. To do this type in your terminal emulator:
@@ -319,58 +312,9 @@ To exit IPython session type the following in your terminal:
 exit()
 ```
 
-### Creating random users
-You can create random users with LangExBank management command random_users. Type the following in your terminal:
-```bash
-docker-compose exec web python manage.py random_users -n 100 -r S -s -fn Users.csv
-```
+### Creating users from admin panel
 
-The provided arguments to <i>random_users</i> command are explained below:
-<table>
- <tr>
-  <td>
-   <code>-n --number</code>
-  </td>
-  <td>
-   Integer. How many users to create e.g. 100
-  </td>
- </tr>
- <tr>
-  <td>
-   <code>-r --rights</code>
-  </td>
-  <td>
-   What type of rights to give to the newly created users. Possible options: 'A' (Admin), 'S' (Student) or 'T' (Teacher)
-  </td>
- </tr>
- <tr>
-  <td>
-   <code>-s --save</code>
-  </td>
-  <td>
-   Whether to save newly generated users to CSV file.
-  </td>
- </tr>
- <tr>
-  <td>
-   <code>-fn --filename</code>
-  </td>
-  <td>
-   Name of the CSV file where new user logins and passwords will be saved.
-  </td>
- </tr>
-</table>
-
-CSV file with user data will be save in your Docker container. To transfer it to your host machine type the following in your terminal emulator:
-```bash
-docker cp testingplatform_web_1:/home/app_web/LangExBank/Users.csv .
-```
-
-If the command results with an error replace <i>testingplatform_web_1</i> with your container name. If you want to specify exact location where you want to place Users csv replace the dot with the folder path.
-
-### Creating random users with django-admin
-
-You can also create random users with django-admin. Navigate to &lt;your-LangExBank-installation-URL&gt;/admin/management/random_users/, fill and submit the form displayed on page.
+...
 
 ## New users registration
 You can allow new students to register on your LangExBank instance using embedded registration view. To enable this set <code>LANGEXBANK_OPEN_SIGNUP</code> to 1 in <i>LangExBank/env.prod</i> file. Then send <i>yoursite.example.com/easy_register</i> to your students. In order to register the students will be asked to type Full Name, Group id, username and password. In current version of LangExBank no e-mail confirmation is required to register.
