@@ -27,15 +27,15 @@ Prerequisites:
 
 5. [Corpus-based quizzes](#corpus-based-quizzes)
 
-   5.1. [Filling exercise bank](#filling-exercise-bank)
+    5.1. [Filling exercise bank](#filling-exercise-bank)
    
-   5.2. [Creating new quiz](#creating-new-quiz)
+    5.2. [Creating new quiz](#creating-new-quiz)
    
-   5.3. [Editing created quiz](#editing-created-quiz)
+    5.3. [Editing created quiz](#editing-created-quiz)
    
-   5.4. [Previewing and taking a quiz](#previewing-and-taking-a-quiz)
+    5.4. [Previewing and taking a quiz](#previewing-and-taking-a-quiz)
    
-   5.5. [Deleting quizzes](#deleting-quizzes)
+    5.5. [Deleting quizzes](#deleting-quizzes)
 6. [IELTS-like tests](#ielts-like-tests)
 
     6.1. [Reading](#reading)
@@ -50,23 +50,23 @@ Prerequisites:
 
 8. [Reference materials webiste](#reference-materials)
 
-  8.1. [Accessing reference materials](#accessing-reference)
+    8.1. [Accessing reference materials](#accessing-reference)
 
-  8.2. [Adding and editing reference materials](#adding-and-editing-reference)
+    8.2. [Adding and editing reference materials](#adding-and-editing-reference)
 
 9. [Migrating data and mediafiles](#migrating-data-and-mediafiles)
 
-  9.1. [Dumping platform data](#dumping-platform-data)
+    9.1. [Dumping platform data](#dumping-platform-data)
 
-  9.2. [Dumping platform mediafiles](#dumping-platform-mediafiles)
+    9.2. [Dumping platform mediafiles](#dumping-platform-mediafiles)
 
-  9.3. [Loading platform data](#loading-platform-data)
+    9.3. [Loading platform data](#loading-platform-data)
 
-  9.4. [Loading platform mediafiles](#loading-platform-mediafiles)
+    9.4. [Loading platform mediafiles](#loading-platform-mediafiles)
 
-  9.5. [Dumping reference materials](#dumping-reference-materials)
+    9.5. [Dumping reference materials](#dumping-reference-materials)
 
-  9.6. [Loading reference materials](#loading-reference-materials)
+    9.6. [Loading reference materials](#loading-reference-materials)
 
 ##  Installation
 Learner Corpora Laboratory uses Docker to deploy LangExBank.
