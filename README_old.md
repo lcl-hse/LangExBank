@@ -15,7 +15,6 @@ Prerequisites:
 ## Table of contents
 1. [Installation](#installation)
 2. [Creating users](#creating-users)
-
     2.1. [Creating users via web interface](#creating-users-via-web)
 
     2.2. [Creating users with Django-admin](#creating-users-with-django-admin)
@@ -23,8 +22,6 @@ Prerequisites:
     2.3. [Creating users in terminal](#creating-users-in-ipython-terminal)
 
     2.4. [Creating random users](#creating-random-users)
-
-    2.5. [Creating random users with django-admin][#creating-django-admin]
     
 3. [New users registration](#new-users-registration)
 4. [Corpus-based quizzes](#corpus-based-quizzes)
@@ -49,26 +46,6 @@ Prerequisites:
     6.1. [Reviewing corpus-based quiz results](#reviewing-corpus-based-quiz-results)
     
     6.2. [Reviewing IELTS-like test results](#reviewing-ielts-like-test-results)
-
-7. [Reference materials webiste][# reference]
-
-  7.1. [Accessing reference materials][#access-reference]
-
-  7.2. [Adding and editing reference materials][#edit-reference]
-
-8. [Migrating data and mediafiles][#migration]
-
-  8.1. [Dumping platform data][#migration-dump-data]
-
-  8.2. [Dumping platform mediafiles][#migration-dump-media]
-
-  8.3. [Loading platform data][#migration-load-data]
-
-  8.4. [Loading platform mediafiles][#migration-load-media]
-
-  8.5. [Dumping reference materials][#migration-dump-reference]
-
-  8.6. [Loading reference materials][#migration-load-reference]
 
 ##  Installation
 Learner Corpora Laboratory uses Docker to deploy LangExBank.
@@ -260,27 +237,17 @@ depends_on:
 
 "12345" to the port you want to run LangExBank on.
 
-In your terminal emulator navigate to the folder containing docker-compose.yml and env.prod files and run the following command:
+Run the following commands in your terminal emulator:
 
 ```bash
+cd LangExBank
+docker-compose build
 docker-compose up -d
+docker-compose exec web python manage.py migrate
+docker-compose exec web python manage.py collectstatic --no-input --clear
 ```
 
 Then navigate to your domain or IP address in your web browser.
-
-After initial setup uncomment (delete '# ' sequence from) line 16 of <i>docker-compose.yml</i> and comment out (add initial '# ' to) line 15.
-
-To restart LangExBank navigate to the folder containing <i>docker-compose.yml</i> file and execute the following commands:
-
-```bash
-docker-compose down
-docker-compose up -d
-```
-
-To update and restart LangExBanke navigate to the folder containing <i>docker-compose.yml</i> file and execute the following commands:
-```bash
-docker-compose pull
-docker-compose 
 
 ## Creating users
 LangExBank support three type of users: Admin, Teacher and Student. To start using LangExBank after deploy you will need to create at least 1 admin user.
@@ -368,10 +335,6 @@ docker cp testingplatform_web_1:/home/app_web/LangExBank/Users.csv .
 
 If the command results with an error replace <i>testingplatform_web_1</i> with your container name. If you want to specify exact location where you want to place Users csv replace the dot with the folder path.
 
-### Creating random users with django-admin
-
-You can also create random users with django-admin. Navigate to &lt;your-LangExBank-installation-URL&gt;/admin/management/random_users/, fill and submit the form displayed on page.
-
 ## New users registration
 You can allow new students to register on your LangExBank instance using embedded registration view. To enable this set <code>LANGEXBANK_OPEN_SIGNUP</code> to 1 in <i>LangExBank/env.prod</i> file. Then send <i>yoursite.example.com/easy_register</i> to your students. In order to register the students will be asked to type Full Name, Group id, username and password. In current version of LangExBank no e-mail confirmation is required to register.
 
@@ -391,12 +354,14 @@ On the LangExBank main page navigate to the <b>Questions</b> panel to access que
   <td>1 or more error tags from REALEC annotation scheme. By default errors with all tags will be included</td>
  </tr>
  <tr>
-  <td>Make questions multiple choice with distractor generation model (checkbox with selector)</td>
-  <td>Whether to generate multiple-choice questions. LangExBank includes two models of distrator generation: <b>DisSelector</b> and <b>DisGen</b>. <b>DisGen</b> supports <i>Choice of lexical item</i>, <i>Choice of tense</i> and <i>Prepositions</i> tags. <b>DisSelector</b> supports only <i>Choice of lexical item</i> tag, but has less restrictions on input and produces more coherent output.
+  <td>Make questions multiple choice (checkbox)</td>
+  <td>Whether to generate multiple-choice questions. Currently multiple choice option generation models support only the following types of errors:
+<ul>
+ <li>Choice of tense</li>
+ <li>Prepositions</li>
+ <li>Choice of a lexical item</li>
+</ul>
 </td>
- </tr>
- <tr>
-  
  </tr>
  <tr>
   <td>Create new folder with name (checkbox)</td>
@@ -415,8 +380,6 @@ To create new quiz tick the boxes left to questions on <b>Questions</b> panel, e
 
 ### Editing created quiz
 Navigate to the <b>Quizzes</b> panel and select created quiz. You can edit questions and answers to them, add right answers in case of <i>short answer</i> questions and add distractor oprions in case of <i>multiple choice</i> questions. If you made a mistake editing just click <b>Restore to default</b> in question or answer field to restore its text to value from the database. When you are done please click <b>Save changes</b> to apply your changes to quiz.
-
-You can change whether you want the test takers to be able to access reference materials website with the option "allow acces to reference" (at the bottom of the page). If the option is not selected, the results of student are automatically submitted after TIME_PER_TRY seconds if they switch from the tab with test. Also the students can switch tabs without auto-submitting no more than TRIES times.
 
 ### Previewing and taking a quiz
 To preview a quiz just select <i>Preview</i> option right to quiz name at the <b>Quizzes</b> panel. To share quiz with your students copy URL from your adress bar at the preview page and send it to them. When you are ready click <b>Submit answers</b> at the bottom of the page. Then you will be redirected to the page with your results in quiz.
