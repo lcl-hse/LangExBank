@@ -277,33 +277,33 @@ docker-compose up -d
 Navigate to &lt;URL-you-re-running-LangExBank-on&gt;/admin/ to access the admin panel. Here you can create, edit and delete database objects as in a standard Django application admin site.
 Also you can execute some management commands if you go to &lt;URL-you-re-running-LangExBank-on&gt;/admin/management/
 
-### Management: Load data to DB
-
-...
-
 ### ManagementL Dump data from DB
 
-...
+In this tab you can download all the database data from your LangExBank installation (for example, before migrating to another server). Leave field "App label" empty if you want to download all the data (including superuser data) or type in "main_app" if you want to download only LangExBank platform data. Select one of the 3 available output types (JSON, XML or YAML). Select identation level (for convieniently displaying downloaded file in a text editor) or leave the default value of 4. Type in the name of the output file or leave the default value "dump.json". Select whether you want to download your data file as a zip folder (selected by default). After choosing all the needed options click "Dump and download model data" and the download will start after some time (may take several minutes in case of a large number of database objects).
 
-### Management: Load mediafiles to site
+### Management: Load data to DB
 
-...
+In this tab you can populate your LangExBank database with the saved data (for example, when migrating to another server). Select the file with your data dump and click "Load data from file".
 
 ### Management: Download mediafiles from site
 
-...
+In this file you can download media (audio, PDF) files from your LangExBank installation (for example, before migrating to another server). Type in the output filename or leave the default value "mediafiles.zip". Click "dump and download mediafiles" and the download will start after some time.
+
+### Management: Load mediafiles to site
+
+In this tab you can load media (audio, PDF) files into LangExBank (for example, when migrating to another server). Select your ZIP file with saved mediafiles and click "Load data from file" button.
 
 ### Management: Generate K random users for the platform
 
-...
+In this you can generate K random users for the LangExBank platform (for example, for load testing purposes). Select or type in the number of users you want to generate and select the type of rights (Admin, Teacher or Student) you want to give to those users. Selected whether you want to save generated user data into a JSON file. If you selected the option to save data into a JSON file, you can specify the name of the output file or leave the default value "Generated_users.json". After specifying all the options click on "Generate random users" to proceed. If you have selected the option to save generated users data into a file, the file will be downloaded after some time.
 
 ### Management: Download right answers for selected Quiz
 
-...
+In this tab you can download right answers for the selected quiz. Select a quiz name and then type in the output filename or leave the default value "Answers.json". Click the button "Download quiz results" and soon the download will start.
 
 ### Management: Download User info data
 
-...
+Click on link "Download user info data" on the Management section of Admin panel to download user info data.
 
 
 ## Creating users
@@ -338,7 +338,7 @@ exit()
 
 ### Creating users from admin panel
 
-...
+You can also create users from admin panel. Navigate to &lt;URL-you-re-running-LangExBank-on&gt;/admin/ and click "Add user" button.
 
 ## New users registration
 You can allow new students to register on your LangExBank instance using embedded registration view. To enable this set <code>LANGEXBANK_OPEN_SIGNUP</code> to 1 in <i>LangExBank/env.prod</i> file. Then send <i>yoursite.example.com/easy_register</i> to your students. In order to register the students will be asked to type Full Name, Group id, username and password. In current version of LangExBank no e-mail confirmation is required to register.
