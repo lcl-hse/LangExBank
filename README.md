@@ -54,19 +54,9 @@ Prerequisites:
 
     8.2. [Adding and editing reference materials](#adding-and-editing-reference)
 
-9. [Migrating data and mediafiles](#migrating-data-and-mediafiles)
+    8.3. [Downloading reference materials](#downloading-reference-materials)
 
-    9.1. [Dumping platform data](#dumping-platform-data)
-
-    9.2. [Dumping platform mediafiles](#dumping-platform-mediafiles)
-
-    9.3. [Loading platform data](#loading-platform-data)
-
-    9.4. [Loading platform mediafiles](#loading-platform-mediafiles)
-
-    9.5. [Dumping reference materials](#dumping-reference-materials)
-
-    9.6. [Loading reference materials](#loading-reference-materials)
+    8.4. [Uploading reference materials](#uploading-reference-materials)
 
 ##  Installation
 Learner Corpora Laboratory uses Docker to deploy LangExBank.
@@ -282,6 +272,40 @@ docker-compose down
 docker-compose up -d
 ```
 
+## Admin panel
+
+Navigate to &lt;URL-you-re-running-LangExBank-on&gt;/admin/ to access the admin panel. Here you can create, edit and delete database objects as in a standard Django application admin site.
+Also you can execute some management commands if you go to &lt;URL-you-re-running-LangExBank-on&gt;/admin/management/
+
+### Management: Load data to DB
+
+...
+
+### ManagementL Dump data from DB
+
+...
+
+### Management: Load mediafiles to site
+
+...
+
+### Management: Download mediafiles from site
+
+...
+
+### Management: Generate K random users for the platform
+
+...
+
+### Management: Download right answers for selected Quiz
+
+...
+
+### Management: Download User info data
+
+...
+
+
 ## Creating users
 
 LangExBank support three type of users: Admin, Teacher and Student. To start using LangExBank after deploy you will need to create at least 1 admin user.
@@ -398,3 +422,23 @@ To review results of either a corpus-based test or an IELTS-like test navigate t
 </table>
 
 To review results of a particular student click <b>Details</b> right to the row with his name. Now you will be able to see answers submitted by the student as well as right answers to quiz questions. To edit mark for each question navigate your cursor to mark column and enter new mark in floating point number format (e.g. <i>0.9</i> or <i>2.0</i>. If you think that the answer submotted by a student was correct click <b>Mark as new correct</b> below answer. (Warning: the answer will be counted as correct only for new test takers). Adding new correct answer is not supported for multiple choice questions. When you are done reviewing student results click <b>Save changes</b> at the bottom of the page to apply your changes.
+
+## Reference materials website
+
+...
+
+### Accessing reference materials
+
+...
+
+### Adding and editing reference materials
+
+...
+
+### Downloading reference materials
+
+...
+
+### Uploading reference materials
+
+...
