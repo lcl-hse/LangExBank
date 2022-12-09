@@ -7,72 +7,63 @@ LangExBank is an open-source language testing platform that supports:
 # Instruction manual
 
 Prerequisites:
- - Docker
+ - Basic Docker knowledge
  - Basic terminal knowledge
  - IPython knowledge (for modifying database in interactive shell)
 
 
-<b>WARNING!</B> This manual is outdated and soon will be replaced with the up-to-date version
-
-
 ## Table of contents
 1. [Installation](#installation)
-2. [Creating users](#creating-users)
 
-    2.1. [Creating users with Django-admin](#creating-users-with-django-admin)
+2. [Admin panel](#admin-panel)
 
-    2.2. [Creating users in terminal](#creating-users-in-ipython-terminal)
+3. [Creating users](#creating-users)
 
-    2.3. [Creating random users](#creating-random-users)
-    
-3. [New users registration](#new-users-registration)
-4. [Corpus-based quizzes](#corpus-based-quizzes)
+    3.1. [Creating users in IPython terminal](#creating-users-in-ipython-terminal)
 
-   4.1. [Filling exercise bank](#filling-exercise-bank)
+    3.2. [Creating users from admin panel](#creating-users-from-admin-panel)
+
+4. [New users registration](#new-users-registration)
+
+5. [Corpus-based quizzes](#corpus-based-quizzes)
+
+    5.1. [Filling exercise bank](#filling-exercise-bank)
    
-   4.2. [Creating new quiz](#creating-new-quiz)
+    5.2. [Creating new quiz](#creating-new-quiz)
    
-   4.3. [Editing created quiz](#editing-created-quiz)
+    5.3. [Editing created quiz](#editing-created-quiz)
    
-   4.4. [Previewing and taking a quiz](#previewing-and-taking-a-quiz)
+    5.4. [Previewing and taking a quiz](#previewing-and-taking-a-quiz)
    
-   4.5. [Deleting quizzes](#deleting-quizzes)
-5. [IELTS-like tests](#ielts-like-tests)
+    5.5. [Deleting quizzes](#deleting-quizzes)
+6. [IELTS-like tests](#ielts-like-tests)
 
-    5.1. [Reading](#reading)
+    6.1. [Reading](#reading)
  
-    5.2. [Listening](#listening)
+    6.2. [Listening](#listening)
     
-6. [Reviewing results](#reviewing-results)
+7. [Reviewing results](#reviewing-results)
 
-    6.1. [Reviewing corpus-based quiz results](#reviewing-corpus-based-quiz-results)
+    7.1. [Reviewing corpus-based quiz results](#reviewing-corpus-based-quiz-results)
     
-    6.2. [Reviewing IELTS-like test results](#reviewing-ielts-like-test-results)
+    7.2. [Reviewing IELTS-like test results](#reviewing-ielts-like-test-results)
+
+8. [Reference materials webiste](#reference-materials)
+
+    8.1. [Accessing reference materials](#accessing-reference)
+
+    8.2. [Adding and editing reference materials](#adding-and-editing-reference)
+
+    8.3. [Downloading reference materials](#downloading-reference-materials)
+
+    8.4. [Uploading reference materials](#uploading-reference-materials)
 
 ##  Installation
 Learner Corpora Laboratory uses Docker to deploy LangExBank.
 
-### In testing environment
-To install LangExBank in testing environment clone this repository to your machine and build Docker container from the source code with.
+Copy <i>docker-compose.yml</i> file from the root of this respository to your machine
 
-Enter your terminal emulator and type:
-```bash
-git clone https://github.com/lcl-hse/LangExBank.git
-docker build -f ./langexbank/Dockerfile.prod -t langexbank ./langexbank
-docker create --name langexbank_1 langexbank
-docker start langexbank_1
-docker exec langexbank_1 python manage.py migrate
-docker exec -p 8000:8000 -e DEBUG=1 SECRET_KEY=please-change-me DJANGO_ALLOWED_HOSTS=* DJANGO_ENCRYPTION_KEYS=please-change-me LANGEXBANK_ENC_KEY=please-change-me LANGEXBANK_ENCODE_USERS=0 LANGEXBANK_OPEN_SIGNUP=1 gunicorn testing_platform.wsgi:application --bind 0.0.0.0:8000 -t 12000
-```
-
-Then go to http://localhost:8000 in your web browser to access LangExBank. However, in this mode LangExBank will be accessible only from your computer so your students will not be able to take tests.
-
-### In production environment
-To make your LangExBank accessible from the web you will need to follow the following instructions: 
-
-To use LangExBank in testing environment, you will need to create a separate Docker container for a web server app (e.g. nginx, apache etc.) and orchestrate containers with docker-compose command. In this manual we will use nginx as a containerized web server as nginx Dockerfile and configuration are already present in this repository.
-
-First, open your favourite text editor and create a file in the LangExBank folder called <i>env.prod</i>. This file will contain environment variables needed for LangExBank to run in a Docker environment. Fill the file with the following contents (Meaning of every variable will be explained later):
+Then, open your favourite text editor and create a file in the LangExBank folder called <i>env.prod</i>. This file will contain environment variables needed for LangExBank to run in a Docker environment. Fill the file with the following contents (Meaning of every variable will be explained later):
 ```
 # ./LangExBank/env.prod
 DEBUG=0
@@ -82,8 +73,18 @@ DJANGO_ENCRYPTION_KEYS=please-change-me
 LANGEXBANK_ENC_KEY=please-change-me
 LANGEXBANK_ENCODE_USERS=0
 LANGEXBANK_OPEN_SIGNUP=1
-DJANGO_MEDIA_ROOT=mediafiles
-DJANGO_STATIC_ROOT=staticfiles
+PGDATA=/var/lib/postgresql/data/langexbank_data
+REF_EDITOR_LOGIN=login
+REF_EDITOR_PASSWORD=password
+REF_SECRET_KEY=please-change-me
+REF_URL_PREFIX=/reference_platform
+REF_DATA_FOLDER=/usr/src/app/reference_data # check
+TRIES=3
+TIME_PER_TRY=10
+DJANGO_SUPERUSER_USERNAME=Username
+DJANGO_SUPERUSER_PASSWORD=Password
+DJANGO_SUPERUSER_EMAIL=example@example.com
+PRODUCTION=1 # check
 ```
 Where:
 <table>
@@ -144,20 +145,92 @@ Where:
  </td>
 </tr>
 <tr>
- <td>
-  <code>DJANGO_MEDIA_ROOT</code>
- </td>
- <td>
-  String (respective path). Where to store media files (PDFs, audios, videos).
- </td>
+  <td>
+    <code>PGDATA</code>
+  </td>
+  <td>
+    The location of where data will be stored inside PostgreSQL container. Set it to "var/lib/postgresql/data/langexbank_data" (the value is not set implicitly due to architecture issues).
+  </td>
 </tr>
 <tr>
- <td>
-  <code>DJANGO_STATIC_ROOT</code>
- </td>
- <td>
-  String (respective path). Where to store static files (JS, CSS).
- </td>
+  <td>
+    <code>REF_EDITOR_LOGIN</code>
+  </td>
+  <td>
+    Login for the Reference platform administrator user
+  </td>
+</tr>
+<tr>
+  <td>
+    <code>REF_EDITOR_PASSWORD</code>
+  </td>
+  <td>
+    Password for the Reference platform administrator user
+  </td>
+</tr>
+<tr>
+  <td>
+    <code>REF_SECRET_KEY</code>
+  </td>
+  <td>
+    Secret key for the reference platform. Used to encrypt session data. Set it to a string value and keep secret.
+  </td>
+</tr>
+<tr>
+  <td>
+    <code>REF_URL_PREFIX</code>
+  </td>
+  <td>
+    Set it to "/reference_platform" (the value is not set implicitly due to compatibility issues).
+  </td>
+</tr>
+<tr>
+  <td>
+    <code>REF_DATA_FOLDER</code>
+  </td>
+  <td>
+    Folder inside Reference platform used to store it data. Set it to "/usr/src/app/reference_data" (The value is not set implicitly due to architecture issues).
+  </td>
+</tr>
+<tr>
+  <td>
+    <code>TRIES</code>
+  </td>
+  <td>
+    How many tries (switches away from the tab with quiz) are allowed for quizzes without the "Allow access to reference" option checked (default = 3).
+  </td>
+</tr>
+<tr>
+  <td>
+    <code>TIME_PER_TRY</code>
+  </td>
+  <td>
+    For how long a student user is allowed to stay away from the tab with quiz if option "Allow access to reference" is not checked (default = 10 seconds).
+  </td>
+</tr>
+<tr>
+  <td>
+    <code>DJANGO_SUPERUSER_USERNAME</code>
+  </td>
+  <td>
+    Username for the LangExBank superuser (to be able to create/delete/update DB objects and dump/load data/files from Django-Admin web interface)
+  </td>
+</tr>
+<tr>
+  <td>
+    <code>DJANGO_SUPERUSER_PASSWORD</code>
+  </td>
+  <td>
+    Password for the LangExBank superuser (to be able to create/delete/update DB objects and dump/load data/files from Django-Admin web interface)
+  </td>
+</tr>
+<tr>
+  <td>
+    <code>PRODUCTION</code>
+  </td>
+  <td>
+    Set to 1 (the value is not set implicitly due to architecture issues).
+  </td>
 </tr>
 </table>
 
@@ -175,30 +248,69 @@ depends_on:
 
 "12345" to the port you want to run LangExBank on.
 
-Run the following commands in your terminal emulator:
+In your terminal emulator navigate to the folder containing docker-compose.yml and env.prod files and run the following command:
 
 ```bash
-cd LangExBank
-docker-compose build
 docker-compose up -d
-docker-compose exec web python manage.py migrate
-docker-compose exec web python manage.py collectstatic --no-input --clear
 ```
 
 Then navigate to your domain or IP address in your web browser.
 
-## Creating users
-LangExBank support three type of users: Admin, Teacher and Student. To start using LangExBank after deploy you will need to create at least 1 admin user.
+After initial setup uncomment (delete '# ' sequence from) line 16 of <i>docker-compose.yml</i> and comment out (add initial '# ' to) line 15.
 
-You can create new users with three different approaches:
+To restart LangExBank navigate to the folder containing <i>docker-compose.yml</i> file and execute the following commands:
 
-### Creating users with django-admin
-To add, edit and delete users with Django-Admin web application you need to create a superuser first:
 ```bash
-docker-compose exec web python manage.py createsuperuser
+docker-compose down
+docker-compose up -d
 ```
 
-Enter new superuser data according to <a href="https://docs.djangoproject.com/en/3.0/intro/tutorial02/#creating-an-admin-user">Django documentation</a>. Then navigate to <i>yoursite.example.com/admin</i> in your web browser and enter your superuser name and password to access database editing. Then in section <b>MAIN_APP</b> section select <i>Users</i> option (please do not confuse it with <i>Users</i> in <b>AUTHENTICATION AND AUTHORIZATION</b> section.  Then click on <b>ADD USER</b> button and input user data, including username, full name, password and rights (Student, Teacher or Admin) and password(<i>Enc passsword</i> field).
+To update and restart LangExBanke navigate to the folder containing <i>docker-compose.yml</i> file and execute the following commands:
+```bash
+docker-compose pull
+docker-compose down
+docker-compose up -d
+```
+
+## Admin panel
+
+Navigate to &lt;URL-you-re-running-LangExBank-on&gt;/admin/ to access the admin panel. Here you can create, edit and delete database objects as in a standard Django application admin site.
+Also you can execute some management commands if you go to &lt;URL-you-re-running-LangExBank-on&gt;/admin/management/
+
+### ManagementL Dump data from DB
+
+In this tab you can download all the database data from your LangExBank installation (for example, before migrating to another server). Leave field "App label" empty if you want to download all the data (including superuser data) or type in "main_app" if you want to download only LangExBank platform data. Select one of the 3 available output types (JSON, XML or YAML). Select identation level (for convieniently displaying downloaded file in a text editor) or leave the default value of 4. Type in the name of the output file or leave the default value "dump.json". Select whether you want to download your data file as a zip folder (selected by default). After choosing all the needed options click "Dump and download model data" and the download will start after some time (may take several minutes in case of a large number of database objects).
+
+### Management: Load data to DB
+
+In this tab you can populate your LangExBank database with the saved data (for example, when migrating to another server). Select the file with your data dump and click "Load data from file".
+
+### Management: Download mediafiles from site
+
+In this file you can download media (audio, PDF) files from your LangExBank installation (for example, before migrating to another server). Type in the output filename or leave the default value "mediafiles.zip". Click "dump and download mediafiles" and the download will start after some time.
+
+### Management: Load mediafiles to site
+
+In this tab you can load media (audio, PDF) files into LangExBank (for example, when migrating to another server). Select your ZIP file with saved mediafiles and click "Load data from file" button.
+
+### Management: Generate K random users for the platform
+
+In this you can generate K random users for the LangExBank platform (for example, for load testing purposes). Select or type in the number of users you want to generate and select the type of rights (Admin, Teacher or Student) you want to give to those users. Selected whether you want to save generated user data into a JSON file. If you selected the option to save data into a JSON file, you can specify the name of the output file or leave the default value "Generated_users.json". After specifying all the options click on "Generate random users" to proceed. If you have selected the option to save generated users data into a file, the file will be downloaded after some time.
+
+### Management: Download right answers for selected Quiz
+
+In this tab you can download right answers for the selected quiz. Select a quiz name and then type in the output filename or leave the default value "Answers.json". Click the button "Download quiz results" and soon the download will start.
+
+### Management: Download User info data
+
+Click on link "Download user info data" on the Management section of Admin panel to download user info data.
+
+
+## Creating users
+
+LangExBank support three type of users: Admin, Teacher and Student. To start using LangExBank after deploy you will need to create at least 1 admin user.
+
+You can create new users with two different approaches:
 
 ### Creating users in IPython terminal
 You can create, delete and edit users in Django IPython console. To do this type in your terminal emulator:
@@ -224,54 +336,9 @@ To exit IPython session type the following in your terminal:
 exit()
 ```
 
-### Creating random users
-You can create random users with LangExBank management command random_users. Type the following in your terminal:
-```bash
-docker-compose exec web python manage.py random_users -n 100 -r S -s -fn Users.csv
-```
+### Creating users from admin panel
 
-The provided arguments to <i>random_users</i> command are explained below:
-<table>
- <tr>
-  <td>
-   <code>-n --number</code>
-  </td>
-  <td>
-   Integer. How many users to create e.g. 100
-  </td>
- </tr>
- <tr>
-  <td>
-   <code>-r --rights</code>
-  </td>
-  <td>
-   What type of rights to give to the newly created users. Possible options: 'A' (Admin), 'S' (Student) or 'T' (Teacher)
-  </td>
- </tr>
- <tr>
-  <td>
-   <code>-s --save</code>
-  </td>
-  <td>
-   Whether to save newly generated users to CSV file.
-  </td>
- </tr>
- <tr>
-  <td>
-   <code>-fn --filename</code>
-  </td>
-  <td>
-   Name of the CSV file where new user logins and passwords will be saved.
-  </td>
- </tr>
-</table>
-
-CSV file with user data will be save in your Docker container. To transfer it to your host machine type the following in your terminal emulator:
-```bash
-docker cp testingplatform_web_1:/home/app_web/LangExBank/Users.csv .
-```
-
-If the command results with an error replace <i>testingplatform_web_1</i> with your container name. If you want to specify exact location where you want to place Users csv replace the dot with the folder path.
+You can also create users from admin panel. Navigate to &lt;URL-you-re-running-LangExBank-on&gt;/admin/, find "Users" link in the "MAIN_APP" panel and click "Add" button next to it. Enter Login and Full name (to be displayed in test results) of the user, select their Rights (Admin, Student or Teacher), enter their password and click the "SAVE" button.
 
 ## New users registration
 You can allow new students to register on your LangExBank instance using embedded registration view. To enable this set <code>LANGEXBANK_OPEN_SIGNUP</code> to 1 in <i>LangExBank/env.prod</i> file. Then send <i>yoursite.example.com/easy_register</i> to your students. In order to register the students will be asked to type Full Name, Group id, username and password. In current version of LangExBank no e-mail confirmation is required to register.
@@ -292,14 +359,12 @@ On the LangExBank main page navigate to the <b>Questions</b> panel to access que
   <td>1 or more error tags from REALEC annotation scheme. By default errors with all tags will be included</td>
  </tr>
  <tr>
-  <td>Make questions multiple choice (checkbox)</td>
-  <td>Whether to generate multiple-choice questions. Currently multiple choice option generation models support only the following types of errors:
-<ul>
- <li>Choice of tense</li>
- <li>Prepositions</li>
- <li>Choice of a lexical item</li>
-</ul>
+  <td>Make questions multiple choice with distractor generation model (checkbox with selector)</td>
+  <td>Whether to generate multiple-choice questions. LangExBank includes two models of distrator generation: <b>DisSelector</b> and <b>DisGen</b>. <b>DisGen</b> supports <i>Choice of lexical item</i>, <i>Choice of tense</i> and <i>Prepositions</i> tags. <b>DisSelector</b> supports only <i>Choice of lexical item</i> tag, but has less restrictions on input and produces more coherent output.
 </td>
+ </tr>
+ <tr>
+  
  </tr>
  <tr>
   <td>Create new folder with name (checkbox)</td>
@@ -318,6 +383,8 @@ To create new quiz tick the boxes left to questions on <b>Questions</b> panel, e
 
 ### Editing created quiz
 Navigate to the <b>Quizzes</b> panel and select created quiz. You can edit questions and answers to them, add right answers in case of <i>short answer</i> questions and add distractor oprions in case of <i>multiple choice</i> questions. If you made a mistake editing just click <b>Restore to default</b> in question or answer field to restore its text to value from the database. When you are done please click <b>Save changes</b> to apply your changes to quiz.
+
+You can change whether you want the test takers to be able to access reference materials website with the option "allow acces to reference" (at the bottom of the page). If the option is not selected, the results of student are automatically submitted after TIME_PER_TRY seconds if they switch from the tab with test. Also the students can switch tabs without auto-submitting no more than TRIES times.
 
 ### Previewing and taking a quiz
 To preview a quiz just select <i>Preview</i> option right to quiz name at the <b>Quizzes</b> panel. To share quiz with your students copy URL from your adress bar at the preview page and send it to them. When you are ready click <b>Submit answers</b> at the bottom of the page. Then you will be redirected to the page with your results in quiz.
@@ -355,3 +422,25 @@ To review results of either a corpus-based test or an IELTS-like test navigate t
 </table>
 
 To review results of a particular student click <b>Details</b> right to the row with his name. Now you will be able to see answers submitted by the student as well as right answers to quiz questions. To edit mark for each question navigate your cursor to mark column and enter new mark in floating point number format (e.g. <i>0.9</i> or <i>2.0</i>. If you think that the answer submotted by a student was correct click <b>Mark as new correct</b> below answer. (Warning: the answer will be counted as correct only for new test takers). Adding new correct answer is not supported for multiple choice questions. When you are done reviewing student results click <b>Save changes</b> at the bottom of the page to apply your changes.
+
+## Reference materials website
+
+Navigate to &lt;URL-you-re-running-LangExBank-on&gt;/reference_platform/ to access the Reference platform. Here you can view and edit study materials associated with REALEC error tags.
+
+### Accessing reference materials
+
+To access reference materials select the error tag from the panel on the left. You will be presented with the list of articles associated with it. Click the name of the article to access it. You can also view all articles if you go to &lt;URL-you-re-running-LangExBank-on&gt;/reference_platform/allArticles.
+
+### Adding and editing reference materials
+
+To access editing features of the Reference platform navigate to &lt;URL-you-re-running-LangExBank-on&gt;/reference_platform/auth and type in the login and password specified in REF_EDITOR_LOGIN and REF_EDITOR_PASSWORD variables. After that you will be redirected to the index page of Reference platform and the "+ Add article" link will appear in the left panel. Click on it and you will see the articled editor. Add a name for you article and select one or more error tags asscoiated with it. To save the article click the 'Save article" button.
+
+To edit Reference materials after authentication click to "Edit" link displayed next to article name in the list of articles. To delete the article click on the "Delete" button next to "Edit" link.
+
+### Downloading reference materials
+
+You can download the data of Reference platform (for example, before migrating to another server). After authentication at Reference platform, type &lt;URL-you-re-running-LangExBank-on&gt;/reference_platform/dump_data in your browser and the download will start.
+
+### Uploading reference materials
+
+You can upload saved data to Reference platform (for example, after migrating to another server). After authentication at Reference platform, go to &lt;URL-you-re-running-LangExBank-on&gt;/reference_platform/, select the file with your previously saved reference data and click the "Upload data" button.
