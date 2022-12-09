@@ -338,7 +338,7 @@ exit()
 
 ### Creating users from admin panel
 
-You can also create users from admin panel. Navigate to &lt;URL-you-re-running-LangExBank-on&gt;/admin/ and click "Add user" button.
+You can also create users from admin panel. Navigate to &lt;URL-you-re-running-LangExBank-on&gt;/admin/, find "Users" link in the "MAIN_APP" panel and click "Add" button next to it. Enter Login and Full name (to be displayed in test results) of the user, select their Rights (Admin, Student or Teacher), enter their password and click the "SAVE" button.
 
 ## New users registration
 You can allow new students to register on your LangExBank instance using embedded registration view. To enable this set <code>LANGEXBANK_OPEN_SIGNUP</code> to 1 in <i>LangExBank/env.prod</i> file. Then send <i>yoursite.example.com/easy_register</i> to your students. In order to register the students will be asked to type Full Name, Group id, username and password. In current version of LangExBank no e-mail confirmation is required to register.
@@ -425,20 +425,22 @@ To review results of a particular student click <b>Details</b> right to the row 
 
 ## Reference materials website
 
-...
+Navigate to &lt;URL-you-re-running-LangExBank-on&gt;/reference_platform/ to access the Reference platform. Here you can view and edit study materials associated with REALEC error tags.
 
 ### Accessing reference materials
 
-...
+To access reference materials select the error tag from the panel on the left. You will be presented with the list of articles associated with it. Click the name of the article to access it. You can also view all articles if you go to &lt;URL-you-re-running-LangExBank-on&gt;/reference_platform/allArticles.
 
 ### Adding and editing reference materials
 
-...
+To access editing features of the Reference platform navigate to &lt;URL-you-re-running-LangExBank-on&gt;/reference_platform/auth and type in the login and password specified in REF_EDITOR_LOGIN and REF_EDITOR_PASSWORD variables. After that you will be redirected to the index page of Reference platform and the "+ Add article" link will appear in the left panel. Click on it and you will see the articled editor. Add a name for you article and select one or more error tags asscoiated with it. To save the article click the 'Save article" button.
+
+To edit Reference materials after authentication click to "Edit" link displayed next to article name in the list of articles. To delete the article click on the "Delete" button next to "Edit" link.
 
 ### Downloading reference materials
 
-...
+You can download the data of Reference platform (for example, before migrating to another server). After authentication at Reference platform, type &lt;URL-you-re-running-LangExBank-on&gt;/reference_platform/dump_data in your browser and the download will start.
 
 ### Uploading reference materials
 
-...
+You can upload saved data to Reference platform (for example, after migrating to another server). After authentication at Reference platform, go to &lt;URL-you-re-running-LangExBank-on&gt;/reference_platform/, select the file with your previously saved reference data and click the "Upload data" button.
