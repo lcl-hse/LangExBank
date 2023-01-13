@@ -103,18 +103,18 @@ def generate_questions(folder, tags, strike, delete_downloaded=True,
                 data = [
                     {
                         "id": idx,
-                        "masked_sent": re.sub("<b>.*?</b>", "[MASK]", el['Sentence']),
-                        "correction": el['Right answer']
+                        "sentence": re.sub("<b>.*?</b>", "[MASK]", el['Sentence']),
+                        "right_answer": el['Right answer']
                     } for idx, el in enumerate(records)
                 ]
                 distractors = get_distractors_from_disselector(data)
 
                 questions = [
-                        Question(
-                            question_text=re.sub("<b>.*?</b>", "_"*8, q['Sentence']),
-                            error_tag=q['Error type'], question_type='multiple_choice',
-                            question_level=0, ukey=ukey, batch_elem_id=el['id']
-                        ) for q, el, d in zip(records, data, distractors) if d
+                    Question(
+                        question_text=re.sub("<b>.*?</b>", "_"*8, q['Sentence']),
+                        error_tag=q['Error type'], question_type='multiple_choice',
+                        question_level=0, ukey=ukey, batch_elem_id=el['id']
+                    ) for q, el, d in zip(records, data, distractors) if d
                 ]
                 distractors = [d for d in distractors if d]
                 Question.objects.bulk_create(questions)
